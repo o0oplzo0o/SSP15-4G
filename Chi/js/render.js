@@ -3,32 +3,32 @@ var render = new function()
 	//Render loop
 	this.update = function()
 	{
-		index.context.clearRect(0, 0, index.canvas.width, index.canvas.height);
+		chi.context.clearRect(0, 0, chi.canvas.width, chi.canvas.height);
 		
 		// animation set
-		for(var i=0; i<index.indicators.length; i++){
-			index.indicators[i].draw(index.context);
+		for(var i=0; i<chi.indicators.length; i++){
+			chi.indicators[i].draw(chi.context);
 		}
 
 		// cubes set
-		for(var i=0; i<index.object.length; i++)
+		for(var i=0; i<chi.object.length; i++)
 		{
-			for(var j=0; j<index.object[i].length; j++)
+			for(var j=0; j<chi.object[i].length; j++)
 			{
-				index.object[i][j].draw(index.context);
+				chi.object[i][j].draw(chi.context);
 			}
 		}
 		
 		// lines / operators set
-		for(var i=0; i<index.extra.length; i++)
+		for(var i=0; i<chi.extra.length; i++)
 		{
-			index.extra[i].draw(index.context);
+			chi.extra[i].draw(chi.context);
 		}
 
 		// right cubes set
-		for (var i = 0; i < index.rcubes.length; ++i)
+		for (var i = 0; i < chi.rcubes.length; ++i)
 		{
-			index.rcubes[i].draw(index.context);
+			chi.rcubes[i].draw(chi.context);
 		}
 	}
 }

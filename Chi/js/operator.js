@@ -36,7 +36,7 @@ var operator = function()
 		context.stroke();
 
 		context.fillStyle = 'Black'; //'#8ED6FF';
-		context.fillText(this.text,this.pos.x-25,this.pos.y+8);
+		context.fillText(this.text,this.pos.x-20,this.pos.y+8);
 	}
 	
 	this.getPosition = function()

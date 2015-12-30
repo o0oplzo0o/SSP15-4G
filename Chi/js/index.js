@@ -1,4 +1,4 @@
-var index = new function()
+var chi = new function()
 {
 	this.canvas;
 	this.context;
@@ -9,15 +9,15 @@ var index = new function()
 
 	this.refresh;
 
-	var padding = 50;
-	var spaceX = 150;
+	var padding = 30;
+	var spaceX = 130;
 	var spaceY = 500;
 	
 	this.init = function()
 	{
 		this.canvas = document.getElementById("keccakCanvas");
 		this.context = this.canvas.getContext("2d");
-		this.context.font = "24px arial";
+		this.context.font = "18px arial";
 
     	// resize the canvas to fill browser window dynamically
 		/*
@@ -29,9 +29,9 @@ var index = new function()
 		}
 		resizeCanvas();
 		*/
-		
+	
 		// create 10 cubes
-		for (var i = 0; i < 5; ++i)
+		/*for (var i = 0; i < 5; ++i)
 		{
 			var axisY = new Array();
 			this.object.push(axisY);
@@ -43,7 +43,7 @@ var index = new function()
 				var a = new cube();
 				axisY.push(a.createCube(this.context,padding+posX,padding+posY,50,"#8ED6FF",i+","+j));
 			}
-		}
+		}*/
 		
 		for(var i=0;i<5;++i) {
 			// straight vertical line
@@ -172,9 +172,10 @@ var index = new function()
 		// 60 fps update loop
 		this.update();
 		this.refresh = setInterval(this.update,1000/60);
-		
+		this.create10cubes();
 		// start animation
 		this.animate(0, 0.5, 500);
+		//this.animate(0, 0.5, 500);
 	}
 
 	this.showRightCubes = function(i, op) {
@@ -205,7 +206,7 @@ var index = new function()
 
 			// draw 2 cubes
 			var a = new cube();
-			index.rcubes.push(a.createCube(
+			chi.rcubes.push(a.createCube(
 				this.context,
 				padding+posX,
 				padding+posY,
@@ -216,7 +217,7 @@ var index = new function()
 
 			posX += spaceX*2;
 			var b = new cube();
-			index.rcubes.push(b.createCube(
+			chi.rcubes.push(b.createCube(
 				this.context,
 				padding+posX,
 				padding+posY,
@@ -227,7 +228,7 @@ var index = new function()
 		} else {
 			// draw 1 cube
 			var a = new cube();
-			index.rcubes.push(a.createCube(
+			chi.rcubes.push(a.createCube(
 				this.context,
 				padding+posX,
 				padding+posY,
@@ -240,7 +241,7 @@ var index = new function()
 
 		// result cube	
 		var r = new cube();
-		index.rcubes.push(r.createCube(
+		chi.rcubes.push(r.createCube(
 			this.context,
 			padding+posX,
 			padding+posY,
@@ -253,7 +254,7 @@ var index = new function()
 
 		// draw operator
 		var o = new operator();
-		index.rcubes.push(o.createOperator(
+		chi.rcubes.push(o.createOperator(
 			this.context,
 			padding+posX+25,
 			padding+posY,
@@ -264,23 +265,40 @@ var index = new function()
 
 		// go into operator
 		setTimeout(function(){
-			index.rcubes[0].moveTo(index.rcubes[2].pos.x,index.rcubes[2].pos.y,s);
-			index.rcubes[1].moveTo(index.rcubes[2].pos.x,index.rcubes[2].pos.y,s);
+			chi.rcubes[0].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y,s);
+			chi.rcubes[1].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y,s);
 		}, delay);
 
 		// result comes out
 		delay += g;
 		setTimeout(function(){
-			index.rcubes[2].moveTo(index.rcubes[2].pos.x,index.rcubes[2].pos.y+spaceX,s);
+			chi.rcubes[2].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y+spaceX,s);
 		}, delay);
 
 		// continue
 		delay += 1250;
 		setTimeout(function(){
-			index.rcubes = [];
+			chi.rcubes = [];
 		}, delay);
 	}
 
+		this.create10cubes=function(){
+			for (var i = 0; i < 5; ++i)
+		{
+			var axisY = new Array();
+			this.object.push(axisY);
+
+			for (var j = 0; j < 2; ++j)
+			{
+				var posX = i * spaceX;
+				var posY = j * spaceY;
+				var a = new cube();
+				axisY.push(a.createCube(this.context,padding+posX+25.5,padding+posY-10,30,"#8ED6FF",i+","+j));
+			}
+		}
+		}
+	
+	
 	this.animate = function(i, speed, gap)
 	{
 		// animation settings
@@ -340,66 +358,66 @@ var index = new function()
 		*/
 		
 		setTimeout(function(){
-			index.indicators[1].moveTo(index.indicators[1].pos.x,index.indicators[1].pos.y+125,s);
+			chi.indicators[1].moveTo(chi.indicators[1].pos.x,chi.indicators[1].pos.y+125,s);
 
 			if (a == 3) {
-				index.indicators[2].moveTo(index.indicators[2].pos.x,index.indicators[2].pos.y+50,s);
+				chi.indicators[2].moveTo(chi.indicators[2].pos.x,chi.indicators[2].pos.y+50,s);
 			} else {
-				index.indicators[2].moveTo(index.indicators[2].pos.x,index.indicators[2].pos.y+80,s);
+				chi.indicators[2].moveTo(chi.indicators[2].pos.x,chi.indicators[2].pos.y+80,s);
 			}
 		}, delay);
 
 		delay += g;
 		setTimeout(function(){
-			index.indicators[1].moveTo(index.indicators[1].pos.x+40,index.indicators[1].pos.y,s);
+			chi.indicators[1].moveTo(chi.indicators[1].pos.x+40,chi.indicators[1].pos.y,s);
 
 			if (a == 3) {
-				index.indicators[2].moveTo(index.indicators[2].pos.x+690,index.indicators[2].pos.y,s);
+				chi.indicators[2].moveTo(chi.indicators[2].pos.x+690,chi.indicators[2].pos.y,s);
 			} else {
-				index.indicators[2].moveTo(index.indicators[2].pos.x-65,index.indicators[2].pos.y,s);
-			}
-		}, delay);
-		
-		delay += g;
-		setTimeout(function(){
-			index.indicators[1].moveTo(index.indicators[1].pos.x,index.indicators[1].pos.y+110,s);
-			if (a == 3) {
-				index.indicators[2].moveTo(index.indicators[2].pos.x,index.indicators[2].pos.y+190,s);
-			} else {
-				index.indicators[2].moveTo(index.indicators[2].pos.x,index.indicators[2].pos.y+160,s);
+				chi.indicators[2].moveTo(chi.indicators[2].pos.x-65,chi.indicators[2].pos.y,s);
 			}
 		}, delay);
 		
 		delay += g;
 		setTimeout(function(){
-			index.indicators[1].moveTo(index.indicators[1].pos.x+25,index.indicators[1].pos.y,s);
-			index.indicators[2].moveTo(index.indicators[2].pos.x-30,index.indicators[2].pos.y,s);
+			chi.indicators[1].moveTo(chi.indicators[1].pos.x,chi.indicators[1].pos.y+110,s);
+			if (a == 3) {
+				chi.indicators[2].moveTo(chi.indicators[2].pos.x,chi.indicators[2].pos.y+190,s);
+			} else {
+				chi.indicators[2].moveTo(chi.indicators[2].pos.x,chi.indicators[2].pos.y+160,s);
+			}
+		}, delay);
+		
+		delay += g;
+		setTimeout(function(){
+			chi.indicators[1].moveTo(chi.indicators[1].pos.x+25,chi.indicators[1].pos.y,s);
+			chi.indicators[2].moveTo(chi.indicators[2].pos.x-30,chi.indicators[2].pos.y,s);
 
 			// show right cubes here (AND)
-			index.showRightCubes(k, "AND");
+			chi.showRightCubes(k, "AND");
 		}, delay);
 
 		delay += 3000;
 		setTimeout(function(){
-			index.indicators[0].moveTo(index.indicators[0].pos.x,index.indicators[0].pos.y+360,s);
-			index.indicators[1].moveTo(index.indicators[0].pos.x,index.indicators[0].pos.y+360,s);
+			chi.indicators[0].moveTo(chi.indicators[0].pos.x,chi.indicators[0].pos.y+360,s);
+			chi.indicators[1].moveTo(chi.indicators[0].pos.x,chi.indicators[0].pos.y+360,s);
 
 			// show right cubes here (XOR)
-			index.showRightCubes(k, "XOR");
+			chi.showRightCubes(k, "XOR");
 		}, delay);
 
 		delay += 3000;
 		setTimeout(function(){
-			index.indicators[0].moveTo(index.indicators[0].pos.x,index.indicators[0].pos.y+100,s);
+			chi.indicators[0].moveTo(chi.indicators[0].pos.x,chi.indicators[0].pos.y+100,s);
 		}, delay);
 
 		// start next set in series
 		delay += g;
 		setTimeout(function(){
-			index.indicators = [];
+			chi.indicators = [];
 
 			if (k < 4) {
-				index.animate(k+1, 0.5, 500);
+				chi.animate(k+1, 0.5, 500);
 			} else {
 				clearInterval(this.refresh);
 			}
@@ -415,4 +433,4 @@ var index = new function()
 	}
 }
 
-index.init();
+chi.init();

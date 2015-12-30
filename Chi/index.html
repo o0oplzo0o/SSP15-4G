@@ -1,33 +1,42 @@
 <!DOCTYPE html>
-
-<html lang="en">
-      <head>
-          <meta charset="utf-8" />
-          <title>HTML5 Canvas Template</title>
-          <style>
-          	* {
-          		margin:0;
-          		padding:0;
-          	}
-          	html, body {
-          		width:100%;
-          		height:100%;
-          	}
-          	canvas {
-          		display:block;
-          	}
-          </style>
-      </head>
-      <body>
-          <canvas id="keccakCanvas" width="1280" height="800">
+<html>
+	 <meta charset="utf-8" />
+	<head>
+		<link rel="stylesheet" type="text/css" href="mystyle.css">
+		<script src="big_integer.js"></script>
+		<script src="common.js"></script>
+		<script src="keccak.js"></script>
+		<script src="index.js"></script>
+		
+		
+		<title>KECCAK</title>
+	</head>
+	<body>
+		  
+		<div class="one">
+		<select class="round1" id="hashFunction" onChange="index.hashFunctionChanged()">
+			<option value=0>select...</option>
+			<option value=1>shake128,output256</option>
+			<option value=2>shake256,output512</option>
+		</select>
+		
+		<textarea name="textarea" id="input_text"></textarea>
+		
+		<input class="round" type="submit" value="submit" onclick="index.hash()">
+		</div>
+		<div class="one">
+		<canvas id="keccakCanvas" width="1280" height="800">
               <p>Canvas not supported.</p>
           </canvas>
-          
-          <script src="js/util.js"></script>
+		  <script src="js/util.js"></script>
           <script src="js/render.js"></script>
           <script src="js/cube.js"></script>
           <script src="js/line.js"></script>
           <script src="js/operator.js"></script>
           <script src="js/index.js"></script>
-      </body>
- </html>
+		</div>
+		<div>
+			<p>Result:</br><label id="hash_result"></label></p>
+		</div>
+	</body>
+</html>

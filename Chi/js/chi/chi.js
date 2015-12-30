@@ -405,7 +405,7 @@ var chi = new function()
 		var s = speed;
 		var g = gap;
 
-		var k = i;
+		var k = (i+)2%5;
 		var a = k%5;
 		var b = (k+1)%5;
 		var c = (k+2)%5;

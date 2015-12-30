@@ -62,7 +62,7 @@ var cube = function()
 		context.fill();
 		context.stroke();
 		context.fillStyle = 'Black'; //'#8ED6FF';
-		context.fillText(this.text,this.pos.x+7,this.pos.y+36);
+		context.fillText(this.text,this.pos.x+(0.15 * this.size),this.pos.y+(0.70 * this.size));
 	}
 	
 	this.getPosition = function()

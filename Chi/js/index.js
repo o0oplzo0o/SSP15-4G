@@ -3,8 +3,11 @@ var index = new function()
 	this.canvas;
 	this.context;
 	this.object = new Array();
-	this.indicate=new Array();
 	this.extra = new Array();
+	this.indicators = new Array();
+	this.rcubes = new Array();
+
+	this.refresh;
 
 	var padding = 50;
 	var spaceX = 150;
@@ -15,11 +18,19 @@ var index = new function()
 		this.canvas = document.getElementById("keccakCanvas");
 		this.context = this.canvas.getContext("2d");
 		this.context.font = "24px arial";
+
+    	// resize the canvas to fill browser window dynamically
+		/*
+		window.addEventListener('resize', resizeCanvas, false);
+
+		function resizeCanvas() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		}
+		resizeCanvas();
+		*/
 		
-		
-				
-		
-		//create 10 cubes
+		// create 10 cubes
 		for (var i = 0; i < 5; ++i)
 		{
 			var axisY = new Array();
@@ -34,8 +45,6 @@ var index = new function()
 			}
 		}
 		
-		
-
 		for(var i=0;i<5;++i) {
 			// straight vertical line
 			var posX = i * spaceX;
@@ -156,263 +165,254 @@ var index = new function()
 				"#ffd66a",
 				"XOR"
 			));
-
 		}
-		/*
-		var count=0;
-		var interval=setInterval(function(){
-			index.context.clearRect(0, 0, index.canvas.width, index.canvas.height);
-			//index.drawindicator();
-			
-			index.moveindicator(count);
-			//index.drawindicator();
-			count+=1;
-			if(count===5){
-				clearInterval(interval);
+
+		// draw cubes on right
+		
+		// 60 fps update loop
+		this.update();
+		this.refresh = setInterval(this.update,1000/60);
+		
+		// start animation
+		this.animate(0, 0.5, 500);
+	}
+
+	this.showRightCubes = function(i, op) {
+		// animation settings
+		var delay = 1000;
+		var s = 0.5;
+		var g = 500;
+
+		var k = i;
+		var a = k%5;
+		var b = (k+1)%5;
+		var c = (k+2)%5;
+
+		var posX = 5 * spaceX + padding;
+		var posY = 0.5 * spaceY;
+
+		if (op != "NOT") {
+			var aText;
+			var bText;
+
+			if (op == "AND") {
+				aText = this.object[b][0].text;
+				bText = this.object[c][0].text;
+			} else if (op == "XOR") {
+				aText = this.object[a][0].text;
+				bText = this.object[b][0].text;
 			}
-			index.context.clearRect(0, 0, index.canvas.width, index.canvas.height);
-		},8000);
+
+			// draw 2 cubes
+			var a = new cube();
+			index.rcubes.push(a.createCube(
+				this.context,
+				padding+posX,
+				padding+posY,
+				40,
+				"#FFF000",
+				aText
+			));
+
+			posX += spaceX*2;
+			var b = new cube();
+			index.rcubes.push(b.createCube(
+				this.context,
+				padding+posX,
+				padding+posY,
+				40,
+				"#FFF000",
+				bText
+			));
+		} else {
+			// draw 1 cube
+			var a = new cube();
+			index.rcubes.push(a.createCube(
+				this.context,
+				padding+posX,
+				padding+posY,
+				40,
+				"#FFF000",
+				this.object[b][0].text
+			));
+		}
+		posX = 6 * spaceX + padding;
+
+		// result cube	
+		var r = new cube();
+		index.rcubes.push(r.createCube(
+			this.context,
+			padding+posX,
+			padding+posY,
+			40,
+			"#FFF000",
+			"result"
+		));
+		
+		posY += 5;
+
+		// draw operator
+		var o = new operator();
+		index.rcubes.push(o.createOperator(
+			this.context,
+			padding+posX+25,
+			padding+posY,
+			90,
+			"#ffffff",
+			op
+		));
+
+		// go into operator
+		setTimeout(function(){
+			index.rcubes[0].moveTo(index.rcubes[2].pos.x,index.rcubes[2].pos.y,s);
+			index.rcubes[1].moveTo(index.rcubes[2].pos.x,index.rcubes[2].pos.y,s);
+		}, delay);
+
+		// result comes out
+		delay += g;
+		setTimeout(function(){
+			index.rcubes[2].moveTo(index.rcubes[2].pos.x,index.rcubes[2].pos.y+spaceX,s);
+		}, delay);
+
+		// continue
+		delay += 1250;
+		setTimeout(function(){
+			index.rcubes = [];
+		}, delay);
+	}
+
+	this.animate = function(i, speed, gap)
+	{
+		// animation settings
+		var delay = 1000;
+		var s = speed;
+		var g = gap;
+
+		var k = i;
+		var a = k%5;
+		var b = (k+1)%5;
+		var c = (k+2)%5;
+
+		// draw 3 small cubes at a b and c
+		var posX = a*spaceX+25;
+		var posY = spaceY-450;
+		
+		var ac = new cube();
+		this.indicators.push(ac.createCube(
+			this.context,
+			padding+posX,
+			padding+posY,
+			20,
+			"#FFF000",
+			" "
+		));
+
+		posX = b*spaceX+25;
+		var bc = new cube();
+		this.indicators.push(bc.createCube(
+			this.context,
+			padding+posX,
+			padding+posY,
+			20,
+			"#FFF000",
+			" "
+		));
+
+		posX = c*spaceX+25;
+		var cc = new cube();
+		this.indicators.push(cc.createCube(
+			this.context,
+			padding+posX,
+			padding+posY,
+			20,
+			"#FFF000",
+			" "
+		));
+
+		/*
+		starts from 0
+		a = 4
+		b = 0
+		c = 1
+		b -> NOT b
+		then AND with c
+		then result XOR with a
 		*/
-		/*
-		function drawoperatorNOT(x,y,sizex,sizey){
-				context.beginPath();
-				context.fillStyle = "#FF0000";
-				context.fillRect(x, y, sizex, sizey);
-				context.font="Bold 12px Georgia";
-				context.fillStyle = "Black";
-				context.fillText("NOT",x+3,y+16);
-				context.stroke();
-		 }
-		function drawoperatorAND(x,y,sizex,sizey){
-				context.beginPath();
-				context.fillStyle = "#339900";
-				context.fillRect(x, y, sizex, sizey);
-				context.font="Bold 12px Georgia";
-				context.fillStyle = "Black";
-				context.fillText("AND",x+3,y+16);
-				context.stroke();
-		 }
-		 function drawoperatorXOR(x,y,sizex,sizey){
-			 context.beginPath();
-				context.fillStyle = "#FF9900";
-				context.fillRect(x, y, sizex, sizey);
-				context.font="Bold 12px Georgia";
-				context.fillStyle = "Black";
-				context.fillText("XOR",x+3,y+16);
-				context.stroke();
-		 }*/
 		
-		//60 fps update loop
-			this.drawindicator();
-		//this.update();
-		setInterval(this.update,1000/60);
-		//for testing
-		//setTimeout(this.moveindicator,2000);
-		//setInterval(this.moveindicator,2000);
-		
-		//setInterval(this.animate,1000);
-		//this.animateindicator();
-		//this.animateindicator();
-		//setInterval(this.animateindicator,8000);
-		//for testing
-		//setTimeout(this.test2,2000);
-	}
-	this.test = function()
-	{
-		
-		index.object[0][0].moveTo(index.object[0][0].pos.x,index.object[0][0].pos.y-200,0.1);
-	}
+		setTimeout(function(){
+			index.indicators[1].moveTo(index.indicators[1].pos.x,index.indicators[1].pos.y+125,s);
 
-	this.test2 = function()
-	{
-		index.object[0][0].moveTo(index.object[0][0].pos.x+200,index.object[0][0].pos.y,0.1);
-	}
-	
-	
-	
-	this.drawindicator=function(){
-			
-		for (var i=0; i<5; ++i){
-			var indicator=new Array();
-			//this.indicate.push(indicator);
-			//for (var j=0; j<1; ++j){
-				var posX=i*spaceX+25;
-				var posY=spaceY-450;
-				var smallcube=new cube();
-				this.indicate.push(smallcube.createCube(this.context,padding+posX,padding+posY,20,"#FFF000"," "));
-				
-				
-			//}
-		}
-		
-	}
-
-	/*
-	this.animateindicator=function(){
-	for(var i=0;i<5;i++){
-		this.animate=function(i){
-			setTimeout(function(){
-				this.moveindicator(i);
-				},7000);
-		}(i);
-	}
-	}
-	
-	var time=0;
-	this.animateindicator=function(time){
-		var interval= setInterval(function(){
-			index.moveindicator(time);
-			time += 1;
-			if(time === 6){
-		
-			clearInterval(interval);
-					
+			if (a == 3) {
+				index.indicators[2].moveTo(index.indicators[2].pos.x,index.indicators[2].pos.y+50,s);
+			} else {
+				index.indicators[2].moveTo(index.indicators[2].pos.x,index.indicators[2].pos.y+80,s);
 			}
+		}, delay);
+
+		delay += g;
+		setTimeout(function(){
+			index.indicators[1].moveTo(index.indicators[1].pos.x+40,index.indicators[1].pos.y,s);
+
+			if (a == 3) {
+				index.indicators[2].moveTo(index.indicators[2].pos.x+690,index.indicators[2].pos.y,s);
+			} else {
+				index.indicators[2].moveTo(index.indicators[2].pos.x-65,index.indicators[2].pos.y,s);
+			}
+		}, delay);
 		
-	
-		},8000);
-		(time);
+		delay += g;
+		setTimeout(function(){
+			index.indicators[1].moveTo(index.indicators[1].pos.x,index.indicators[1].pos.y+110,s);
+			if (a == 3) {
+				index.indicators[2].moveTo(index.indicators[2].pos.x,index.indicators[2].pos.y+190,s);
+			} else {
+				index.indicators[2].moveTo(index.indicators[2].pos.x,index.indicators[2].pos.y+160,s);
+			}
+		}, delay);
+		
+		delay += g;
+		setTimeout(function(){
+			index.indicators[1].moveTo(index.indicators[1].pos.x+25,index.indicators[1].pos.y,s);
+			index.indicators[2].moveTo(index.indicators[2].pos.x-30,index.indicators[2].pos.y,s);
+
+			// show right cubes here (AND)
+			index.showRightCubes(k, "AND");
+		}, delay);
+
+		delay += 3000;
+		setTimeout(function(){
+			index.indicators[0].moveTo(index.indicators[0].pos.x,index.indicators[0].pos.y+360,s);
+			index.indicators[1].moveTo(index.indicators[0].pos.x,index.indicators[0].pos.y+360,s);
+
+			// show right cubes here (XOR)
+			index.showRightCubes(k, "XOR");
+		}, delay);
+
+		delay += 3000;
+		setTimeout(function(){
+			index.indicators[0].moveTo(index.indicators[0].pos.x,index.indicators[0].pos.y+100,s);
+		}, delay);
+
+		// start next set in series
+		delay += g;
+		setTimeout(function(){
+			index.indicators = [];
+
+			if (k < 4) {
+				index.animate(k+1, 0.5, 500);
+			} else {
+				clearInterval(this.refresh);
+			}
+		}, delay);
 	}
-	*/
-
 	
-	
-	
-	this.moveindicator=function(i){
-		
-		var k=i;
-		//this.drawindicator();
-		//var interval=setInterval(function(){
-			//index.context.clearRect(0, 0, index.canvas.width, index.canvas.height);
-		//this.drawindicator();
-		//this.anmate=function(){
-		var a=k%5;
-		var b= (1+k)%5;
-		var c=(2+k)%5;
-		
-		setTimeout(function(){
-			index.indicate[b].moveTo(index.indicate[b].pos.x,index.indicate[b].pos.y+125,0.1);
-			index.indicate[c].moveTo(index.indicate[c].pos.x,index.indicate[c].pos.y+80,0.1);
-		},1000);
-		
-		setTimeout(function(){
-			index.indicate[b].moveTo(index.indicate[b].pos.x+40,index.indicate[b].pos.y,0.1);
-			index.indicate[c].moveTo(index.indicate[c].pos.x-65,index.indicate[c].pos.y,0.1);
-		},3000);
-	
-		setTimeout(function(){
-			index.indicate[b].moveTo(index.indicate[b].pos.x,index.indicate[b].pos.y+100,0.1);
-			index.indicate[c].moveTo(index.indicate[c].pos.x,index.indicate[c].pos.y+180,0.1);
-		},4000);
-			
-		setTimeout(function(){
-			index.indicate[b].moveTo(index.indicate[b].pos.x+25,index.indicate[b].pos.y,0.1);
-			index.indicate[c].moveTo(index.indicate[c].pos.x-30,index.indicate[c].pos.y,0.1);
-		},5000);
-		setTimeout(function(){
-			index.indicate[a].moveTo(index.indicate[a].pos.x,index.indicate[a].pos.y+360,0.1);
-			index.indicate[b].moveTo(index.indicate[a].pos.x,index.indicate[a].pos.y+360,0.1);
-		},6000);
-		setTimeout(function(){
-			index.indicate[a].moveTo(index.indicate[a].pos.x,index.indicate[a].pos.y+100,0.1);
-		},7000);
-		
-		if(a===3){
-			setTimeout(function(){
-			index.indicate[b].moveTo(index.indicate[b].pos.x,index.indicate[b].pos.y+125,0.1);
-			index.indicate[c].moveTo(index.indicate[c].pos.x,index.indicate[c].pos.y+50,0.1);
-		},1000);
-		
-		setTimeout(function(){
-			index.indicate[b].moveTo(index.indicate[b].pos.x+40,index.indicate[b].pos.y,0.1);
-			index.indicate[c].moveTo(index.indicate[c].pos.x+720,index.indicate[c].pos.y,0.1);
-		},3000);
-			
-		}
-		
-		
-		
-		}
-		
-		
-	
-
-	
-	
-	//var time=100;
-	/*this.moveindicator=function(){
-	
-		//1	
-		setTimeout(function(){
-			index.indicate[1].moveTo(index.indicate[1].pos.x,index.indicate[1].pos.y+125,0.1);
-		},2000);
-		
-		setTimeout(function(){
-			index.indicate[1].moveTo(index.indicate[1].pos.x+40,index.indicate[1].pos.y,0.1);
-		},3000);
-		setTimeout(function(){
-			index.indicate[1].moveTo(index.indicate[1].pos.x,index.indicate[1].pos.y+100,0.1);
-		},4000);
-		setTimeout(function(){
-			index.indicate[1].moveTo(index.indicate[1].pos.x+25,index.indicate[1].pos.y,0.1);
-		},5000);
-		//2
-		setTimeout(function(){
-			index.indicate[2].moveTo(index.indicate[2].pos.x,index.indicate[2].pos.y+80,0.1);
-		},2000);
-		
-		setTimeout(function(){
-			index.indicate[2].moveTo(index.indicate[2].pos.x-65,index.indicate[2].pos.y,0.1);
-		},3000);
-		
-		setTimeout(function(){
-			index.indicate[2].moveTo(index.indicate[2].pos.x,index.indicate[2].pos.y+165,0.1);
-		},4000);
-		
-		setTimeout(function(){
-			index.indicate[2].moveTo(index.indicate[2].pos.x-25,index.indicate[2].pos.y,0.1);
-		},5000);
-		//0
-		setTimeout(function(){
-			index.indicate[0].moveTo(index.indicate[0].pos.x,index.indicate[0].pos.y+360,0.1);
-		},6000);
-		
-		setTimeout(function(){
-			index.indicate[2].moveTo(index.indicate[0].pos.x,index.indicate[0].pos.y+360,0.1);
-		},6000);
-		
-		setTimeout(function(){
-			index.indicate[0].moveTo(index.indicate[0].pos.x,index.indicate[0].pos.y+100,0.1);
-		},7000);
-	}*/
-	
-
-			
-		
-		
-		
-		
-		//setTimeout(index.indicate[1].moveTo(index.indicate[1].pos.x+50,index.indicate[1].pos.y,0.1),1000);
-		//index.indicate[1].moveTo(index.indicate[1].pos.x+50,index.indicate[1].pos.y,0.1);
-	
-	
-	//Game loop
+	// loop
 	this.update = function()
 	{
 		time.updateTime();
 		
 		render.update();
-		
 	}
 }
 
-
 index.init();
-
-//index.moveindicator(4);
-//index.animatechi();
-
-
-//this.drawindicator();
-index.moveindicator(3);//test
-

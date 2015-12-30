@@ -5,12 +5,12 @@ var render = new function()
 	{
 		index.context.clearRect(0, 0, index.canvas.width, index.canvas.height);
 		
-		
-		for(var i=0; i<index.indicate.length; i++){
-			index.indicate[i].draw(index.context);
+		// animation set
+		for(var i=0; i<index.indicators.length; i++){
+			index.indicators[i].draw(index.context);
 		}
-		
-		
+
+		// cubes set
 		for(var i=0; i<index.object.length; i++)
 		{
 			for(var j=0; j<index.object[i].length; j++)
@@ -19,12 +19,16 @@ var render = new function()
 			}
 		}
 		
-		
+		// lines / operators set
 		for(var i=0; i<index.extra.length; i++)
 		{
 			index.extra[i].draw(index.context);
 		}
-		
-		
+
+		// right cubes set
+		for (var i = 0; i < index.rcubes.length; ++i)
+		{
+			index.rcubes[i].draw(index.context);
+		}
 	}
 }

@@ -2,9 +2,9 @@ var cube = function()
 {
 	this.pos = {x:0,y:0};
 	this.size = 0;
-	this.color = 0xffffff;
-	this.text = "";
+	this.color = "#FFFFFF";
 	this.alpha = 1;
+	this.text = "";
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -12,14 +12,14 @@ var cube = function()
 	this.speed = 0;
 	this.factor = 0;
 	
-	this.createCube = function(context, x, y, size, color, text, alpha)
+	this.createCube = function(context, x, y, size, color, alpha, text)
 	{
 		this.pos.x = x;
 		this.pos.y = y;
 		this.size = size;
 		this.color = color;
-		this.text = text;
 		this.alpha = alpha;
+		this.text = text;
 		
 		this.draw(context);
 		
@@ -29,16 +29,12 @@ var cube = function()
 	
 	this.draw = function(context)
 	{
+		var prevAlpha = context.globalAlpha;
+
 		//cube
-		context.save();
-		context.beginPath();
 		context.fillStyle = this.color; //'#8ED6FF';
-		context.strokeStyle = "Black";
-
-		//alpha
+		context.strokeStyle = "#000000";
 		context.globalAlpha = this.alpha;
-
-		context.save();
 		
 		//actual face
 		context.beginPath();
@@ -67,10 +63,12 @@ var cube = function()
 		context.closePath();
 		context.fill();
 		context.stroke();
-		context.fillStyle = 'Black'; //'#8ED6FF';
+		
+		//text
+		context.fillStyle = "#000000";
 		context.fillText(this.text,this.pos.x+(0.15 * this.size),this.pos.y+(0.70 * this.size));
 
-		context.globalAlpha = 1;
+		context.globalAlpha = prevAlpha;
 	}
 	
 	this.getPosition = function()
@@ -78,7 +76,7 @@ var cube = function()
 		return this.pos;
 	}
 	
-	this.moveTo = function(x,y,speed)
+	this.moveTo = function(x, y, speed)
 	{
 		this.factor = 0;
 		this.ori = this.pos;
@@ -90,7 +88,6 @@ var cube = function()
 	//Specific object update loop
 	this.update = function(self)
 	{
-
 		if(self.isMoving)
 		{
 			self.pos.x = util.lerp(self.ori.x,self.dest.x,self.factor);

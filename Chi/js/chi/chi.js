@@ -58,8 +58,8 @@ var chi = new function()
 					275+posY,
 					50,
 					"#8ED6FF",
-					" ",
-					1
+					1,
+					" "
 				));
 			}
 		}
@@ -85,8 +85,8 @@ var chi = new function()
 					padding+posY,
 					50,
 					"#8ED6FF",
-					chi.input[i][j*4],
-					1
+					1,
+					chi.input[i][j*4]
 				));
 			}
 		}
@@ -101,7 +101,9 @@ var chi = new function()
 				padding+posX+37.5,
 				padding+50,
 				padding+posX+37.5,
-				padding+spaceY-12.5
+				padding+spaceY-12.5,
+				"#000000",
+				1
 			));
 
 			// not group (tonot, tonot2, opnot)
@@ -114,7 +116,9 @@ var chi = new function()
 				x1,
 				y1+(spaceY/4),
 				x1+(spaceX/4),
-				y1+(spaceY/4)
+				y1+(spaceY/4),
+				"#000000",
+				1
 			));
 
 			var tonot2 = new line();
@@ -123,7 +127,9 @@ var chi = new function()
 				x1+(spaceX/4),
 				y1+(spaceY/4),
 				x1+(spaceX/4),
-				y1+(spaceY/4)+100
+				y1+(spaceY/4)+100,
+				"#000000",
+				1
 			));
 
 			var opnot = new operator();
@@ -133,6 +139,7 @@ var chi = new function()
 				y1+(spaceY/4)+50,
 				60,
 				"#ff5733",
+				1,
 				"NOT"
 			));
 
@@ -148,7 +155,9 @@ var chi = new function()
 					x2+50,
 					y2,
 					x2+50,
-					y2-150
+					y2-150,
+					"#000000",
+					1
 				));
 
 				this.extra.push(toand2.createLine(
@@ -156,7 +165,9 @@ var chi = new function()
 					x2+50,
 					y2-150,
 					padding+posX+37.5+spaceX,
-					y2-150
+					y2-150,
+					"#000000",
+					1
 				));
 			} else {
 				this.extra.push(toand.createLine(
@@ -164,7 +175,9 @@ var chi = new function()
 					x2+50,
 					y2,
 					x2+50,
-					y2-175
+					y2-175,
+					"#000000",
+					1
 				));
 
 				this.extra.push(toand2.createLine(
@@ -172,7 +185,9 @@ var chi = new function()
 					x2+50,
 					y2-175,
 					padding+37.5,
-					y2-175
+					y2-175,
+					"#000000",
+					1
 				));
 			}
 
@@ -183,6 +198,7 @@ var chi = new function()
 				y2+12.5,
 				60,
 				"#6aff75",
+				1,
 				"AND"
 			));
 
@@ -197,7 +213,9 @@ var chi = new function()
 					x3,
 					y3,
 					x1,
-					y1+(spaceY/4*3)-30
+					y1+(spaceY/4*3)-30,
+					"#000000",
+					1
 				));
 			} else {
 				this.extra.push(toxor.createLine(
@@ -205,7 +223,9 @@ var chi = new function()
 					padding+37.5+(spaceX/4)+25,
 					y3,
 					x1,
-					y1+(spaceY/4*3)-30
+					y1+(spaceY/4*3)-30,
+					"#000000",
+					1
 				));
 			}
 
@@ -216,6 +236,7 @@ var chi = new function()
 				y1+(spaceY/4*3),
 				60,
 				"#ffd66a",
+				1,
 				"XOR"
 			));
 		}
@@ -258,8 +279,8 @@ var chi = new function()
 				padding+posY,
 				40,
 				"#FFF000",
-				aText,
-				1
+				1,
+				aText
 			));
 
 			posX += spaceX*2;
@@ -270,8 +291,8 @@ var chi = new function()
 				padding+posY,
 				40,
 				"#FFF000",
-				bText,
-				1
+				1,
+				bText
 			));
 
 			posX = 6 * spaceX + padding;
@@ -284,8 +305,8 @@ var chi = new function()
 				padding+posY,
 				40,
 				"#FFF000",
-				rText,
-				1
+				1,
+				rText
 			));
 		} else {
 			// draw 1 cube
@@ -296,8 +317,8 @@ var chi = new function()
 				padding+posY,
 				40,
 				"#FFF000",
-				this.object[b][0].text,
-				1
+				1,
+				this.object[b][0].text
 			));
 
 			posX = 6 * spaceX + padding;
@@ -313,6 +334,7 @@ var chi = new function()
 			padding+posY,
 			90,
 			"#ffffff",
+			1,
 			op
 		));
 
@@ -421,8 +443,8 @@ var chi = new function()
 			padding+posY,
 			20,
 			"#FFF000",
-			" ",
-			1
+			1,
+			""
 		));
 
 		posX = b*spaceX+25;
@@ -433,8 +455,8 @@ var chi = new function()
 			padding+posY,
 			20,
 			"#FFF000",
-			" ",
-			1
+			1,
+			""
 		));
 
 		posX = c*spaceX+25;
@@ -445,8 +467,8 @@ var chi = new function()
 			padding+posY,
 			20,
 			"#FFF000",
-			" ",
-			1
+			1,
+			""
 		));
 
 		/*

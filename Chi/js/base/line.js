@@ -2,7 +2,8 @@ var line = function()
 {
 	this.pos = {x:0,y:0,x2:0,y2:0};
 	this.size = 0;
-	this.color = 0xffffff;
+	this.color = "#FFFFFF";
+	this.alpha = 1;
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -10,12 +11,14 @@ var line = function()
 	this.speed = 0;
 	this.factor = 0;
 	
-	this.createLine = function(context, x, y, x2, y2)
+	this.createLine = function(context, x, y, x2, y2, color, alpha)
 	{
 		this.pos.x = x;
 		this.pos.y = y;
 		this.pos.x2 = x2;
 		this.pos.y2 = y2;
+		this.color = color;
+		this.alpha = alpha;
 		
 		this.draw(context);
 		
@@ -25,17 +28,19 @@ var line = function()
 	
 	this.draw = function(context)
 	{
-		//cube
-		context.save();
-		context.beginPath();
-		context.fillStyle = this.color; //'#8ED6FF';
-		context.strokeStyle = "Black";
-		context.save();
+		var prevAlpha = context.globalAlpha;
 
+		// settings
+		context.strokeStyle = this.color;
+		context.globalAlpha = this.alpha;
+
+		// line
 		context.beginPath();
 		context.moveTo(this.pos.x,this.pos.y);
 		context.lineTo(this.pos.x2,this.pos.y2);
 		context.stroke();
+
+		context.globalAlpha = prevAlpha;
 	}
 	
 	this.getPosition = function()
@@ -55,7 +60,6 @@ var line = function()
 	//Specific object update loop
 	this.update = function(self)
 	{
-
 		if(self.isMoving)
 		{
 			self.pos.x = util.lerp(self.ori.x,self.dest.x,self.factor);

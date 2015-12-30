@@ -227,7 +227,7 @@ var chi = new function()
 		var s = 0.5;
 		var g = 500;
 
-		var k = i;
+		var k = i%5;
 		var a = k%5;
 		var b = (k+1)%5;
 		var c = (k+2)%5;
@@ -405,7 +405,7 @@ var chi = new function()
 		var s = speed;
 		var g = gap;
 
-		var k = (i+)2%5;
+		var k = (i+2)%5;
 		var a = k%5;
 		var b = (k+1)%5;
 		var c = (k+2)%5;
@@ -518,8 +518,8 @@ var chi = new function()
 		setTimeout(function(){
 			chi.indicators = [];
 
-			if (k < 4) {
-				chi.animateOperations(k+1, 0.5, 500);
+			if (i < 4) {
+				chi.animateOperations(i+1, 0.5, 500);
 			} else {
 				clearInterval(this.refresh);
 			}

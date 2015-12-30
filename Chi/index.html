@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html lang="en">
+      <head>
+          <meta charset="utf-8" />
+          <title>HTML5 Canvas Template</title>
+          <style>
+          </style>
+      </head>
+      <body>
+          <canvas id="keccakCanvas" width="1280" height="800">
+              <p>Canvas not supported.</p>
+          </canvas>
+          
+          <script src="js/util.js"></script>
+          <script src="js/render.js"></script>
+          <script src="js/cube.js"></script>
+          <script src="js/line.js"></script>
+          <script src="js/operator.js"></script>
+          <script src="js/index.js"></script>
+                  
+				  <!-- 
+				  	function animationLoop() {
+			          	canvas.width = canvas.width;
+			          	renderContent();
+			          	cubes[25].posX += 5;
+			          	if (posX > 500)
+			              posX = 0;
+			          	setTimeout(animationLoop, 33);
+			      	}
+                    function renderContent()
+                    {
+	              		for (var k = 125; k > 0; --k) {
+	                  		cubes[k] = new cube(cubes[k].posX,cubes[k].posY,50,'#FFF000','1a');
+	                  	}
+                    }
+   
+              		var cubes = new Array();
+
+              		for (var k = 5; k > 0; --k) {
+                  		for (var i = 5; i > 0; --i) {
+                  			var y = 300 + (50 * i) - (k * 25);
+                  			for (var j = 0; j < 5; ++j) {
+                  				var x = 100 + (50 * j) + (k * 25);
+
+                  				cubes.push(new cube(x,y,50,'#FFF000','1a'));
+                  			}
+                  		}
+              		}
+					setTimeout(animationLoop, 33);
+              });
+          </script> -->
+      </body>
+ </html>

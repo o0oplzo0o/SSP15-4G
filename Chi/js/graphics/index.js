@@ -2,6 +2,7 @@ var chi = new function()
 {
 	this.canvas;
 	this.context;
+	this.input = new Array();
 	this.object = new Array();
 	this.extra = new Array();
 	this.indicators = new Array();
@@ -9,15 +10,17 @@ var chi = new function()
 
 	this.refresh;
 
-	var padding = 30;
-	var spaceX = 130;
+	var padding = 25;
+	var spaceX = 150;
 	var spaceY = 500;
 	
-	this.init = function()
+	this.init = function(i)
 	{
 		this.canvas = document.getElementById("keccakCanvas");
 		this.context = this.canvas.getContext("2d");
 		this.context.font = "18px arial";
+
+		this.input = i;
 
     	// resize the canvas to fill browser window dynamically
 		/*
@@ -29,27 +32,77 @@ var chi = new function()
 		}
 		resizeCanvas();
 		*/
-	
-		// create 10 cubes
-		/*for (var i = 0; i < 5; ++i)
+
+		// start by showing state
+		this.showState();
+		
+		// 60 fps update loop
+		this.update();
+		this.refresh = setInterval(this.update,1000/60);
+	}
+
+	this.showState = function() {
+		//create new slice with specific ordering
+		for (var i = 0; i < 5; ++i)
 		{
-			var axisY = new Array();
-			this.object.push(axisY);
+			this.object.push(new Array());
+
+			for (var j = 0; j < 5; ++j)
+			{
+				var posX = ((i + 2) % 5) * 50;
+				var posY = ((j + 2) % 5) * 50;
+				var a = new cube();
+				this.object[i].push(a.createCube(
+					this.context,
+					515+posX,
+					275+posY,
+					50,
+					"#8ED6FF",
+					" ",
+					1
+				));
+			}
+		}
+
+		// start animation
+		this.animateState(0, 0.5, 600);
+	}
+
+	this.showOperations = function() {
+		// create 10 cubes
+		for (var i = 0; i < 5; ++i)
+		{
+			this.object.push(new Array());
 
 			for (var j = 0; j < 2; ++j)
 			{
 				var posX = i * spaceX;
 				var posY = j * spaceY;
 				var a = new cube();
-				axisY.push(a.createCube(this.context,padding+posX,padding+posY,50,"#8ED6FF",i+","+j));
+				this.object[i].push(a.createCube(
+					this.context,
+					padding+posX,
+					padding+posY,
+					50,
+					"#8ED6FF",
+					chi.input[i][j*4],
+					1
+				));
 			}
-		}*/
+		}
 		
 		for(var i=0;i<5;++i) {
-			// straight vertical line
 			var posX = i * spaceX;
-			var vertical = new line();
-			this.extra.push(vertical.createLine(this.context,padding+posX+37.5,padding+50,padding+posX+37.5,padding+spaceY-12.5));
+
+			// straight vertical line
+			var v = new line();
+			this.extra.push(v.createLine(
+				this.context,
+				padding+posX+37.5,
+				padding+50,
+				padding+posX+37.5,
+				padding+spaceY-12.5
+			));
 
 			// not group (tonot, tonot2, opnot)
 			var x1 = padding+posX+37.5;
@@ -166,16 +219,6 @@ var chi = new function()
 				"XOR"
 			));
 		}
-
-		// draw cubes on right
-		
-		// 60 fps update loop
-		this.update();
-		this.refresh = setInterval(this.update,1000/60);
-		this.create10cubes();
-		// start animation
-		this.animate(0, 0.5, 500);
-		//this.animate(0, 0.5, 500);
 	}
 
 	this.showRightCubes = function(i, op) {
@@ -195,13 +238,16 @@ var chi = new function()
 		if (op != "NOT") {
 			var aText;
 			var bText;
+			var rText;
 
 			if (op == "AND") {
-				aText = this.object[b][0].text;
-				bText = this.object[c][0].text;
+				aText = this.input[a][1];
+				bText = this.input[a][2];
+				rText = this.input[a][3];
 			} else if (op == "XOR") {
-				aText = this.object[a][0].text;
-				bText = this.object[b][0].text;
+				aText = this.input[a][0];
+				bText = this.input[a][3];
+				rText = this.input[a][4];
 			}
 
 			// draw 2 cubes
@@ -212,7 +258,8 @@ var chi = new function()
 				padding+posY,
 				40,
 				"#FFF000",
-				aText
+				aText,
+				1
 			));
 
 			posX += spaceX*2;
@@ -223,7 +270,22 @@ var chi = new function()
 				padding+posY,
 				40,
 				"#FFF000",
-				bText
+				bText,
+				1
+			));
+
+			posX = 6 * spaceX + padding;
+
+			// result cube	
+			var r = new cube();
+			chi.rcubes.push(r.createCube(
+				this.context,
+				padding+posX,
+				padding+posY,
+				40,
+				"#FFF000",
+				rText,
+				1
 			));
 		} else {
 			// draw 1 cube
@@ -234,21 +296,12 @@ var chi = new function()
 				padding+posY,
 				40,
 				"#FFF000",
-				this.object[b][0].text
+				this.object[b][0].text,
+				1
 			));
-		}
-		posX = 6 * spaceX + padding;
 
-		// result cube	
-		var r = new cube();
-		chi.rcubes.push(r.createCube(
-			this.context,
-			padding+posX,
-			padding+posY,
-			40,
-			"#FFF000",
-			"result"
-		));
+			posX = 6 * spaceX + padding;
+		}
 		
 		posY += 5;
 
@@ -281,25 +334,71 @@ var chi = new function()
 			chi.rcubes = [];
 		}, delay);
 	}
+	
+	this.animateState = function(y, s, g)
+	{
+		// animation settings
+		var delay = 1000;
 
-		this.create10cubes=function(){
+		// we want middle row (y = 0), so:
+		// this.object[3][0]
+		// this.object[4][0]
+		// this.object[0][0]
+		// this.object[1][0]
+		// this.object[2][0]
+
+		setTimeout(function(){
+			// set opacity of all unneeded cubes to 0.25
 			for (var i = 0; i < 5; ++i)
-		{
-			var axisY = new Array();
-			this.object.push(axisY);
-
-			for (var j = 0; j < 2; ++j)
 			{
-				var posX = i * spaceX;
-				var posY = j * spaceY;
-				var a = new cube();
-				axisY.push(a.createCube(this.context,padding+posX+25.5,padding+posY-10,30,"#8ED6FF",i+","+j));
+				for (var j = 0; j < 5; ++j)
+				{
+					if (j != 0) {
+						chi.object[i][j].alpha = 0.25;
+					}
+				}
 			}
-		}
-		}
-	
-	
-	this.animate = function(i, speed, gap)
+		}, delay);
+
+		delay += g;
+		setTimeout(function(){
+			// move all needed cubes on x axis
+			for (var i = 0; i < 5; ++i)
+			{
+				var posX = ((i+2)%5) * spaceX;
+				chi.object[i][0].moveTo(padding+posX,chi.object[i][0].pos.y,s);
+			}
+		}, delay);
+
+		delay += g;
+		setTimeout(function(){
+			// move all needed cubes on y axis
+			for (var i = 0; i < 5; ++i)
+			{
+				chi.object[i][0].moveTo(chi.object[i][0].pos.x,padding,s);
+			}
+		}, delay);
+
+		delay += g*2;
+		setTimeout(function(){
+			// clear all 25 cubes
+			for (var i = 0; i < 5; ++i)
+			{
+				chi.object[i] = [];
+			}
+
+			// replace with operations scene
+			chi.showOperations();
+		}, delay);
+
+		delay += g;
+		setTimeout(function(){
+			// start animation of operations
+			chi.animateOperations(0, s, g);
+		}, delay);
+	}
+
+	this.animateOperations = function(i, speed, gap)
 	{
 		// animation settings
 		var delay = 1000;
@@ -322,7 +421,8 @@ var chi = new function()
 			padding+posY,
 			20,
 			"#FFF000",
-			" "
+			" ",
+			1
 		));
 
 		posX = b*spaceX+25;
@@ -333,7 +433,8 @@ var chi = new function()
 			padding+posY,
 			20,
 			"#FFF000",
-			" "
+			" ",
+			1
 		));
 
 		posX = c*spaceX+25;
@@ -344,7 +445,8 @@ var chi = new function()
 			padding+posY,
 			20,
 			"#FFF000",
-			" "
+			" ",
+			1
 		));
 
 		/*
@@ -417,7 +519,7 @@ var chi = new function()
 			chi.indicators = [];
 
 			if (k < 4) {
-				chi.animate(k+1, 0.5, 500);
+				chi.animateOperations(k+1, 0.5, 500);
 			} else {
 				clearInterval(this.refresh);
 			}
@@ -432,5 +534,3 @@ var chi = new function()
 		render.update();
 	}
 }
-
-chi.init();

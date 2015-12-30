@@ -4,6 +4,7 @@ var cube = function()
 	this.size = 0;
 	this.color = 0xffffff;
 	this.text = "";
+	this.alpha = 1;
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -11,13 +12,14 @@ var cube = function()
 	this.speed = 0;
 	this.factor = 0;
 	
-	this.createCube = function(context, x, y, size, color, text)
+	this.createCube = function(context, x, y, size, color, text, alpha)
 	{
 		this.pos.x = x;
 		this.pos.y = y;
 		this.size = size;
 		this.color = color;
 		this.text = text;
+		this.alpha = alpha;
 		
 		this.draw(context);
 		
@@ -32,8 +34,12 @@ var cube = function()
 		context.beginPath();
 		context.fillStyle = this.color; //'#8ED6FF';
 		context.strokeStyle = "Black";
-		context.save();
 
+		//alpha
+		context.globalAlpha = this.alpha;
+
+		context.save();
+		
 		//actual face
 		context.beginPath();
 		context.rect(this.pos.x, this.pos.y, this.size, this.size);
@@ -63,6 +69,8 @@ var cube = function()
 		context.stroke();
 		context.fillStyle = 'Black'; //'#8ED6FF';
 		context.fillText(this.text,this.pos.x+(0.15 * this.size),this.pos.y+(0.70 * this.size));
+
+		context.globalAlpha = 1;
 	}
 	
 	this.getPosition = function()

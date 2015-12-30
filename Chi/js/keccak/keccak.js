@@ -1,5 +1,9 @@
 var KECCAK = new function()
 {
+	// byan
+	var animate = new Array();
+	var done = false;
+	
 	this.BLOCKSIZE = [25, 50, 100, 200, 400, 800, 1600];
 	
 	// Round Constants
@@ -278,6 +282,49 @@ var KECCAK = new function()
 			}
 		}
 		//Chi step End
+
+		// animate Chi part
+		if (done == false) {
+			done = true;
+
+			//var strB = this.convertTableToStr(B);
+
+			for(var i=0; i<5; i++)
+			{
+				animate.push(new Array());
+				/*
+				var str = parseInt(strB[i][0], 16);
+				var bin = parseInt(str).toString(2);
+
+				while (bin.length < 4) {
+					bin = "0" + bin;
+				}
+
+				animate.push(bin);
+				*/
+
+				// push a
+				var tempA = bigInt(B[i][1]);
+				animate[i].push(common.hex(tempA));
+				
+				// push not
+				var tempB = bigInt(B[common.mod(i+1,5)][1]).add(1).multiply(-1);
+				animate[i].push(common.hex(tempB));
+
+				// push c
+				var tempC = bigInt(B[common.mod(i+2,5)][1]);
+				animate[i].push(common.hex(tempC));
+
+				// push and
+				var tempD = tempB.and(tempC);
+				animate[i].push(common.hex(tempD));
+
+				// push xor
+				var tempE = tempA.xor(tempD);
+				animate[i].push(common.hex(tempE));
+			}
+			chi.init(animate);
+		}
 		
 		//Iota step Start
 		A[0][0] = bigInt(A[0][0]).xor(RCfixed).toString();

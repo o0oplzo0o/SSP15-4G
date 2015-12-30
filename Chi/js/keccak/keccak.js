@@ -286,7 +286,7 @@ var KECCAK = new function()
 		// animate Chi part
 		if (done == false) {
 			done = true;
-
+			document.getElementById("keccakCanvas").style.background='-webkit-gradient(linear, left top, left bottom, color-stop(0, #DEFCD4), color-stop(100, #abbd73))';
 			//var strB = this.convertTableToStr(B);
 
 			for(var i=0; i<5; i++)

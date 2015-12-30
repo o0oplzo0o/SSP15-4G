@@ -11,6 +11,7 @@
 		<script src="js/keccak/index.js"></script>
 	</head>
 	<body>
+		
 		<div class="one">
 		<select class="round1" id="hashFunction" onChange="index.hashFunctionChanged()">
 			<option value=0>select...</option>
@@ -22,8 +23,11 @@
 		
 		<input class="round" type="submit" value="submit" onclick="index.hash()">
 		</div>
-		<div class="one">
-		<canvas id="keccakCanvas" width="1280" height="600">
+		<div class="nav">
+		
+		</div>
+		<div id="KCanvas">
+		<canvas class="stylecanvas" id="keccakCanvas" width="1280" height="600">
               <p>Canvas not supported.</p>
           </canvas>
 		  <script src="js/graphics/util.js"></script>
@@ -33,8 +37,17 @@
           <script src="js/graphics/operator.js"></script>
           <script src="js/graphics/index.js"></script>
 		</div>
-		<div>
-			<p>Result:</br><label id="hash_result"></label></p>
+		<div class="one">
+		<div class="form-style-3">
+			<form>
+			<fieldset>
+			<span>	result: 
+			</span><textarea readonly id="hash_result"></textarea>
+			
+			
+			</fieldset>
+			</form>
 		</div>
+		</div.
 	</body>
 </html>

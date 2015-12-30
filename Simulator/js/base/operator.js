@@ -6,6 +6,9 @@ var operator = function()
 	this.alpha = 1;
 	this.text = "";
 	
+	this.font = "Arial";
+	this.fontsize = "18";
+	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
 	this.dest = {x:0,y:0};
@@ -30,6 +33,7 @@ var operator = function()
 	this.draw = function(context)
 	{
 		var prevAlpha = context.globalAlpha;
+		var prevFont = context.font;
 
 		// settings
 		context.fillStyle = this.color;
@@ -43,10 +47,12 @@ var operator = function()
 		context.stroke();
 
 		// text
+		context.font = this.fontsize + "px " + this.font;
 		context.fillStyle = "#000000";
 		context.fillText(this.text,this.pos.x-20,this.pos.y+8);
 
 		context.globalAlpha = prevAlpha;
+		context.font = prevFont;
 	}
 	
 	this.getPosition = function()

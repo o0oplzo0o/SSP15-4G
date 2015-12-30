@@ -5,6 +5,9 @@ var cube = function()
 	this.color = "#FFFFFF";
 	this.alpha = 1;
 	this.text = "";
+
+	this.font = "Arial";
+	this.fontsize = "18";
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -30,9 +33,10 @@ var cube = function()
 	this.draw = function(context)
 	{
 		var prevAlpha = context.globalAlpha;
+		var prevFont = context.font;
 
 		//cube
-		context.fillStyle = this.color; //'#8ED6FF';
+		context.fillStyle = this.color;
 		context.strokeStyle = "#000000";
 		context.globalAlpha = this.alpha;
 		
@@ -43,6 +47,7 @@ var cube = function()
 		context.stroke();
 
 		//top face
+		context.fillStyle = convertColor(this.color, 0.10);
 		context.beginPath();
 		context.moveTo(this.pos.x,this.pos.y);
 		context.lineTo((this.pos.x+(this.size/2)),(this.pos.y-(this.size/2)));
@@ -54,6 +59,7 @@ var cube = function()
 		context.stroke();
 
 		//right face
+		context.fillStyle = convertColor(this.color, -0.25);
 		context.beginPath();
 		context.moveTo((this.pos.x+this.size),this.pos.y);
 		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y-(this.size/2)));
@@ -65,10 +71,12 @@ var cube = function()
 		context.stroke();
 		
 		//text
+		context.font = this.fontsize + "px " + this.font;
 		context.fillStyle = "#000000";
 		context.fillText(this.text,this.pos.x+(0.15 * this.size),this.pos.y+(0.70 * this.size));
 
 		context.globalAlpha = prevAlpha;
+		context.font = prevFont;
 	}
 	
 	this.getPosition = function()

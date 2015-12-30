@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-	 <meta charset="utf-8" />
+	<meta charset="utf-8" />
 	<head>
 		<title>KECCAK Simulator - Chi Prototype</title>
 
@@ -9,45 +9,43 @@
 		<script src="js/keccak/common.js"></script>
 		<script src="js/keccak/keccak.js"></script>
 		<script src="js/keccak/index.js"></script>
+
+		<script src="js/base/util.js"></script>
+		<script src="js/base/cube.js"></script>
+		<script src="js/base/line.js"></script>
+		<script src="js/base/operator.js"></script>
 	</head>
 	<body>
-		
 		<div class="one">
-		<select class="round1" id="hashFunction" onChange="index.hashFunctionChanged()">
-			<option value=0>select...</option>
-			<option value=1>shake128,output256</option>
-			<option value=2>shake256,output512</option>
-		</select>
-		
-		<textarea name="textarea" id="input_text"></textarea>
-		
-		<input class="round" type="submit" value="submit" onclick="index.hash()">
+			<select class="round1" id="hashFunction" onChange="index.hashFunctionChanged()">
+				<option value=0>select...</option>
+				<option value=1>shake128,output256</option>
+				<option value=2>shake256,output512</option>
+			</select>
+			
+			<textarea name="textarea" id="input_text"></textarea>
+
+			<input class="round" type="submit" value="submit" onclick="index.hash()" />
 		</div>
 		<div class="nav">
 		
 		</div>
 		<div id="KCanvas">
-		<canvas class="stylecanvas" id="keccakCanvas" width="1280" height="600">
-              <p>Canvas not supported.</p>
-          </canvas>
-		  <script src="js/graphics/util.js"></script>
-          <script src="js/graphics/render.js"></script>
-          <script src="js/graphics/cube.js"></script>
-          <script src="js/graphics/line.js"></script>
-          <script src="js/graphics/operator.js"></script>
-          <script src="js/graphics/index.js"></script>
+			<canvas class="stylecanvas" id="keccakCanvas" width="1280" height="600">
+				<p>Canvas not supported.</p>
+			</canvas>
+			<script src="js/graphics/chi_render.js"></script>
+			<script src="js/graphics/chi.js"></script>
 		</div>
 		<div class="one">
-		<div class="form-style-3">
-			<form>
-			<fieldset>
-			<span>	result: 
-			</span><textarea readonly id="hash_result"></textarea>
-			
-			
-			</fieldset>
-			</form>
+			<div class="form-style-3">
+				<form>
+				<fieldset>
+					<span>	result:  </span>
+					<textarea readonly id="hash_result"></textarea>
+				</fieldset>
+				</form>
+			</div>
 		</div>
-		</div.
 	</body>
 </html>

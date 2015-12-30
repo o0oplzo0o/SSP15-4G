@@ -241,8 +241,8 @@ var inputToState = new function()
 		var skeleton = new slice();
 		this.extra.push(skeleton.createSlice(
 			this.context,
-			640,
-			300,
+			515,
+			175,
 			50,
 			"#8ED6FF",
 			0.25,
@@ -261,7 +261,7 @@ var inputToState = new function()
 				var stateX = (x+2)%5;
 				var stateY = (-y+7)%5;
 					
-				inputToState.object[i].moveTo(stateX*50+640,stateY*50+300,speed);
+				inputToState.object[i].moveTo(stateX*50+515,stateY*50+175,speed);
 			}
 		}, delay);
 
@@ -298,7 +298,7 @@ var inputToState = new function()
 				var stateX = (x+2)%5;
 				var stateY = (-y+7)%5;
 					
-				inputToState.object[i].moveTo(stateX*50+640,stateY*50+300,speed);
+				inputToState.object[i].moveTo(stateX*50+515,stateY*50+175,speed);
 			}
 		}, delay);
 

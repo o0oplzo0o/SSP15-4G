@@ -42,6 +42,13 @@ var inputToState = new function()
 	this.spaceX = 150;
 	this.spaceY = 500;
 	
+	
+	// animation status
+	this.done=false;
+	
+	//
+	this.blink;
+	
 	this.init = function(inputString)
 	{
 		this.canvas = document.getElementById("keccakCanvas");
@@ -51,7 +58,7 @@ var inputToState = new function()
 		this.inputString = inputString;
 
 		// hardcoded default
-		this.inputString = "abcdefghijklmnopqrstuvwxyz1234567890";
+		//this.inputString = "abcdefghijklmnopqrstuvwxyz1234567890";
 
 		// get number of blocks
 		this.numBlocks = Math.floor(this.inputString.length / 8);
@@ -65,6 +72,9 @@ var inputToState = new function()
 		// 60 fps update loop
 		this.update();
 		this.refresh = setInterval(this.update,1000/60);
+		//blink div text
+		this.blink=setInterval(this.textblink, 1000);
+		
 	}
 
 	this.showInput = function() {
@@ -320,7 +330,7 @@ var inputToState = new function()
 		setTimeout(function(){
 			// stop update loop
 			clearInterval(inputToState.refresh);
-
+			clearInterval(inputToState.blink);
 			// destroy all objects
 			for (var i=0; i<inputToState.input.length; ++i) {
 				inputToState.input[i] = null;
@@ -331,7 +341,9 @@ var inputToState = new function()
 				inputToState.object[i] = null;
 			}
 			inputToState.object = [];
+			
 		}, delay);
+		this.done=true;
 	}
 
 	// loop
@@ -339,8 +351,13 @@ var inputToState = new function()
 	{
 		time.updateTime();
 		
-		render.update();
+		inputToState_render.update();
+		
+	}
+	this.textblink=function(){
+		var inputtostate_text = document.getElementById('init');
+		inputtostate_text.style.visibility = (inputtostate_text.style.visibility == 'hidden' ? '' : 'hidden');
+		
 	}
 }
 
-inputToState.init();

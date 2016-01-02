@@ -7,21 +7,25 @@ var chi = new function()
 	this.extra = new Array();
 	this.indicators = new Array();
 	this.rcubes = new Array();
-
+	
 	this.refresh;
 
 	var padding = 25;
 	var spaceX = 150;
 	var spaceY = 500;
 	
+	this.blink;
+	
+	
 	this.init = function(i)
 	{
+		
 		this.canvas = document.getElementById("keccakCanvas");
 		this.context = this.canvas.getContext("2d");
 		this.context.font = "18px arial";
 
 		this.input = i;
-
+		
     	// resize the canvas to fill browser window dynamically
 		/*
 		window.addEventListener('resize', resizeCanvas, false);
@@ -38,8 +42,10 @@ var chi = new function()
 		
 		// 60 fps update loop
 		this.update();
+		this.blink=setInterval(this.textblink, 1000);
 		this.refresh = setInterval(this.update,1000/60);
 	}
+	
 
 	this.showState = function() {
 		//create new slice with specific ordering
@@ -544,8 +550,10 @@ var chi = new function()
 				chi.animateOperations(i+1, 0.5, 500);
 			} else {
 				clearInterval(this.refresh);
+				
 			}
 		}, delay);
+		
 	}
 	
 	// loop
@@ -553,6 +561,13 @@ var chi = new function()
 	{
 		time.updateTime();
 		
-		render.update();
+		chi_render.update();
 	}
+	
+	this.textblink=function(){
+		var chi_text = document.getElementById('chi');
+		chi_text.style.visibility = (chi_text.style.visibility == 'hidden' ? '' : 'hidden');
+		
+	}
+	
 }

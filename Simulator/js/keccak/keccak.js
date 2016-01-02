@@ -284,11 +284,9 @@ var KECCAK = new function()
 		//Chi step End
 
 		// animate Chi part
-		if (done == false) {
+		if (done == false && inputToState.done==true) {
 			done = true;
-			document.getElementById("keccakCanvas").style.background='-webkit-gradient(linear, left top, left bottom, color-stop(0, #DEFCD4), color-stop(100, #abbd73))';
-			//var strB = this.convertTableToStr(B);
-
+			//document.getElementById("keccakCanvas").style.background='-webkit-gradient(linear, left top, left bottom, color-stop(0, #DEFCD4), color-stop(100, #abbd73))';
 			for(var i=0; i<5; i++)
 			{
 				animate.push(new Array());

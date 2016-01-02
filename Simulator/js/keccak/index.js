@@ -14,6 +14,11 @@ var index = new function()
 		var d = document.getElementById("input_text");
 		
 		var str = d.value;
+		//animation:init
+		inputToState.init(str);
+		
+		//settimeout for chi
+		setTimeout(function(){
 		var hexStr = common.string2hex(str);
 		var hexValue = common.sizeOfHex(hexStr);
 		
@@ -23,6 +28,7 @@ var index = new function()
 		
 		var l = document.getElementById("hash_result");
 		l.textContent = result;
+		},14000);
 	};
 	
 	this.hashFunctionChanged = function()

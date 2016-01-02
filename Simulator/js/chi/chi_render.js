@@ -1,4 +1,4 @@
-var render = new function()
+var chi_render = new function()
 {
 	//Render loop
 	this.update = function()

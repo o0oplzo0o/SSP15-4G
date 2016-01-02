@@ -73,7 +73,7 @@ var inputToState = new function()
 		this.update();
 		this.refresh = setInterval(this.update,1000/60);
 		//blink div text
-		this.blink=setInterval(this.textblink, 1000);
+		this.blink=setInterval(this.textblink, 750);
 		
 	}
 

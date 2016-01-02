@@ -42,7 +42,7 @@ var chi = new function()
 		
 		// 60 fps update loop
 		this.update();
-		this.blink=setInterval(this.textblink, 1000);
+		this.blink=setInterval(this.textblink, 750);
 		this.refresh = setInterval(this.update,1000/60);
 	}
 	

@@ -24,7 +24,6 @@ var inputToState = new function()
 {
 	this.canvas;
 	this.context;
-
 	this.speedMultiplier = 1;
 	
 	// track moving object
@@ -48,13 +47,6 @@ var inputToState = new function()
 	this.padding = 25;
 	this.spaceX = 150;
 	this.spaceY = 500;
-	
-	
-	// animation status
-	this.done=false;
-	
-	//
-	this.blink;
 	
 	this.init = function(inputString)
 	{
@@ -80,9 +72,6 @@ var inputToState = new function()
 		// 60 fps update loop
 		this.update();
 		this.refresh = setInterval(this.update,1000/60);
-		
-		//blink div text
-		this.blink = setInterval(this.textblink, 750);
 	}
 
 	this.showInput = function() {
@@ -93,7 +82,7 @@ var inputToState = new function()
 			// (context, x, y, font, size, color, alpha, text)
 			this.input.push(str.createString(
 				this.context,
-				i*105,
+				i*105, // my measurements are exact!
 				50,
 				"Consolas",
 				24,
@@ -103,24 +92,21 @@ var inputToState = new function()
 			));
 		}
 
-		// continue split input animation (play 1)
-		setTimeout(function() {
-			inputToState.playAnimationPhase(++inputToState.currentPhase);
-		}, 1000*this.speedMultiplier);
+		// continue by showing split input animation
+		//this.splitInput(1000, 750, 0.5);
+		setTimeout(function(){
+			inputToState.playAnimationPhase(++inputToState.currentPhase); // Play 1
+		},1000*this.speedMultiplier);
 	}
-	
 	this.splitInput = function() {
-		inputToState.targetCounter = inputToState.numBlocks;
-		console.log("targetCounter = " + inputToState.targetCounter);
+		// delay is the time before the first animation plays
+		// gap is the gap between consecutive animations
+		// speed is the speed in which the animation plays
 
+		inputToState.targetCounter = inputToState.numBlocks;
 		// animation showing string being split
 		for (var i=0; i<inputToState.numBlocks; ++i) {
-			inputToState.input[i].moveTo(
-				i*250,inputToState.input[i].pos.y,
-				0.5,
-				inputToState.objectHitTarget
-			);
-			console.log("moving");
+			inputToState.input[i].moveTo(i*250,inputToState.input[i].pos.y,0.5,inputToState.objectHitTarget);
 		}
 
 		// continue
@@ -129,7 +115,6 @@ var inputToState = new function()
 			// inputToState.showConversion();
 		// }, delay);
 	}
-
 	this.showConversion = function() {
 		// show converted input in hex format
 		for (var i=0; i<this.numBlocks; ++i) {
@@ -400,29 +385,20 @@ var inputToState = new function()
 	{
 		time.updateTime();
 		
-		inputToState_render.update();
-		
+		render.update();
 	}
-	this.textblink=function(){
-		var inputtostate_text = document.getElementById('init');
-		inputtostate_text.style.visibility = (inputtostate_text.style.visibility == 'hidden' ? '' : 'hidden');
-	}
-
+	
 	// Function to keep track of the number of cubes reaching the destination
 	this.objectHitTarget = function()
 	{
-		console.log("hitCounter = " + inputToState.hitCounter);
-		++inputToState.hitCounter;
-		
+		inputToState.hitCounter++;
 		if(inputToState.hitCounter >= inputToState.targetCounter)
 		{
-			console.log("triggered, going next");
 			inputToState.reorderCube();
 			inputToState.hitCounter = 0;
 			inputToState.playAnimationPhase(++inputToState.currentPhase);
 		}
 	}
-
 	this.reorderCube = function()
 	{
 		var newSortedListX = new Array();
@@ -535,3 +511,5 @@ var inputToState = new function()
 		}
 	}
 }
+
+inputToState.init();

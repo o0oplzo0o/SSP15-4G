@@ -310,7 +310,7 @@ var chi = new function()
 				"XOR"
 			));
 		}
-	}	
+	}
 
 	this.animateOperations = function(i, speed, gap)
 	{
@@ -563,8 +563,42 @@ var chi = new function()
 		chi_render.update();
 	}
 	
-	this.textblink=function(){
+	this.textblink = function(){
 		var chi_text = document.getElementById('chi');
 		chi_text.style.visibility = (chi_text.style.visibility == 'hidden' ? '' : 'hidden');
+	}
+
+	this.objectHitTarget = function()
+	{
+		console.log("hitCounter = " + inputToState.hitCounter);
+		++inputToState.hitCounter;
+		
+		if(inputToState.hitCounter >= inputToState.targetCounter)
+		{
+			console.log("triggered, going next");
+			inputToState.reorderCube();
+			inputToState.hitCounter = 0;
+			inputToState.playAnimationPhase(++inputToState.currentPhase);
+		}
+	}
+
+	// Animation phases
+	this.playAnimationPhase = function(phase)
+	{
+		switch(phase)
+		{
+			case 0:
+				this.showState();
+				break;
+			case 1:
+				this.animateState();
+				break;
+			case 2:
+				this.showOperations();
+				break;
+			case 3:
+				this.animateOperations();
+				break;
+		}
 	}
 }

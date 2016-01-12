@@ -43,18 +43,15 @@ var inputToState = new function()
 
 	// animation loop
 	this.refresh;
+	this.blink;
 
 	// display metrics
 	this.padding = 25;
 	this.spaceX = 150;
 	this.spaceY = 500;
 	
-	
 	// animation status
 	this.done=false;
-	
-	//
-	this.blink;
 	
 	this.init = function(inputString)
 	{
@@ -401,9 +398,9 @@ var inputToState = new function()
 		time.updateTime();
 		
 		inputToState_render.update();
-		
 	}
-	this.textblink=function(){
+
+	this.textblink = function(){
 		var inputtostate_text = document.getElementById('init');
 		inputtostate_text.style.visibility = (inputtostate_text.style.visibility == 'hidden' ? '' : 'hidden');
 	}

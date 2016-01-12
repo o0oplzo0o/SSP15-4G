@@ -2,20 +2,22 @@ var chi = new function()
 {
 	this.canvas;
 	this.context;
+
+	// animation sets
 	this.input = new Array();
 	this.object = new Array();
 	this.extra = new Array();
 	this.indicators = new Array();
 	this.rcubes = new Array();
 	
+	// animation timers
 	this.refresh;
-
+	this.blink;
+	
+	// display settings	
 	var padding = 25;
 	var spaceX = 150;
 	var spaceY = 500;
-	
-	this.blink;
-	
 	
 	this.init = function(i)
 	{
@@ -45,7 +47,6 @@ var chi = new function()
 		this.refresh = setInterval(this.update,1000/60);
 	}
 	
-
 	this.showState = function() {
 		//create new slice with specific ordering
 		for (var i = 0; i < 5; ++i)
@@ -71,6 +72,70 @@ var chi = new function()
 
 		// start animation
 		this.animateState(0, 0.5, 600);
+	}
+
+	
+	this.animateState = function(y, s, g)
+	{
+		// animation settings
+		var delay = 1000;
+
+		// we want middle row (y = 0), so:
+		// this.object[3][0]
+		// this.object[4][0]
+		// this.object[0][0]
+		// this.object[1][0]
+		// this.object[2][0]
+
+		setTimeout(function(){
+			// set opacity of all unneeded cubes to 0.25
+			for (var i = 0; i < 5; ++i)
+			{
+				for (var j = 0; j < 5; ++j)
+				{
+					if (j != 0) {
+						chi.object[i][j].alpha = 0.25;
+					}
+				}
+			}
+		}, delay);
+
+		delay += g;
+		setTimeout(function(){
+			// move all needed cubes on x axis
+			for (var i = 0; i < 5; ++i)
+			{
+				var posX = ((i+2)%5) * spaceX;
+				chi.object[i][0].moveTo(padding+posX,chi.object[i][0].pos.y,s);
+			}
+		}, delay);
+
+		delay += g;
+		setTimeout(function(){
+			// move all needed cubes on y axis
+			for (var i = 0; i < 5; ++i)
+			{
+				chi.object[i][0].moveTo(chi.object[i][0].pos.x,padding,s);
+			}
+		}, delay);
+
+		delay += g*2;
+		setTimeout(function(){
+			// clear all 25 cubes
+			for (var i = 0; i < 5; ++i)
+			{
+				chi.object[i] = [];
+			}
+
+			// replace with operations scene
+			chi.showOperations();
+		}, delay);
+
+		delay += g;
+		setTimeout(function(){
+			// start animation of operations
+			chi.animateOperations(0, s, g);
+		}, delay);
 	}
 
 	this.showOperations = function() {
@@ -245,185 +310,7 @@ var chi = new function()
 				"XOR"
 			));
 		}
-	}
-
-	this.showRightCubes = function(i, op) {
-		// animation settings
-		var delay = 1000;
-		var s = 0.5;
-		var g = 500;
-
-		var k = i%5;
-		var a = k%5;
-		var b = (k+1)%5;
-		var c = (k+2)%5;
-
-		var posX = 5 * spaceX + padding;
-		var posY = 0.5 * spaceY;
-
-		if (op != "NOT") {
-			var aText;
-			var bText;
-			var rText;
-
-			if (op == "AND") {
-				aText = this.input[a][1];
-				bText = this.input[a][2];
-				rText = this.input[a][3];
-			} else if (op == "XOR") {
-				aText = this.input[a][0];
-				bText = this.input[a][3];
-				rText = this.input[a][4];
-			}
-
-			// draw 2 cubes
-			var a = new cube();
-			chi.rcubes.push(a.createCube(
-				this.context,
-				padding+posX,
-				padding+posY,
-				40,
-				"#FFF000",
-				1,
-				aText
-			));
-
-			posX += spaceX*2;
-			var b = new cube();
-			chi.rcubes.push(b.createCube(
-				this.context,
-				padding+posX,
-				padding+posY,
-				40,
-				"#FFF000",
-				1,
-				bText
-			));
-
-			posX = 6 * spaceX + padding;
-
-			// result cube	
-			var r = new cube();
-			chi.rcubes.push(r.createCube(
-				this.context,
-				padding+posX,
-				padding+posY,
-				40,
-				"#FFF000",
-				1,
-				rText
-			));
-		} else {
-			// draw 1 cube
-			var a = new cube();
-			chi.rcubes.push(a.createCube(
-				this.context,
-				padding+posX,
-				padding+posY,
-				40,
-				"#FFF000",
-				1,
-				this.object[b][0].text
-			));
-
-			posX = 6 * spaceX + padding;
-		}
-		
-		posY += 5;
-
-		// draw operator
-		var o = new operator();
-		chi.rcubes.push(o.createOperator(
-			this.context,
-			padding+posX+25,
-			padding+posY,
-			90,
-			"#ffffff",
-			1,
-			op
-		));
-
-		// go into operator
-		setTimeout(function(){
-			chi.rcubes[0].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y,s);
-			chi.rcubes[1].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y,s);
-		}, delay);
-
-		// result comes out
-		delay += g;
-		setTimeout(function(){
-			chi.rcubes[2].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y+spaceX,s);
-		}, delay);
-
-		// continue
-		delay += 1250;
-		setTimeout(function(){
-			chi.rcubes = [];
-		}, delay);
-	}
-	
-	this.animateState = function(y, s, g)
-	{
-		// animation settings
-		var delay = 1000;
-
-		// we want middle row (y = 0), so:
-		// this.object[3][0]
-		// this.object[4][0]
-		// this.object[0][0]
-		// this.object[1][0]
-		// this.object[2][0]
-
-		setTimeout(function(){
-			// set opacity of all unneeded cubes to 0.25
-			for (var i = 0; i < 5; ++i)
-			{
-				for (var j = 0; j < 5; ++j)
-				{
-					if (j != 0) {
-						chi.object[i][j].alpha = 0.25;
-					}
-				}
-			}
-		}, delay);
-
-		delay += g;
-		setTimeout(function(){
-			// move all needed cubes on x axis
-			for (var i = 0; i < 5; ++i)
-			{
-				var posX = ((i+2)%5) * spaceX;
-				chi.object[i][0].moveTo(padding+posX,chi.object[i][0].pos.y,s);
-			}
-		}, delay);
-
-		delay += g;
-		setTimeout(function(){
-			// move all needed cubes on y axis
-			for (var i = 0; i < 5; ++i)
-			{
-				chi.object[i][0].moveTo(chi.object[i][0].pos.x,padding,s);
-			}
-		}, delay);
-
-		delay += g*2;
-		setTimeout(function(){
-			// clear all 25 cubes
-			for (var i = 0; i < 5; ++i)
-			{
-				chi.object[i] = [];
-			}
-
-			// replace with operations scene
-			chi.showOperations();
-		}, delay);
-
-		delay += g;
-		setTimeout(function(){
-			// start animation of operations
-			chi.animateOperations(0, s, g);
-		}, delay);
-	}
+	}	
 
 	this.animateOperations = function(i, speed, gap)
 	{
@@ -548,13 +435,126 @@ var chi = new function()
 			if (i < 4) {
 				chi.animateOperations(i+1, 0.5, 500);
 			} else {
-				clearInterval(this.refresh);
-				
+				clearInterval(this.refresh);			
 			}
 		}, delay);
-		
 	}
 	
+	this.showRightCubes = function(i, op) {
+		// animation settings
+		var delay = 1000;
+		var s = 0.5;
+		var g = 500;
+
+		var k = i%5;
+		var a = k%5;
+		var b = (k+1)%5;
+		var c = (k+2)%5;
+
+		var posX = 5 * spaceX + padding;
+		var posY = 0.5 * spaceY;
+
+		if (op != "NOT") {
+			var aText;
+			var bText;
+			var rText;
+
+			if (op == "AND") {
+				aText = this.input[a][1];
+				bText = this.input[a][2];
+				rText = this.input[a][3];
+			} else if (op == "XOR") {
+				aText = this.input[a][0];
+				bText = this.input[a][3];
+				rText = this.input[a][4];
+			}
+
+			// draw 2 cubes
+			var a = new cube();
+			chi.rcubes.push(a.createCube(
+				this.context,
+				padding+posX,
+				padding+posY,
+				40,
+				"#FFF000",
+				1,
+				aText
+			));
+
+			posX += spaceX*2;
+			var b = new cube();
+			chi.rcubes.push(b.createCube(
+				this.context,
+				padding+posX,
+				padding+posY,
+				40,
+				"#FFF000",
+				1,
+				bText
+			));
+
+			posX = 6 * spaceX + padding;
+
+			// result cube	
+			var r = new cube();
+			chi.rcubes.push(r.createCube(
+				this.context,
+				padding+posX,
+				padding+posY,
+				40,
+				"#FFF000",
+				1,
+				rText
+			));
+		} else {
+			// draw 1 cube
+			var a = new cube();
+			chi.rcubes.push(a.createCube(
+				this.context,
+				padding+posX,
+				padding+posY,
+				40,
+				"#FFF000",
+				1,
+				this.object[b][0].text
+			));
+
+			posX = 6 * spaceX + padding;
+		}
+		
+		posY += 5;
+
+		// draw operator
+		var o = new operator();
+		chi.rcubes.push(o.createOperator(
+			this.context,
+			padding+posX+25,
+			padding+posY,
+			90,
+			"#ffffff",
+			1,
+			op
+		));
+
+		// go into operator
+		setTimeout(function(){
+			chi.rcubes[0].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y,s);
+			chi.rcubes[1].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y,s);
+		}, delay);
+
+		// result comes out
+		delay += g;
+		setTimeout(function(){
+			chi.rcubes[2].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y+spaceX,s);
+		}, delay);
+
+		// continue
+		delay += 1250;
+		setTimeout(function(){
+			chi.rcubes = [];
+		}, delay);
+	}
+
 	// loop
 	this.update = function()
 	{
@@ -566,7 +566,5 @@ var chi = new function()
 	this.textblink=function(){
 		var chi_text = document.getElementById('chi');
 		chi_text.style.visibility = (chi_text.style.visibility == 'hidden' ? '' : 'hidden');
-		
 	}
-	
 }

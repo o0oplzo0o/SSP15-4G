@@ -15,6 +15,8 @@ var operator = function()
 	this.speed = 0;
 	this.factor = 0;
 	
+	this.onHitTargetCB = null; //Function callback when cube moveTo hit destination
+	
 	this.createOperator = function(context, x, y, size, color, alpha, text)
 	{
 		this.pos.x = x;
@@ -60,13 +62,27 @@ var operator = function()
 		return this.pos;
 	}
 	
-	this.moveTo = function(x,y,speed)
+	this.moveTo = function(x, y, speed, cb)
 	{
+		if(cb === undefined)
+			this.onHitTargetCB = null;
+		else
+			this.onHitTargetCB = cb;
+		
 		this.factor = 0;
 		this.ori = this.pos;
 		this.dest = {x:x,y:y};
 		this.speed = speed;
 		this.isMoving = true;
+	}
+	
+	this.onHitTarget = function(self)
+	{
+		console.log(self.onHitTargetCB);
+		if(self.onHitTargetCB != null)
+			self.onHitTargetCB();
+		
+		self.onHitTargetCB = null;
 	}
 	
 	//Specific object update loop
@@ -80,6 +96,7 @@ var operator = function()
 			if(self.factor >= 1)
 			{
 				self.isMoving = false;
+				self.onHitTarget(self);
 			}
 			self.factor += time.dt * self.speed;
 		}

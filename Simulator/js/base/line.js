@@ -11,6 +11,8 @@ var line = function()
 	this.speed = 0;
 	this.factor = 0;
 	
+	this.onHitTargetCB = null; //Function callback when cube moveTo hit destination
+	
 	this.createLine = function(context, x, y, x2, y2, color, alpha)
 	{
 		this.pos.x = x;
@@ -48,14 +50,29 @@ var line = function()
 		return this.pos;
 	}
 	
-	this.moveTo = function(x,y,speed)
+	this.moveTo = function(x, y, speed, cb)
 	{
+		if(cb === undefined)
+			this.onHitTargetCB = null;
+		else
+			this.onHitTargetCB = cb;
+		
 		this.factor = 0;
 		this.ori = this.pos;
 		this.dest = {x:x,y:y};
 		this.speed = speed;
 		this.isMoving = true;
 	}
+	
+	this.onHitTarget = function(self)
+	{
+		console.log(self.onHitTargetCB);
+		if(self.onHitTargetCB != null)
+			self.onHitTargetCB();
+		
+		self.onHitTargetCB = null;
+	}
+
 	
 	//Specific object update loop
 	this.update = function(self)
@@ -68,6 +85,7 @@ var line = function()
 			if(self.factor >= 1)
 			{
 				self.isMoving = false;
+				self.onHitTarget(self);
 			}
 			self.factor += time.dt * self.speed;
 		}

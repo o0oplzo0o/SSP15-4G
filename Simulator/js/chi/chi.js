@@ -3,13 +3,22 @@ var chi = new function()
 	this.canvas;
 	this.context;
 
+	// track moving object
+	this.currentPhase = 0;
+	this.hitCounter = 0;
+	this.targetCounter = 0;
+	this.index = 0;
+
 	// animation sets
-	this.input = new Array();
-	this.object = new Array();
-	this.extra = new Array();
-	this.indicators = new Array();
-	this.rcubes = new Array();
+	this.cubes = new Array();
+	this.lines = new Array();
+	this.operators = new Array();
+	this.indicators = new Array(); // yellow cubes
+	this.tables = new Array();
 	
+	// storage
+	this.input = new Array();
+
 	// animation timers
 	this.refresh;
 	this.blink;
@@ -39,11 +48,11 @@ var chi = new function()
 		*/
 
 		// start by showing state
-		this.showState();
+		this.playAnimationPhase(this.currentPhase); // Play 0
 		
 		// 60 fps update loop
 		this.update();
-		this.blink=setInterval(this.textblink, 750);
+		//this.blink = setInterval(this.textblink, 750);
 		this.refresh = setInterval(this.update,1000/60);
 	}
 	
@@ -51,14 +60,14 @@ var chi = new function()
 		//create new slice with specific ordering
 		for (var i = 0; i < 5; ++i)
 		{
-			this.object.push(new Array());
+			this.cubes.push(new Array());
 
 			for (var j = 0; j < 5; ++j)
 			{
 				var posX = ((i + 2) % 5) * 50;
 				var posY = ((j + 2) % 5) * 50;
 				var a = new cube();
-				this.object[i].push(a.createCube(
+				this.cubes[i].push(a.createCube(
 					this.context,
 					515+posX,
 					275+posY,
@@ -71,92 +80,86 @@ var chi = new function()
 		}
 
 		// start animation
-		this.animateState(0, 0.5, 600);
+		setTimeout(function() {
+			chi.playAnimationPhase(++chi.currentPhase);
+		}, 1000*this.speedMultiplier);
 	}
 
-	
-	this.animateState = function(y, s, g)
+	this.moveState = function()
 	{
-		// animation settings
-		var delay = 1000;
-
 		// we want middle row (y = 0), so:
-		// this.object[3][0]
-		// this.object[4][0]
-		// this.object[0][0]
-		// this.object[1][0]
-		// this.object[2][0]
-
-		setTimeout(function(){
-			// set opacity of all unneeded cubes to 0.25
-			for (var i = 0; i < 5; ++i)
-			{
-				for (var j = 0; j < 5; ++j)
-				{
-					if (j != 0) {
-						chi.object[i][j].alpha = 0.25;
-					}
+		// this.cubes[3][0]
+		// this.cubes[4][0]
+		// this.cubes[0][0]
+		// this.cubes[1][0]
+		// this.cubes[2][0]
+		
+		// set opacity of all unneeded cubes to 0.25
+		for (var i = 0; i < 5; ++i) {
+			for (var j = 0; j < 5; ++j) {
+				if (j != 0) {
+					chi.cubes[i][j].alpha = 0.25;
 				}
 			}
-		}, delay);
+		}
 
-		delay += g;
 		setTimeout(function(){
+			chi.targetCounter = 5;
+			
 			// move all needed cubes on x axis
-			for (var i = 0; i < 5; ++i)
-			{
+			for (var i=0; i<5; ++i) {
 				var posX = ((i+2)%5) * spaceX;
-				chi.object[i][0].moveTo(padding+posX,chi.object[i][0].pos.y,s);
+				chi.cubes[i][0].moveTo(
+					padding+posX,
+					padding,
+					0.5,
+					chi.objectHitTarget
+				);
 			}
-		}, delay);
+		}, 1000*this.speedMultiplier);
+	}
 
-		delay += g;
-		setTimeout(function(){
-			// move all needed cubes on y axis
-			for (var i = 0; i < 5; ++i)
-			{
-				chi.object[i][0].moveTo(chi.object[i][0].pos.x,padding,s);
-			}
-		}, delay);
+	this.clearSlice = function() {
+		// clear all 25 cubes
+		for (var i = 0; i < 5; ++i) {
+			chi.cubes[i] = [];
+		}
 
-		delay += g*2;
-		setTimeout(function(){
-			// clear all 25 cubes
-			for (var i = 0; i < 5; ++i)
-			{
-				chi.object[i] = [];
-			}
-
-			// replace with operations scene
-			chi.showOperations();
-		}, delay);
-
-		delay += g;
-		setTimeout(function(){
-			// start animation of operations
-			chi.animateOperations(0, s, g);
-		}, delay);
+		// replace with operations scene
+		setTimeout(function() {
+			chi.playAnimationPhase(++chi.currentPhase);
+		}, 1000*this.speedMultiplier);
 	}
 
 	this.showOperations = function() {
+		console.log("showing operations");
+
 		// create 10 cubes
+		// gonna change this to grouped operations
+		var labels = [["A", "A'"],
+			["B", "B'"],
+			["C", "C'"],
+			["D", "D'"],
+			["E", "E'"],
+		]
+
 		for (var i = 0; i < 5; ++i)
 		{
-			this.object.push(new Array());
+			this.cubes.push(new Array());
 
 			for (var j = 0; j < 2; ++j)
 			{
 				var posX = i * spaceX;
 				var posY = j * spaceY;
 				var a = new cube();
-				this.object[i].push(a.createCube(
+				this.cubes[i].push(a.createCube(
 					this.context,
 					padding+posX,
 					padding+posY,
 					50,
 					"#8ED6FF",
 					1,
-					chi.input[i][j*4]
+					labels[i][j]
 				));
 			}
 		}
@@ -166,7 +169,7 @@ var chi = new function()
 
 			// straight vertical line
 			var v = new line();
-			this.extra.push(v.createLine(
+			this.lines.push(v.createLine(
 				this.context,
 				padding+posX+37.5,
 				padding+50,
@@ -181,7 +184,7 @@ var chi = new function()
 			var y1 = padding+50;
 
 			var tonot = new line();
-			this.extra.push(tonot.createLine(
+			this.lines.push(tonot.createLine(
 				this.context,
 				x1,
 				y1+(spaceY/4),
@@ -192,7 +195,7 @@ var chi = new function()
 			));
 
 			var tonot2 = new line();
-			this.extra.push(tonot2.createLine(
+			this.lines.push(tonot2.createLine(
 				this.context,
 				x1+(spaceX/4),
 				y1+(spaceY/4),
@@ -203,7 +206,7 @@ var chi = new function()
 			));
 
 			var opnot = new operator();
-			this.extra.push(opnot.createOperator(
+			this.operators.push(opnot.createOperator(
 				this.context,
 				x1+(spaceX/4),
 				y1+(spaceY/4)+50,
@@ -220,7 +223,7 @@ var chi = new function()
 			var toand = new line();
 			var toand2 = new line();
 			if (i < 4) {
-				this.extra.push(toand.createLine(
+				this.lines.push(toand.createLine(
 					this.context,
 					x2+50,
 					y2,
@@ -230,7 +233,7 @@ var chi = new function()
 					1
 				));
 
-				this.extra.push(toand2.createLine(
+				this.lines.push(toand2.createLine(
 					this.context,
 					x2+50,
 					y2-150,
@@ -240,7 +243,7 @@ var chi = new function()
 					1
 				));
 			} else {
-				this.extra.push(toand.createLine(
+				this.lines.push(toand.createLine(
 					this.context,
 					x2+50,
 					y2,
@@ -250,7 +253,7 @@ var chi = new function()
 					1
 				));
 
-				this.extra.push(toand2.createLine(
+				this.lines.push(toand2.createLine(
 					this.context,
 					x2+50,
 					y2-175,
@@ -262,7 +265,7 @@ var chi = new function()
 			}
 
 			var opand = new operator();
-			this.extra.push(opand.createOperator(
+			this.operators.push(opand.createOperator(
 				this.context,
 				x2+25,
 				y2+12.5,
@@ -278,7 +281,7 @@ var chi = new function()
 
 			var toxor = new line();
 			if (i < 4) {
-				this.extra.push(toxor.createLine(
+				this.lines.push(toxor.createLine(
 					this.context,
 					x3,
 					y3,
@@ -288,7 +291,7 @@ var chi = new function()
 					1
 				));
 			} else {
-				this.extra.push(toxor.createLine(
+				this.lines.push(toxor.createLine(
 					this.context,
 					padding+37.5+(spaceX/4)+25,
 					y3,
@@ -300,7 +303,7 @@ var chi = new function()
 			}
 
 			var opxor = new operator();
-			this.extra.push(opxor.createOperator(
+			this.operators.push(opxor.createOperator(
 				this.context,
 				x1,
 				y1+(spaceY/4*3),
@@ -310,16 +313,17 @@ var chi = new function()
 				"XOR"
 			));
 		}
+
+		setTimeout(function() {
+			// start animation of operations
+			chi.playAnimationPhase(++chi.currentPhase);
+		}, 1000*this.speedMultiplier);
 	}
 
-	this.animateOperations = function(i, speed, gap)
-	{
-		// animation settings
-		var delay = 1000;
-		var s = speed;
-		var g = gap;
-
-		var k = (i+2)%5;
+	this.animateOperations = function() {
+		console.log("animating operations for "+this.index);
+		
+		var k = (this.index+2)%5;
 		var a = k%5;
 		var b = (k+1)%5;
 		var c = (k+2)%5;
@@ -363,196 +367,211 @@ var chi = new function()
 			""
 		));
 
+		// draw table
+		var translate = ["A", "B", "C", "D", "E"];
+
+		var tableInput = [[translate[a], "Default value"],
+			["NOT "+translate[b], ""],
+			["NOT "+translate[b]+" AND "+translate[c], ""],
+			["NOT "+translate[b]+" AND "+translate[c]+" XOR "+translate[a], ""],
+			[translate[a]+"'", ""],
+		];
+
+		var t = new table();
+		this.tables.push(t.createTable(
+			this.context,
+			5*spaceX+padding,
+			0.5*spaceY,
+			tableInput
+		));
+
 		/*
 		starts from 0
-		a = 4
-		b = 0
-		c = 1
+		a = 3
+		b = 4
+		c = 0
 		b -> NOT b
 		then AND with c
 		then result XOR with a
 		*/
+
+		setTimeout(function() {
+			chi.playAnimationPhase(++chi.currentPhase);
+		}, 1000*this.speedMultiplier);
+	}
+
+	this.moveBC1 = function() {
+		console.log("moveBC1");
+
+		chi.targetCounter = 2;
+
+		chi.indicators[1].moveTo(
+			chi.indicators[1].pos.x,
+			chi.indicators[1].pos.y+125,
+			0.5,
+			chi.objectHitTarget
+		);
+
+		var a = (chi.index+2)%5;
+		if (a == 3) {
+			chi.indicators[2].moveTo(
+				chi.indicators[2].pos.x,
+				chi.indicators[2].pos.y+50,
+				0.5,
+				chi.objectHitTarget
+			);
+		} else {
+			chi.indicators[2].moveTo(
+				chi.indicators[2].pos.x,
+				chi.indicators[2].pos.y+80,
+				0.5,
+				chi.objectHitTarget
+			);
+		}
+	}
+
+	this.moveBC2 = function() {
+		console.log("moveBC2");
+
+		chi.targetCounter = 1;
+
+		chi.indicators[1].moveTo(
+			chi.indicators[1].pos.x+40,
+			chi.indicators[1].pos.y,
+			0.5,
+			chi.objectHitTarget
+		);
+
+		var a = (chi.index+2)%5;
+		if (a == 3) {
+			chi.indicators[2].moveTo(
+				chi.indicators[2].pos.x+690,
+				chi.indicators[2].pos.y,
+				0.5,
+				chi.objectHitTarget
+			);
+		} else {
+			chi.indicators[2].moveTo(
+				chi.indicators[2].pos.x-65,
+				chi.indicators[2].pos.y,
+				0.5,
+				chi.objectHitTarget
+			);
+		}
+	}
+
+	this.moveBC3 = function() {
+		console.log("moveBC3");
+
+		chi.targetCounter = 1;
 		
-		setTimeout(function(){
-			chi.indicators[1].moveTo(chi.indicators[1].pos.x,chi.indicators[1].pos.y+125,s);
+		chi.indicators[1].moveTo(
+			chi.indicators[1].pos.x,
+			chi.indicators[1].pos.y+110,
+			0.5,
+			chi.objectHitTarget
+		);
 
-			if (a == 3) {
-				chi.indicators[2].moveTo(chi.indicators[2].pos.x,chi.indicators[2].pos.y+50,s);
-			} else {
-				chi.indicators[2].moveTo(chi.indicators[2].pos.x,chi.indicators[2].pos.y+80,s);
-			}
-		}, delay);
+		var a = (chi.index+2)%5;
+		if (a == 3) {
+			chi.indicators[2].moveTo(
+				chi.indicators[2].pos.x,
+				chi.indicators[2].pos.y+190,
+				0.5,
+				chi.objectHitTarget
+			);
+		} else {
+			chi.indicators[2].moveTo(
+				chi.indicators[2].pos.x,
+				chi.indicators[2].pos.y+160,
+				0.5,
+				chi.objectHitTarget
+			);
+		}
 
-		delay += g;
-		setTimeout(function(){
-			chi.indicators[1].moveTo(chi.indicators[1].pos.x+40,chi.indicators[1].pos.y,s);
+		// update table (NOT)
+		var t = chi.tables[0];
+		t.input[1][1] = "NOT updated";
+	}
 
-			if (a == 3) {
-				chi.indicators[2].moveTo(chi.indicators[2].pos.x+690,chi.indicators[2].pos.y,s);
-			} else {
-				chi.indicators[2].moveTo(chi.indicators[2].pos.x-65,chi.indicators[2].pos.y,s);
-			}
-		}, delay);
+	this.moveBC4 = function() {
+		console.log("moveBC4");
+
+		chi.targetCounter = 1;
 		
-		delay += g;
-		setTimeout(function(){
-			chi.indicators[1].moveTo(chi.indicators[1].pos.x,chi.indicators[1].pos.y+110,s);
-			if (a == 3) {
-				chi.indicators[2].moveTo(chi.indicators[2].pos.x,chi.indicators[2].pos.y+190,s);
-			} else {
-				chi.indicators[2].moveTo(chi.indicators[2].pos.x,chi.indicators[2].pos.y+160,s);
-			}
-		}, delay);
+		chi.indicators[1].moveTo(
+			chi.indicators[1].pos.x+25,
+			chi.indicators[1].pos.y,
+			0.5,
+			chi.objectHitTarget
+		);
+		chi.indicators[2].moveTo(
+			chi.indicators[2].pos.x-30,
+			chi.indicators[2].pos.y,
+			0.5,
+			chi.objectHitTarget
+		);
 		
-		delay += g;
-		setTimeout(function(){
-			chi.indicators[1].moveTo(chi.indicators[1].pos.x+25,chi.indicators[1].pos.y,s);
-			chi.indicators[2].moveTo(chi.indicators[2].pos.x-30,chi.indicators[2].pos.y,s);
+		// update table (AND)
+		var t = chi.tables[0];
+		t.input[2][1] = "AND updated";
+	}
 
-			// show right cubes here (AND)
-			chi.showRightCubes(k, "AND");
-		}, delay);
+	this.moveAB = function() {
+		console.log("moveAB");
 
-		delay += 3000;
-		setTimeout(function(){
-			chi.indicators[0].moveTo(chi.indicators[0].pos.x,chi.indicators[0].pos.y+360,s);
-			chi.indicators[1].moveTo(chi.indicators[0].pos.x,chi.indicators[0].pos.y+360,s);
+		chi.targetCounter = 1;
+		
+		chi.indicators[0].moveTo(
+			chi.indicators[0].pos.x,
+			chi.indicators[0].pos.y+360,
+			0.5,
+			chi.objectHitTarget
+		);
+		chi.indicators[1].moveTo(
+			chi.indicators[0].pos.x,
+			chi.indicators[0].pos.y+360,
+			0.5,
+			chi.objectHitTarget
+		);
+		
+		// update table (XOR)
+		var t = chi.tables[0];
+		t.input[3][1] = "XOR updated";
+	}
 
-			// show right cubes here (XOR)
-			chi.showRightCubes(k, "XOR");
-		}, delay);
+	this.moveA = function() {
+		console.log("moveA");
 
-		delay += 3000;
-		setTimeout(function(){
-			chi.indicators[0].moveTo(chi.indicators[0].pos.x,chi.indicators[0].pos.y+100,s);
-		}, delay);
+		chi.targetCounter = 0;
+		
+		chi.indicators[0].moveTo(
+			chi.indicators[0].pos.x,
+			chi.indicators[0].pos.y+100,
+			0.5,
+			chi.objectHitTarget
+		);
+
+		// update table (A')
+		var t = chi.tables[0];
+		t.input[4][1] = "prime updated";
+	}
+
+	this.nextSet = function() {
+		console.log("nextSet");
 
 		// start next set in series
-		delay += g;
 		setTimeout(function(){
 			chi.indicators = [];
 
-			if (i < 4) {
-				chi.animateOperations(i+1, 0.5, 500);
+			if (chi.index < 4) {
+				chi.index += 1;
+				chi.currentPhase = 4;
+				chi.animateOperations();
 			} else {
-				clearInterval(this.refresh);			
+				clearInterval(chi.refresh);			
 			}
-		}, delay);
-	}
-	
-	this.showRightCubes = function(i, op) {
-		// animation settings
-		var delay = 1000;
-		var s = 0.5;
-		var g = 500;
-
-		var k = i%5;
-		var a = k%5;
-		var b = (k+1)%5;
-		var c = (k+2)%5;
-
-		var posX = 5 * spaceX + padding;
-		var posY = 0.5 * spaceY;
-
-		if (op != "NOT") {
-			var aText;
-			var bText;
-			var rText;
-
-			if (op == "AND") {
-				aText = this.input[a][1];
-				bText = this.input[a][2];
-				rText = this.input[a][3];
-			} else if (op == "XOR") {
-				aText = this.input[a][0];
-				bText = this.input[a][3];
-				rText = this.input[a][4];
-			}
-
-			// draw 2 cubes
-			var a = new cube();
-			chi.rcubes.push(a.createCube(
-				this.context,
-				padding+posX,
-				padding+posY,
-				40,
-				"#FFF000",
-				1,
-				aText
-			));
-
-			posX += spaceX*2;
-			var b = new cube();
-			chi.rcubes.push(b.createCube(
-				this.context,
-				padding+posX,
-				padding+posY,
-				40,
-				"#FFF000",
-				1,
-				bText
-			));
-
-			posX = 6 * spaceX + padding;
-
-			// result cube	
-			var r = new cube();
-			chi.rcubes.push(r.createCube(
-				this.context,
-				padding+posX,
-				padding+posY,
-				40,
-				"#FFF000",
-				1,
-				rText
-			));
-		} else {
-			// draw 1 cube
-			var a = new cube();
-			chi.rcubes.push(a.createCube(
-				this.context,
-				padding+posX,
-				padding+posY,
-				40,
-				"#FFF000",
-				1,
-				this.object[b][0].text
-			));
-
-			posX = 6 * spaceX + padding;
-		}
-		
-		posY += 5;
-
-		// draw operator
-		var o = new operator();
-		chi.rcubes.push(o.createOperator(
-			this.context,
-			padding+posX+25,
-			padding+posY,
-			90,
-			"#ffffff",
-			1,
-			op
-		));
-
-		// go into operator
-		setTimeout(function(){
-			chi.rcubes[0].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y,s);
-			chi.rcubes[1].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y,s);
-		}, delay);
-
-		// result comes out
-		delay += g;
-		setTimeout(function(){
-			chi.rcubes[2].moveTo(chi.rcubes[2].pos.x,chi.rcubes[2].pos.y+spaceX,s);
-		}, delay);
-
-		// continue
-		delay += 1250;
-		setTimeout(function(){
-			chi.rcubes = [];
-		}, delay);
+		}, 1000*this.speedMultiplier);
 	}
 
 	// loop
@@ -568,17 +587,70 @@ var chi = new function()
 		chi_text.style.visibility = (chi_text.style.visibility == 'hidden' ? '' : 'hidden');
 	}
 
+	this.reorderCube = function() {
+		var newSortedListX = new Array();
+		var newSortedList = new Array();
+		//Reorder X 
+		for(var i=0; i<chi.cubes.length; i++)
+		{
+			var pos = 0;
+			if(newSortedListX.length == 0)
+			{
+				newSortedListX.push(chi.cubes[i]);
+				continue;
+			}
+			for(var j=0; j<newSortedListX.length; j++)
+			{
+				if(chi.cubes[i].pos.x >= newSortedListX[j].pos.x)
+					pos = j+1;
+			}
+			newSortedListX.splice(pos,0,chi.cubes[i]);
+		}
+		//Reorder Y
+		//newSortedList = newSortedListX.slice();
+		for(var i=0; i<newSortedListX.length;i++)
+		{
+			var pos = 0;
+			var isFirst = false;
+			if(newSortedList.length == 0)
+			{
+				newSortedList.push(newSortedListX[i]);
+				continue;
+			}
+			for(var j=0; j<newSortedList.length; j++)
+			{
+				//if x pos is the same then order
+				if(newSortedListX[i].pos.x == newSortedList[j].pos.x)
+				{
+					if(!isFirst)
+					{
+						pos = j;
+						isFirst = true;
+					}
+					if(newSortedListX[i].pos.y > newSortedList[j].pos.y)
+					{
+						pos = j+1;
+					}
+					
+				}
+			}
+			newSortedList.splice(pos,0,newSortedListX[i]);
+		}
+		
+		chi.cubes = newSortedList.slice().reverse();
+		newSortedListX = null;
+		newSortedList = null;
+	}
+
 	this.objectHitTarget = function()
 	{
-		console.log("hitCounter = " + inputToState.hitCounter);
-		++inputToState.hitCounter;
+		++chi.hitCounter;
 		
-		if(inputToState.hitCounter >= inputToState.targetCounter)
+		if(chi.hitCounter >= chi.targetCounter)
 		{
-			console.log("triggered, going next");
-			inputToState.reorderCube();
-			inputToState.hitCounter = 0;
-			inputToState.playAnimationPhase(++inputToState.currentPhase);
+			//chi.reorderCube();
+			chi.hitCounter = 0;
+			chi.playAnimationPhase(++chi.currentPhase);
 		}
 	}
 
@@ -591,14 +663,42 @@ var chi = new function()
 				this.showState();
 				break;
 			case 1:
-				this.animateState();
+				this.moveState();
 				break;
 			case 2:
-				this.showOperations();
+				this.clearSlice();
 				break;
 			case 3:
-				this.animateOperations();
+				this.showOperations();
+				break;
+			case 4:
+				this.animateOperations(); // and show table
+				break;
+			case 5:
+				this.moveBC1();
+				break;
+			case 6:
+				this.moveBC2();
+				break;
+			case 7:
+				this.moveBC3();
+				break;
+			case 8:
+				this.moveBC4();
+				break;
+			case 9:
+				this.moveAB();
+				break;
+			case 10:
+				this.moveA();
+				break;
+			case 11:
+				this.nextSet();
 				break;
 		}
 	}
 }
+
+var go = new Array();
+
+chi.init(go);

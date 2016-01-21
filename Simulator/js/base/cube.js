@@ -94,7 +94,7 @@ var cube = function()
 			this.onHitTargetCB = cb;
 		
 		this.factor = 0;
-		this.ori = this.pos;
+		this.ori = {x:this.pos.x, y:this.pos.y};
 		this.dest = {x:x,y:y};
 		this.speed = speed;
 		this.isMoving = true;

@@ -28,7 +28,8 @@ var cube = function()
 		
 		this.draw(context);
 		
-		setInterval(this.update,1000/60, this);
+		setInterval(this.update,1000/60,this);
+
 		return this;
 	}
 	
@@ -88,16 +89,19 @@ var cube = function()
 	
 	this.moveTo = function(x, y, speed, cb)
 	{
-		if(cb === undefined)
-			this.onHitTargetCB = null;
-		else
-			this.onHitTargetCB = cb;
-		
 		this.factor = 0;
 		this.ori = this.pos;
 		this.dest = {x:x,y:y};
 		this.speed = speed;
 		this.isMoving = true;
+
+		if(cb === undefined) {
+			this.onHitTargetCB = null;
+			console.log("NOT OK");
+		} else {
+			this.onHitTargetCB = cb;
+			console.log("ok");
+		}
 	}
 	
 	this.onHitTarget = function(self)
@@ -114,14 +118,18 @@ var cube = function()
 	{
 		if(self.isMoving)
 		{
+			if(self.onHitTargetCB == null)
+				console.log("error, "+self.text+" not registered");
+
 			self.pos.x = util.lerp(self.ori.x,self.dest.x,self.factor);
 			self.pos.y = util.lerp(self.ori.y,self.dest.y,self.factor);
-			
+
 			if(self.factor >= 1)
 			{
 				self.isMoving = false;
 				self.onHitTarget(self);
 			}
+
 			self.factor += time.dt * self.speed;
 		}
 	}

@@ -66,7 +66,7 @@ var chi = new function()
 			{
 				var posX = ((i + 2) % 5) * 50;
 				var posY = ((j + 2) % 5) * 50;
-				var a = new cube();
+				var c = new cube();
 				this.cubes[i].push(a.createCube(
 					this.context,
 					515+posX,
@@ -98,22 +98,22 @@ var chi = new function()
 		for (var i = 0; i < 5; ++i) {
 			for (var j = 0; j < 5; ++j) {
 				if (j != 0) {
-					chi.cubes[i][j].alpha = 0.25;
+					this.cubes[i][j].alpha = 0.25;
 				}
 			}
 		}
 
 		setTimeout(function(){
-			chi.targetCounter = 5;
+			this.targetCounter = 5;
 			
 			// move all needed cubes on x axis
 			for (var i=0; i<5; ++i) {
 				var posX = ((i+2)%5) * spaceX;
-				chi.cubes[i][0].moveTo(
+				this.cubes[i][0].moveTo(
 					padding+posX,
 					padding,
 					0.5,
-					chi.objectHitTarget
+					this.objectHitTarget
 				);
 			}
 		}, 1000*this.speedMultiplier);
@@ -151,7 +151,7 @@ var chi = new function()
 			{
 				var posX = i * spaceX;
 				var posY = j * spaceY;
-				var a = new cube();
+				var c = new cube();
 				this.cubes[i].push(a.createCube(
 					this.context,
 					padding+posX,
@@ -340,7 +340,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			""
+			"1"
 		));
 
 		posX = b*spaceX+25;
@@ -352,7 +352,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			""
+			"2"
 		));
 
 		posX = c*spaceX+25;
@@ -364,7 +364,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			""
+			"3"
 		));
 
 		// draw table
@@ -380,7 +380,7 @@ var chi = new function()
 		var t = new table();
 		this.tables.push(t.createTable(
 			this.context,
-			5*spaceX+padding,
+			5*spaceX+2*padding,
 			0.5*spaceY,
 			tableInput
 		));

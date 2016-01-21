@@ -1,31 +1,208 @@
 body{	
-	background-color: 	#380000    ;
+	background-color: 	#FFF    ;
 }
+
+/*Nav bar*/
+
+.ul1{
+	width: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding-left: 20px;
+    overflow: hidden;
+    background-color: #606060  ;
+	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	position:static;
+}
+.ul2{
+	
+    list-style-type: none;
+    margin: 0;
+    padding-left: 20px;
+    overflow: hidden;
+	position:static;
+	font-family:Andika, Arial, sans-serif; 
+	color:#000;
+	font-size:0.9em;
+	letter-spacing:.1em;
+}
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 10px 10px;
+    text-decoration: none;
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.1em;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+	text-align: center;
+	font-weight:bold;
+}
+
+li a:hover:not(.active) {
+    background-color: #111;
+	color:#FFF;
+}
+
+li a:hover {
+	color:#FFF;
+}
+
+.active {
+    background-color: 	#909090 ;
+	
+}
+
+/*End Nav bar*/
+
+/*content for learn,quiz Para*/
+.rounddiv{
+	width:95%;
+	padding-left:20px;
+	margin-left:20px;
+	margin-top:30px;
+	position:static;
+	background-color:#E8E8E8    ;
+	border:0px groove #D0D0D0 ;
+	-webkit-border-radius:  8px 0 0 8px ;
+	-moz-border-radius:  8px 0 0 8px ;
+	border-radius:  0 8px  0 8px ;
+	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+}
+
+.rounddiv h1{
+	
+	font-family:Andika, Arial, sans-serif; 
+	color:#000;
+	font-size:1.4em;
+	letter-spacing:.1em;
+	font-weight:bold;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+}
+.rounddiv input{
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.4em;
+	letter-spacing:.1em;
+	font-weight:bold;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+	
+}
+.rounddiv div{
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.em;
+	letter-spacing:.1em;
+	letter-spacing:.1em;
+	
+	
+}
+
+p{
+	
+	font-family:Andika, Arial, sans-serif; 
+	color:#000;
+	font-size:1.0em;
+	letter-spacing:.1em;
+}
+
+.rounddiv1{
+	width:95%;
+	padding-left:20px;
+	margin-left:20px;
+	
+	position:static;
+	background-color:#E8E8E8   ;
+	border:0px groove #D0D0D0 ;
+	-webkit-border-radius:  8px 0 0 8px ;
+	-moz-border-radius:  8px 0 0 8px ;
+	border-radius:  0 8px  0 8px ;
+	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+}
+.rounddiv1 h1{
+	
+	font-family:Andika, Arial, sans-serif; 
+	color:#000;
+	font-size:1.4em;
+	letter-spacing:.1em;
+	font-weight:bold;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+}
+
+
+
+.roundbtn1 {
+	border:2px groove #404040  ;
+	cursor:pointer; /*forces the cursor to change to a hand when the button is hovered*/
+	padding: 5px 25px;
+	background-color:	#404040  ;
+	/*give the background a gradient
+	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
+	border-radius:15px ;
+	/*style to the text inside the button*/
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.4sem;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+	/*add a drop shadow to the button*/
+	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+}
+
+.roundbtn1:hover, input#submitbutton:focus {
+	color:#edebda;
+	/*reduce the spread of the shadow to give a pushed effect*/
+	-webkit-box-shadow: rgba(0, 0, 0, .25) 0 1px 0px;
+	-moz-box-shadow: rgba(0, 0, 0, .25) 0 1px 0px;
+	box-shadow: rgba(0, 0, 0, .25) 0 1px 0px;
+}
+
+/*End Para*/
 
 .stylecanvas{
 	float:left;
 	margin-top: 30px;
-	margin-left: 20px;
+	margin-left : 20px;
 	margin-bottom: 20px;
-	position:relative
-	display:inline;
-	padding: 20px 20px 0px 0px;
+	margin-right: 20px;
+	padding: 20px 20px 20px 80px;
 	border:3px groove #7c93ba;
 	-webkit-border-radius: 10px;
     -moz-border-radius: 10px;
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #DEFCD4), color-stop(100, #abbd73))
 }
-
+.KCanvas{
+	width: 1600px;
+	height:720px;
+	border:3px groove #7c93ba;
+	-webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+}
 .KNavin{
 	border:2px groove #7c93ba;
-	width: 100px;
-	margin-left: 20px;
+	width: 120px;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	padding-left: 2px;
+	
 	/*give the background a gradient
 	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
 	background: -webkit-gradient(linear, left top, left bottom, from(#88add7), to(#6b6dbb));
@@ -36,9 +213,15 @@ body{
 	/*style to the text inside the button*/
 	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
-	font-size:1.2em;
+	font-size:1.3em;
+	letter-spacing:.1em;
 	font-variant:small-caps;
-	text-align: Center;
+	text-align: center;
+	
+	/*give the corners a small curve*/
+	-webkit-border-radius:  15px 0  0 15px;
+	-moz-border-radius:  15px 0 0 15px ;
+	border-radius:  15px 0 0 15px ;
 	/*add a drop shadow to the button*/
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
@@ -48,6 +231,8 @@ body{
 .KNav{
 	vertical-align: middle;
 	float:left;
+
+	margin-left:80px;
 	margin-top: 50px;
 	height:600px;
 	width: 100px;
@@ -60,7 +245,7 @@ input[type="text"] ,textarea {
 	border: 2px solid #6b6dbb;
 	border-radius: 10px;
 	height: 50px;
-	width: 65%;
+	width: 60%;
 	resize: none;
 	display:inline-block;
 	vertical-align:middle;
@@ -70,12 +255,48 @@ input[type="text"] ,textarea {
 }
 
 .one{
-	padding: 10px 10px 10px 5px;
-	margin-left: 20px;
+	padding: 20px 20px 20px 80px;
+}
+
+.first{
+	
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.6em;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+	text-align: center ;
+	padding: 200px 20px 20px 20px;
+}
+.first div{
+	
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.0em;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+	text-align: middle ;
+	
 }
 
 .one1{
 	padding-left: 20px;
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.8em;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+	font-weight: bold;
+}
+.one2{
+	padding-left: 20px;
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.8em;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+	font-weight:bold;
+	
 }
 
 .btnstyle{
@@ -165,12 +386,43 @@ input[type="text"] ,textarea {
 	box-shadow: rgba(0, 0, 0, .25) 0 1px 0px;
 }
 
+.roundbtn {
+	border:2px groove #404040  ;
+	cursor:pointer; /*forces the cursor to change to a hand when the button is hovered*/
+	padding: 5px 25px;
+	background-color:	#404040  ;
+	/*give the background a gradient
+	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
+	
+	/*style to the text inside the button*/
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:0.8em;
+	letter-spacing:.1em;
+	font-variant:small-caps;
+	/*add a drop shadow to the button*/
+	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+}
+
+.roundbtn:hover, input#submitbutton:focus {
+	color:#edebda;
+	/*reduce the spread of the shadow to give a pushed effect*/
+	-webkit-box-shadow: rgba(0, 0, 0, .25) 0 1px 0px;
+	-moz-box-shadow: rgba(0, 0, 0, .25) 0 1px 0px;
+	box-shadow: rgba(0, 0, 0, .25) 0 1px 0px;
+}
+
+
+
+
+
 .form-style-3{
-	
-	padding-left: 20px;
-    max-width: 95%;
+	padding-left: 80px;
+    max-width: 80%;
     font-family: Andika, Arial, sans-serif; 
-	
+
 	font-size:1.2em;
 	letter-spacing:.1em;
 	font-variant:small-caps;
@@ -187,7 +439,7 @@ input[type="text"] ,textarea {
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
-    
+    margin: 0px 0px 10px 0px;
     border: 2px groove #7c93ba;
     padding: 20px;
 	

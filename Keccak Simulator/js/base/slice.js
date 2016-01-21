@@ -54,7 +54,7 @@ var slice = function()
 		}
 
 		// see util.js
-		this.cubes = arrayOperations.arrayToState(this.cubes);
+		this.cubes = arrayToState(this.cubes);
 
 		// update positioning
 		for (var i=0; i<5; i++) {
@@ -85,9 +85,9 @@ var slice = function()
 	this.setInput = function(i, j, text)
 	{
 		// see util.js
-		this.cubes = arrayOperations.StateToArray(this.cubes);
+		this.cubes = stateToArray(this.cubes);
 		this.cubes[i][j].text = text;
-		this.cubes = arrayOperations.arrayToState(this.cubes);
+		this.cubes = arrayToState(this.cubes);
 	}
 	
 	this.getPosition = function()

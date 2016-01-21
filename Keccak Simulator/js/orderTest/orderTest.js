@@ -8,6 +8,8 @@ var orderTest = new function()
 	
 	this.init = function()
 	{
+		console.log("orderTest started");
+
 		this.canvas = document.getElementById("keccakCanvas");
 		this.context = this.canvas.getContext("2d");
 
@@ -50,7 +52,7 @@ var orderTest = new function()
 			}
 		}
 		
-		this.object = zSort5x5(this.object);
+		this.sortedObject = zSort5x5(this.object);
 		
 		// 60 fps update loop
 		this.update();

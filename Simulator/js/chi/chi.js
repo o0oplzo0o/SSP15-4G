@@ -67,7 +67,7 @@ var chi = new function()
 				var posX = ((i + 2) % 5) * 50;
 				var posY = ((j + 2) % 5) * 50;
 				var c = new cube();
-				this.cubes[i].push(a.createCube(
+				this.cubes[i].push(c.createCube(
 					this.context,
 					515+posX,
 					275+posY,
@@ -104,16 +104,16 @@ var chi = new function()
 		}
 
 		setTimeout(function(){
-			this.targetCounter = 5;
+			chi.targetCounter = 5;
 			
 			// move all needed cubes on x axis
 			for (var i=0; i<5; ++i) {
 				var posX = ((i+2)%5) * spaceX;
-				this.cubes[i][0].moveTo(
+				chi.cubes[i][0].moveTo(
 					padding+posX,
 					padding,
 					0.5,
-					this.objectHitTarget
+					chi.objectHitTarget
 				);
 			}
 		}, 1000*this.speedMultiplier);
@@ -152,7 +152,7 @@ var chi = new function()
 				var posX = i * spaceX;
 				var posY = j * spaceY;
 				var c = new cube();
-				this.cubes[i].push(a.createCube(
+				this.cubes[i].push(c.createCube(
 					this.context,
 					padding+posX,
 					padding+posY,
@@ -433,7 +433,7 @@ var chi = new function()
 	this.moveBC2 = function() {
 		console.log("moveBC2");
 
-		chi.targetCounter = 1;
+		chi.targetCounter = 2;
 
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x+40,
@@ -463,7 +463,7 @@ var chi = new function()
 	this.moveBC3 = function() {
 		console.log("moveBC3");
 
-		chi.targetCounter = 1;
+		chi.targetCounter = 2;
 		
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x,
@@ -497,7 +497,7 @@ var chi = new function()
 	this.moveBC4 = function() {
 		console.log("moveBC4");
 
-		chi.targetCounter = 1;
+		chi.targetCounter = 2;
 		
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x+25,

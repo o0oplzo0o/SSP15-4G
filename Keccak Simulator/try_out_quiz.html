@@ -1,141 +1,135 @@
 <!DOCTYPE html>
 <html>
-	<meta charset="utf-8" />
-	<head>
-		<title>KECCAK Learning</title>
+<meta charset="utf-8" />
+<head>
+	<title>KECCAK Learning</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<div style="width:100%">
+	<div class="one2">KECCAK - cryptographic sponge function</div>
+	<div>
+		<ul class="ul1">
+		<li><a href="index.html">home</a></li>
+		<li><a href="learn_basic_operation.html">learn keccak</a></li>
+		<li><a href="simulator.html">understand with simulation</a></li>
+		<li><a class="active" href="try_out_quiz.html">try out quiz</a></li>
+		<li><a href="proj_ref.html">project reference</a></li>
+		</ul class="ul2">
+	</div>
+<div class="rounddiv">
+	<h1>test yourself</h1>
+	<p>1. What is sponge construction? 
+		<ul class="ul2">
+		<input type="radio" name="q1" value="a" id="q1a"/><label for="q1a">an operation based on fixed length permutation and padding rule</label><br/>
+		<input type="radio" name="q1" value="b" id="q1b"/><label for="q1b">an operation based on variable-length permutation</label><br/>
+		<input type="radio" name="q1" value="c" id="q1c"/><label for="q1c">an operation mapping fixed input to fixed output </label><br/>
+		<input type="radio" name="q1" value="d" id="q1d"/><label for="q1d">an operation mapping fixed input to variable output</label><br/>
+		</ul class="ul2">
+	</p>
 
-		<link rel="stylesheet" type="text/css" href="style.css">
-	</head>
-	<body>
-		<div style="width:100%">
-		<div class="one2">
-		keccak- cryptographic sponge function
-		</div>
-		<div>
-		  <ul class="ul1">
-			  <li><a href="index.html">home</a></li>
-			  <li><a href="learn_basic_operation.html">learn keccak</a></li>
-			   <li><a href="index_chi+input.html">understand with simulation</a></li>
-			  <li><a class="active" href="try_out_quiz.html">try out quiz</a></li>
-			  <li><a href="proj_ref.html">project reference</a></li>
-		 </ul class="ul2">
-		 </div>
-		  <div class="rounddiv">
-			<h1>test yourself</h1>
-			<p>
-				1. What is the spong construction? 
-				<ul class="ul2">            
-				<input type="radio" name="q1" value="a" id="q1a"><label for="q1a">operation based on fixed length permutation and padding rule</label><br/>          
-				<input type="radio" name="q1" value="b" id="q1b"><label for="q1b">operation based on variable-length permutation</label><br/>            
-				<input type="radio" name="q1" value="c" id="q1c"><label for="q1c">operation offers mapping fixed input to fixed output </label><br/>            
-				<input type="radio" name="q1" value="d" id="q1d"><label for="q1d">operation offers mapping fixed input to variable output</label><br/>       
-				</ul class="ul2">   
-			</p>  
-			<p>2. Keccak is _______ ?       
-				<ul class="ul2">            
-				<input type="radio" name="q2" value="a" id="q2a"><label for="q2a">MD5 hash</label><br/>           
-				<input type="radio" name="q2" value="b" id="q2b"><label for="q2b">SHA1 Standard</label><br/>            
-				<input type="radio" name="q2" value="c" id="q2c"><label for="q2c">SHA2 Standard</label><br/>           
-				<input type="radio" name="q2" value="d" id="q2d"><label for="q2d">SHA3 Standard</label><br/>       
-				</ul class="ul2">        
-			</p> 
-			<p>3. Theta function in Keccak perform _______ ?     
+	<p>2. KECCAK is _______ ?       
+		<ul class="ul2">            
+		<input type="radio" name="q2" value="a" id="q2a"/><label for="q2a">MD5 hash</label><br/>
+		<input type="radio" name="q2" value="b" id="q2b"/><label for="q2b">SHA1 Standard</label><br/>
+		<input type="radio" name="q2" value="c" id="q2c"/><label for="q2c">SHA2 Standard</label><br/>
+		<input type="radio" name="q2" value="d" id="q2d"/><label for="q2d">SHA3 Standard</label><br/>
+		</ul class="ul2">
+	</p>
 
-				<ul class="ul2">            
-				<input type="radio" name="q3" value="a" id="q3a"><label for="q3a"> diffusion by bitwise XOR and Rotation </label><br/>            
-				<input type="radio" name="q3" value="b" id="q3b"><label for="q3b"> confusion by bitwise XOR and Rotation</label><br/>            
-				<input type="radio" name="q3" value="c" id="q3c"><label for="q3c"> diffusion by bitwise XOR only </label><br/>           
-				<input type="radio" name="q3" value="d" id="q3d"><label for="q3d"> confusion by bitwise XOR</label><br/>       
-				</ul class="ul2">        
-			</p>   
-			<p>4. What is the result of 6 XOR 4 ?     
+	<p>3. What does the Theta function in KECCAK perform _______ ?
+		<ul class="ul2">
+		<input type="radio" name="q3" value="a" id="q3a"/><label for="q3a">diffusion by bitwise XOR and rotation</label><br/>
+		<input type="radio" name="q3" value="b" id="q3b"/><label for="q3b">confusion by bitwise XOR and rotation</label><br/>
+		<input type="radio" name="q3" value="c" id="q3c"/><label for="q3c">diffusion by bitwise XOR only</label><br/>
+		<input type="radio" name="q3" value="d" id="q3d"/><label for="q3d">confusion by bitwise XOR</label><br/>
+		</ul class="ul2">
+	</p>
 
-				<ul class="ul2">           
-				<input type="radio" name="q4" value="a" id="q4a"><label for="q4a">1</label><br/>            
-				<input type="radio" name="q4" value="b" id="q4b"><label for="q4b">2</label><br/>            
-				<input type="radio" name="q4" value="c" id="q4c"><label for="q4c">3</label><br/>            
-				<input type="radio" name="q4" value="d" id="q4d"><label for="q4d">4</label><br/>        
-				</ul class="ul2">        
-			</p>   
-			<p>5. What is the result of 15 bit shift left ?   
+	<p>4. What is the result of 6 XOR 4 ?
+		<ul class="ul2">
+		<input type="radio" name="q4" value="a" id="q4a"/><label for="q4a">1</label><br/>
+		<input type="radio" name="q4" value="b" id="q4b"/><label for="q4b">2</label><br/>
+		<input type="radio" name="q4" value="c" id="q4c"/><label for="q4c">3</label><br/>
+		<input type="radio" name="q4" value="d" id="q4d"/><label for="q4d">4</label><br/>
+		</ul class="ul2">
+	</p>
 
-				<ul class="ul2">            
-				<input type="radio" name="q5" value="a" id="q5a"><label for="q5a">15</label><br/>            
-				<input type="radio" name="q5" value="b" id="q5b"><label for="q5b">30</label><br/>            
-				<input type="radio" name="q5" value="c" id="q5c"><label for="q5c">60</label><br/>           
-				<input type="radio" name="q5" value="d" id="q5d"><label for="q5d">120</label><br/>        
-				</ul class="ul2">        
-			</p>     
-			<p>6.What is the result of 30 bit shift right ?      
+	<p>5. What is the result of 15 bit shift left ?   
+		<ul class="ul2">
+		<input type="radio" name="q5" value="a" id="q5a"/><label for="q5a">15</label><br/>
+		<input type="radio" name="q5" value="b" id="q5b"/><label for="q5b">30</label><br/>
+		<input type="radio" name="q5" value="c" id="q5c"/><label for="q5c">60</label><br/>
+		<input type="radio" name="q5" value="d" id="q5d"/><label for="q5d">120</label><br/>
+		</ul class="ul2">
+	</p>
 
-				<ul class="ul2">            
-				<input type="radio" name="q6" value="a" id="q6a"><label for="q6a">15</label><br/>            
-				<input type="radio" name="q6" value="b" id="q6b"><label for="q6b">30</label><br/>            
-				<input type="radio" name="q6" value="c" id="q6c"><label for="q6c">60</label><br/>            
-				<input type="radio" name="q6" value="d" id="q6d"><label for="q6d">120</label><br/>        
-				</ul class="ul2">       
-			</p>  
-			<p>7. What is the result of 15 XOR 30 ?       
+	<p>6.What is the result of 30 bit shift right ?
+		<ul class="ul2">
+		<input type="radio" name="q6" value="a" id="q6a"/><label for="q6a">15</label><br/>
+		<input type="radio" name="q6" value="b" id="q6b"/><label for="q6b">30</label><br/>
+		<input type="radio" name="q6" value="c" id="q6c"/><label for="q6c">60</label><br/>
+		<input type="radio" name="q6" value="d" id="q6d"/><label for="q6d">120</label><br/>
+		</ul class="ul2">
+	</p>
 
-				<ul class="ul2" class="answers">            
-				<input type="radio" name="q7" value="a" id="q7a"><label for="q7a">15</label><br/>            
-				<input type="radio" name="q7" value="b" id="q7b"><label for="q7b">16</label><br/>            
-				<input type="radio" name="q7" value="c" id="q7c"><label for="q7c">17</label><br/>            
-				<input type="radio" name="q7" value="d" id="q7d"><label for="q7d">18</label><br/>        
-				</ul class="ul2">        
-			</p> 
-			<p>8. Rho function in Keccak perform in____ ?      
+	<p>7. What is the result of 15 XOR 30 ?       
+		<ul class="ul2" class="answers">
+		<input type="radio" name="q7" value="a" id="q7a"/><label for="q7a">15</label><br/>
+		<input type="radio" name="q7" value="b" id="q7b"/><label for="q7b">16</label><br/>
+		<input type="radio" name="q7" value="c" id="q7c"/><label for="q7c">17</label><br/>
+		<input type="radio" name="q7" value="d" id="q7d"/><label for="q7d">18</label><br/>
+		</ul class="ul2">
+	</p>
 
-				<ul class="ul2">            
-				<input type="radio" name="q8" value="a" id="q8a"><label for="q8a">rotating by even number 0,2,4,6,8...</label><br/>            
-				<input type="radio" name="q8" value="b" id="q8b"><label for="q8b">rotating by user specifiy interval </label><br/>            
-				<input type="radio" name="q8" value="c" id="q8c"><label for="q8c">rotating by +1 incremental </label><br/>            
-				<input type="radio" name="q8" value="d" id="q8d"><label for="q8d">rotating by triangular number 0,1,3,6,10,...</label><br/>       
-				</ul class="ul2">        
-			</p>  
-			<p>9. Keccak is design by ?        
-				<ul class="ul2">            
-				<input type="radio" name="q9" value="a" id="q9a"><label for="q9a">Ron Rivest, Adi Shamir, and Leonard Adleman</label><br/>            
-				<input type="radio" name="q9" value="b" id="q9b"><label for="q9b">Ronald Rivest</label><br/>            
-				<input type="radio" name="q9" value="c" id="q9c"><label for="q9c">Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche</label><br/>            
-				<input type="radio" name="q9" value="d" id="q9d"><label for="q9d">United States National Security Agency</label><br/>        
-				</ul class="ul2">        
-			</p>
-			<p>10. What are the operations in Keccak-f permutation?       
+	<p>8. What does the Rho function in KECCAK perform?
+		<ul class="ul2">
+		<input type="radio" name="q8" value="a" id="q8a"/><label for="q8a">rotation by even number 0,2,4,6,8...</label><br/>
+		<input type="radio" name="q8" value="b" id="q8b"/><label for="q8b">rotation by user-specified interval</label><br/>
+		<input type="radio" name="q8" value="c" id="q8c"/><label for="q8c">rotation by +1 incremental</label><br/>
+		<input type="radio" name="q8" value="d" id="q8d"/><label for="q8d">rotation by triangular numbers 0,1,3,6,10,...</label><br/>
+		</ul class="ul2">
+	</p>
 
-				<ul class="ul2">           
-				<input type="radio" name="q10" value="a" id="q10a"><label for="q10a">AND, OR and  Rotation </label><br/>            
-				<input type="radio" name="q10" value="b" id="q10b"><label for="q10b">AND, XOR and Rotation </label><br/>            
-				<input type="radio" name="q10" value="c" id="q10c"><label for="q10c">NOT, AND, OR and Rotation</label><br/>            
-				<input type="radio" name="q10" value="d" id="q10d"><label for="q10d">NOT,AND, XOR and Rotation </label><br/>        
-				</ul class="ul2">     
-			</p>
-			<input class="roundbtn1" type="submit" value="show me answers" onclick="showanswer()" /></br></br>
-			<div id="answer" style="display:none">
-				</br>
-				           
-				Correct Answer for Question 1: operation based on fixed length permutation and padding rule<br/>           
-				Correct Answer for Question 2: SHA3 Standard<br/>         
-				Correct Answer for Question 3: diffusion by bitwise XOR and Rotation <br/>         
-				Correct Answer for Question 4: 2<br/>         
-				Correct Answer for Question 5: 30<br/>         
-				Correct Answer for Question 6: 15<br/>         
-				Correct Answer for Question 7: 17<br/>         
-				Correct Answer for Question 8: rotating by triangular number 0,1,3,6,10,...<br/>         
-				Correct Answer for Question 9: Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche<br/>         
-				Correct Answer for Question 10: NOT,AND, XOR and Rotation<br/></br>                
-		  </div>
-		  
-		 
+	<p>9. KECCAK was designed by ______________.        
+		<ul class="ul2">            
+		<input type="radio" name="q9" value="a" id="q9a"/><label for="q9a">Ron Rivest, Adi Shamir, and Leonard Adleman</label><br/>
+		<input type="radio" name="q9" value="b" id="q9b"/><label for="q9b">Ronald Rivest</label><br/>
+		<input type="radio" name="q9" value="c" id="q9c"/><label for="q9c">Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche</label><br/>
+		<input type="radio" name="q9" value="d" id="q9d"/><label for="q9d">United States National Security Agency</label><br/>
+		</ul class="ul2">
+	</p>
+
+	<p>10. What are the basic operations involved in KECCAK-f permutations?
+		<ul class="ul2">
+		<input type="radio" name="q10" value="a" id="q10a" /><label for="q10a">AND, OR and  Rotation </label><br/>
+		<input type="radio" name="q10" value="b" id="q10b" /><label for="q10b">AND, XOR and Rotation </label><br/>
+		<input type="radio" name="q10" value="c" id="q10c" /><label for="q10c">NOT, AND, OR and Rotation</label><br/>
+		<input type="radio" name="q10" value="d" id="q10d" /><label for="q10d">NOT, AND, XOR and Rotation </label><br/>
+		</ul class="ul2">
+	</p>
+
+	<input class="roundbtn1" type="submit" value="show me answers" onclick="showanswer()" /></br></br>
+	
+	<div id="answer" style="display:none"></br>
+		Correct Answer for Question 1: operation based on fixed length permutation and padding rule<br/>
+		Correct Answer for Question 2: SHA3 Standard<br/>
+		Correct Answer for Question 3: diffusion by bitwise XOR and Rotation<br/>
+		Correct Answer for Question 4: 2<br/>
+		Correct Answer for Question 5: 30<br/>
+		Correct Answer for Question 6: 15<br/>
+		Correct Answer for Question 7: 17<br/>
+		Correct Answer for Question 8: rotating by triangular number 0,1,3,6,10,...<br/>
+		Correct Answer for Question 9: Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche<br/>
+		Correct Answer for Question 10: NOT,AND, XOR and Rotation<br/></br>
+	</div>
 </div>
-	<script type="text/javascript"> 
-		function showanswer(answer){
-		var theDiv = document.getElementById('answer');
-			if(theDiv.style.display=="none"){
-			theDiv.style.display="";
-			}
-		}
+<script type="text/javascript"> 
+function showanswer(answer) {
+	var targ = document.getElementById('answer');
+	if (targ.style.display == "none")
+		targ.style.display = "";
+}
 </script>
-
-	</body>
+</body>
 </html>

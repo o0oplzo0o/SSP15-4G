@@ -6,7 +6,7 @@ var cube = function()
 	this.alpha = 1;
 	this.text = "";
 
-	this.font = "Arial";
+	this.font = "monospaced";
 	this.fontsize = "18";
 	
 	this.isMoving = false;
@@ -35,8 +35,7 @@ var cube = function()
 	
 	this.draw = function(context)
 	{
-		var prevAlpha = context.globalAlpha;
-		var prevFont = context.font;
+		context.save();
 
 		//cube
 		context.fillStyle = this.color;
@@ -49,17 +48,7 @@ var cube = function()
 		context.fill();
 		context.stroke();
 
-		//top face
-		context.fillStyle = convertColor(this.color, 0.10);
-		context.beginPath();
-		context.moveTo(this.pos.x,this.pos.y);
-		context.lineTo((this.pos.x+(this.size/2)),(this.pos.y-(this.size/2)));
-		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y-(this.size/2)));
-		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y-(this.size/2)));
-		context.lineTo((this.pos.x+this.size),this.pos.y);
-		context.closePath();
-		context.fill();
-		context.stroke();
+		context.save();
 
 		//right face
 		context.fillStyle = convertColor(this.color, -0.25);
@@ -67,19 +56,36 @@ var cube = function()
 		context.moveTo((this.pos.x+this.size),this.pos.y);
 		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y-(this.size/2)));
 		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y+(this.size/2)));
-		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y+(this.size/2)));
 		context.lineTo((this.pos.x+this.size),(this.pos.y+this.size));
 		context.closePath();
 		context.fill();
 		context.stroke();
-		
-		//text
-		context.font = this.fontsize + "px " + this.font;
-		context.fillStyle = "#000000";
-		context.fillText(this.text,this.pos.x+(0.15 * this.size),this.pos.y+(0.70 * this.size));
 
-		context.globalAlpha = prevAlpha;
-		context.font = prevFont;
+		context.restore();
+		context.save();
+
+		//top face
+		context.fillStyle = convertColor(this.color, 0.10);
+		context.beginPath();
+		context.moveTo(this.pos.x,this.pos.y);
+		context.lineTo((this.pos.x+(this.size/2)),(this.pos.y-(this.size/2)));
+		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y-(this.size/2)));
+		context.lineTo((this.pos.x+this.size),this.pos.y);
+		context.closePath();
+		context.fill();
+		context.stroke();
+
+		context.restore();
+
+		//text
+		context.fillStyle = "#000000";
+		context.font = this.fontsize + "px " + this.font;
+		context.fillText(this.text,
+			this.pos.x+(0.15 * this.size),
+			this.pos.y+(0.70 * this.size)
+		);
+
+		context.restore();
 	}
 	
 	this.getPosition = function()
@@ -103,8 +109,6 @@ var cube = function()
 	
 	this.onHitTarget = function(self)
 	{
-		console.log(self.onHitTargetCB);
-		console.log("^ "+self.text);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
 		self.onHitTargetCB = null;

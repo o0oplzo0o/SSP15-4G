@@ -30,7 +30,7 @@ var line = function()
 	
 	this.draw = function(context)
 	{
-		var prevAlpha = context.globalAlpha;
+		context.save();
 
 		// settings
 		context.strokeStyle = this.color;
@@ -42,7 +42,7 @@ var line = function()
 		context.lineTo(this.pos.x2,this.pos.y2);
 		context.stroke();
 
-		context.globalAlpha = prevAlpha;
+		context.restore();
 	}
 	
 	this.getPosition = function()

@@ -1,3 +1,7 @@
+/* 31 jan 2016
+	- fixed graphical bug
+*/
+
 var table = function()
 {
 	// constructor settings
@@ -38,8 +42,7 @@ var table = function()
 	
 	this.draw = function(context)
 	{
-		var prevAlpha = context.globalAlpha;
-		var prevFont = context.font;
+		context.save();
 
 		context.globalAlpha = this.alpha;
 		context.font = this.fontsize + "px " + this.font;
@@ -55,6 +58,7 @@ var table = function()
 		for (var r = 0; r < this.input.length; ++r) {
 			for (var c = 0; c < this.input[r].length; ++c) {
 				// draw cell
+				context.beginPath();
 				context.rect(
 					this.pos.x+(c*(this.size+space)),
 					this.pos.y+(r*(this.fontsize+space)),
@@ -79,8 +83,7 @@ var table = function()
 			}
 		}
 
-		context.globalAlpha = prevAlpha;
-		context.font = prevFont;
+		context.restore();
 	}
 
 	this.getLongestWidth = function(context)

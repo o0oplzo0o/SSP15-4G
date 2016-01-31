@@ -33,9 +33,8 @@ var operator = function()
 	}
 	
 	this.draw = function(context)
-	{
-		var prevAlpha = context.globalAlpha;
-		var prevFont = context.font;
+	{	
+		context.save();
 
 		// settings
 		context.fillStyle = this.color;
@@ -53,8 +52,7 @@ var operator = function()
 		context.fillStyle = "#000000";
 		context.fillText(this.text,this.pos.x-20,this.pos.y+8);
 
-		context.globalAlpha = prevAlpha;
-		context.font = prevFont;
+		context.restore();
 	}
 	
 	this.getPosition = function()

@@ -15,7 +15,7 @@ var index = new function()
 		
 		var str = d.value;
 		//animation:init
-		inputToState.init(str);
+		//inputToState.init(str);
 		
 		//settimeout for chi
 		setTimeout(function(){

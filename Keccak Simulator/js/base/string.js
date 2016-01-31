@@ -33,9 +33,10 @@ var string = function()
 	
 	this.draw = function(context)
 	{
-		// store previous alpha and font
-		var prevAlpha = context.globalAlpha;
-		var prevFont = context.font;
+		context.save();
+
+		//var prevAlpha = context.globalAlpha;
+		//var prevFont = context.font;
 
 		// set font settings
 		context.save();
@@ -46,8 +47,10 @@ var string = function()
 		// draw text
 		context.fillText(this.text,this.pos.x,this.pos.y);
 
-		context.globalAlpha = prevAlpha;
-		context.font = prevFont;
+		//context.globalAlpha = prevAlpha;
+		//context.font = prevFont;
+
+		context.restore();
 	}
 	
 	this.getPosition = function()

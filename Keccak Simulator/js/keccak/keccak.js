@@ -477,6 +477,8 @@ var KECCAK = new function()
 			{
 				my_string = my_string + "00";
 			}
+			console.log("Padded "+(8*my_string.length/2)+" 00s");
+
 			my_string = my_string + "80";
 		}
 		
@@ -561,6 +563,8 @@ var KECCAK = new function()
 		}
 		
 		//Absorbing phase
+		console.log("Length of P: "+P.length);
+		
 		for(var i=0; i<Math.floor(Math.floor((P.length*8)/2)/r); i++)
 		{
 			var Pi = this.convertStrToTable(P.slice(i*(2*Math.floor(r/8)),(i+1)*Math.floor(2*r/8)) + common.padWith("00",Math.floor(c/8)));

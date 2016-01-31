@@ -4,6 +4,7 @@ var chi = new function()
 	this.context;
 
 	// track moving object
+	this.speedMultiplier = 1;
 	this.currentPhase = 0;
 	this.hitCounter = 0;
 	this.targetCounter = 0;
@@ -21,7 +22,6 @@ var chi = new function()
 
 	// animation timers
 	this.refresh;
-	this.blink;
 	
 	// display settings	
 	var padding = 25;
@@ -46,14 +46,13 @@ var chi = new function()
 		}
 		resizeCanvas();
 		*/
-
-		// start by showing state
-		this.playAnimationPhase(this.currentPhase); // Play 0
 		
 		// 60 fps update loop
 		this.update();
-		//this.blink = setInterval(this.textblink, 750);
 		this.refresh = setInterval(this.update,1000/60);
+
+		// start by showing state
+		this.playAnimationPhase(this.currentPhase); // Play 0
 	}
 	
 	this.showState = function() {
@@ -580,11 +579,6 @@ var chi = new function()
 		time.updateTime();
 		
 		chi_render.update();
-	}
-	
-	this.textblink = function(){
-		var chi_text = document.getElementById('chi');
-		chi_text.style.visibility = (chi_text.style.visibility == 'hidden' ? '' : 'hidden');
 	}
 
 	this.reorderCube = function() {

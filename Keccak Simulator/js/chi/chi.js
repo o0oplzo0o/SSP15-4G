@@ -182,10 +182,10 @@ var chi = new function()
 			var tonot = new line();
 			this.lines.push(tonot.createLine(
 				this.context,
-				x2+50,
-				y2,
-				x2+50,
-				y2-150,
+				x1,
+				y1+(spaceY/4),
+				x1+(spaceX/4),
+				y1+(spaceY/4),
 				"#000000",
 				1
 			));
@@ -193,10 +193,10 @@ var chi = new function()
 			var tonot2 = new line();
 			this.lines.push(tonot2.createLine(
 				this.context,
-				x2+50,
-				y2-150,
-				padding+posX+37.5+spaceX,
-				y2-150,
+				x1+(spaceX/4),
+				y1+(spaceY/4),
+				x1+(spaceX/4),
+				y1+(spaceY/4)+100,
 				"#000000",
 				1
 			));
@@ -221,20 +221,20 @@ var chi = new function()
 			if (i < 4) {
 				this.lines.push(toand.createLine(
 					this.context,
-					x1,
-					y1+(spaceY/4),
-					x1+(spaceX/4),
-					y1+(spaceY/4),
+					x2+50,
+					y2,
+					x2+50,
+					y2-150,
 					"#000000",
 					1
 				));
 
 				this.lines.push(toand2.createLine(
 					this.context,
-					x1+(spaceX/4),
-					y1+(spaceY/4),
-					x1+(spaceX/4),
-					y1+(spaceY/4)+100,
+					x2+50,
+					y2-150,
+					padding+posX+37.5+spaceX,
+					y2-150,
 					"#000000",
 					1
 				));
@@ -336,7 +336,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			""
+			"1"
 		));
 
 		posX = b*spaceX+25;
@@ -348,7 +348,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			""
+			"2"
 		));
 
 		posX = c*spaceX+25;
@@ -360,7 +360,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			""
+			"3"
 		));
 
 		// draw table
@@ -403,8 +403,7 @@ var chi = new function()
 
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x,
-			//chi.indicators[1].pos.y+125,
-			padding+50,
+			chi.indicators[1].pos.y+125,
 			0.5,
 			chi.objectHitTarget
 		);

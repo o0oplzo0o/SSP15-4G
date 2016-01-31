@@ -692,7 +692,3 @@ var chi = new function()
 		}
 	}
 }
-
-var go = new Array();
-
-chi.init(go);

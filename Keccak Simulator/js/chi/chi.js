@@ -12,9 +12,11 @@ var chi = new function()
 
 	// animation sets
 	this.cubes = new Array();
+	this.dialogs = new Array();
 	this.lines = new Array();
 	this.operators = new Array();
 	this.indicators = new Array(); // yellow cubes
+	this.slices = new Array();
 	this.tables = new Array();
 	
 	// storage
@@ -26,26 +28,22 @@ var chi = new function()
 	// display settings	
 	var padding = 25;
 	var spaceX = 150;
-	var spaceY = 500;
+	var spaceY = 450;
 	
-	this.init = function(i)
+	this.init = function(input)
 	{
 		this.canvas = document.getElementById("keccakCanvas");
 		this.context = this.canvas.getContext("2d");
 		this.context.font = "18px arial";
 
-		this.input = i;
-		
-    	// resize the canvas to fill browser window dynamically
-		/*
-		window.addEventListener('resize', resizeCanvas, false);
+		this.input = input;
 
-		function resizeCanvas() {
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
-		}
-		resizeCanvas();
-		*/
+		// create dialog box
+		var d = new dialog();
+		this.dialogs.push(d.createDialog(
+			this.context,
+			"The Chi function operates on a single row at a time, starting from the middle most row"
+		));
 		
 		// 60 fps update loop
 		this.update();
@@ -56,27 +54,22 @@ var chi = new function()
 	}
 	
 	this.showState = function() {
-		//create new slice with specific ordering
-		for (var i = 0; i < 5; ++i)
-		{
-			this.cubes.push(new Array());
-
-			for (var j = 0; j < 5; ++j)
-			{
-				var posX = ((i + 2) % 5) * 50;
-				var posY = ((j + 2) % 5) * 50;
-				var c = new cube();
-				this.cubes[i].push(c.createCube(
-					this.context,
-					515+posX,
-					275+posY,
-					50,
-					"#8ED6FF",
-					1,
-					" "
-				));
-			}
+		var filler = new Array();
+		for (var i=0; i<25; ++i) {
+			filler.push("");
 		}
+
+		//draw inputToState state (Pi)
+		var s = new slice();
+		this.slices.push(s.createSlice(
+			this.context,
+			515,
+			175,
+			50,
+			"#8ED6FF",
+			1,
+			filler
+		));
 
 		// start animation
 		setTimeout(function() {
@@ -94,36 +87,36 @@ var chi = new function()
 		// this.cubes[2][0]
 		
 		// set opacity of all unneeded cubes to 0.25
+		chi.slices[0].cubes = arrayToState(chi.slices[0].cubes);
 		for (var i = 0; i < 5; ++i) {
 			for (var j = 0; j < 5; ++j) {
 				if (j != 0) {
-					this.cubes[i][j].alpha = 0.25;
+					this.slices[0].cubes[i][j].alpha = 0.25;
 				}
 			}
 		}
+		chi.slices[0].cubes = stateToArray(chi.slices[0].cubes);
 
 		setTimeout(function(){
 			chi.targetCounter = 5;
 			
 			// move all needed cubes on x axis
+			chi.slices[0].cubes = arrayToState(chi.slices[0].cubes);
 			for (var i=0; i<5; ++i) {
 				var posX = ((i+2)%5) * spaceX;
-				chi.cubes[i][0].moveTo(
+				chi.slices[0].cubes[i][0].moveTo(
 					padding+posX,
 					padding,
 					0.5,
 					chi.objectHitTarget
 				);
 			}
+			chi.slices[0].cubes = stateToArray(chi.slices[0].cubes);
+
 		}, 1000*this.speedMultiplier);
 	}
 
 	this.clearSlice = function() {
-		// clear all 25 cubes
-		for (var i = 0; i < 5; ++i) {
-			chi.cubes[i] = [];
-		}
-
 		// replace with operations scene
 		setTimeout(function() {
 			chi.playAnimationPhase(++chi.currentPhase);
@@ -133,21 +126,25 @@ var chi = new function()
 	this.showOperations = function() {
 		console.log("showing operations");
 
+		// update dialog box
+		this.dialogs[0].setMessage(this.context, "For each \"cube\" (A, B, C, D, E) in the row, 2 other succeeding cubes are used along with NOT, AND and XOR bitwise operations to calculate the final value, marked with prime (A', B', C', D', E').");
+
+		chi.slices = [];
+
 		// create 10 cubes
 		// gonna change this to grouped operations
-		var labels = [["A", "A'"],
+		var labels = [
+			["A", "A'"],
 			["B", "B'"],
 			["C", "C'"],
 			["D", "D'"],
 			["E", "E'"],
 		]
 
-		for (var i = 0; i < 5; ++i)
-		{
+		for (var i = 0; i < 5; ++i) {
 			this.cubes.push(new Array());
 
-			for (var j = 0; j < 2; ++j)
-			{
+			for (var j = 0; j < 2; ++j) {
 				var posX = i * spaceX;
 				var posY = j * spaceY;
 				var c = new cube();
@@ -185,10 +182,10 @@ var chi = new function()
 			var tonot = new line();
 			this.lines.push(tonot.createLine(
 				this.context,
-				x1,
-				y1+(spaceY/4),
-				x1+(spaceX/4),
-				y1+(spaceY/4),
+				x2+50,
+				y2,
+				x2+50,
+				y2-150,
 				"#000000",
 				1
 			));
@@ -196,10 +193,10 @@ var chi = new function()
 			var tonot2 = new line();
 			this.lines.push(tonot2.createLine(
 				this.context,
-				x1+(spaceX/4),
-				y1+(spaceY/4),
-				x1+(spaceX/4),
-				y1+(spaceY/4)+100,
+				x2+50,
+				y2-150,
+				padding+posX+37.5+spaceX,
+				y2-150,
 				"#000000",
 				1
 			));
@@ -224,20 +221,20 @@ var chi = new function()
 			if (i < 4) {
 				this.lines.push(toand.createLine(
 					this.context,
-					x2+50,
-					y2,
-					x2+50,
-					y2-150,
+					x1,
+					y1+(spaceY/4),
+					x1+(spaceX/4),
+					y1+(spaceY/4),
 					"#000000",
 					1
 				));
 
 				this.lines.push(toand2.createLine(
 					this.context,
-					x2+50,
-					y2-150,
-					padding+posX+37.5+spaceX,
-					y2-150,
+					x1+(spaceX/4),
+					y1+(spaceY/4),
+					x1+(spaceX/4),
+					y1+(spaceY/4)+100,
 					"#000000",
 					1
 				));
@@ -339,7 +336,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			"1"
+			""
 		));
 
 		posX = b*spaceX+25;
@@ -351,7 +348,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			"2"
+			""
 		));
 
 		posX = c*spaceX+25;
@@ -363,7 +360,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			"3"
+			""
 		));
 
 		// draw table
@@ -406,7 +403,8 @@ var chi = new function()
 
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x,
-			chi.indicators[1].pos.y+125,
+			//chi.indicators[1].pos.y+125,
+			padding+50,
 			0.5,
 			chi.objectHitTarget
 		);
@@ -519,7 +517,7 @@ var chi = new function()
 	this.moveAB = function() {
 		console.log("moveAB");
 
-		chi.targetCounter = 1;
+		chi.targetCounter = 2;
 		
 		chi.indicators[0].moveTo(
 			chi.indicators[0].pos.x,
@@ -542,7 +540,7 @@ var chi = new function()
 	this.moveA = function() {
 		console.log("moveA");
 
-		chi.targetCounter = 0;
+		chi.targetCounter = 1;
 		
 		chi.indicators[0].moveTo(
 			chi.indicators[0].pos.x,
@@ -562,6 +560,7 @@ var chi = new function()
 		// start next set in series
 		setTimeout(function(){
 			chi.indicators = [];
+			chi.tables = [];
 
 			if (chi.index < 4) {
 				chi.index += 1;

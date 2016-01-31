@@ -326,7 +326,7 @@ var chi = new function()
 
 		// draw 3 small cubes at a b and c
 		var posX = a*spaceX+25;
-		var posY = spaceY-450;
+		var posY = 50;
 		
 		var ac = new cube();
 		this.indicators.push(ac.createCube(
@@ -336,7 +336,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			"1"
+			""
 		));
 
 		posX = b*spaceX+25;
@@ -348,7 +348,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			"2"
+			""
 		));
 
 		posX = c*spaceX+25;
@@ -360,7 +360,7 @@ var chi = new function()
 			20,
 			"#FFF000",
 			1,
-			"3"
+			""
 		));
 
 		// draw table
@@ -403,7 +403,7 @@ var chi = new function()
 
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x,
-			chi.indicators[1].pos.y+125,
+			padding+50+(spaceY/4),
 			0.5,
 			chi.objectHitTarget
 		);
@@ -412,14 +412,14 @@ var chi = new function()
 		if (a == 3) {
 			chi.indicators[2].moveTo(
 				chi.indicators[2].pos.x,
-				chi.indicators[2].pos.y+50,
+				padding+(spaceY/4)-25,
 				0.5,
 				chi.objectHitTarget
 			);
 		} else {
 			chi.indicators[2].moveTo(
 				chi.indicators[2].pos.x,
-				chi.indicators[2].pos.y+80,
+				padding+(spaceY/4),
 				0.5,
 				chi.objectHitTarget
 			);
@@ -472,7 +472,7 @@ var chi = new function()
 		if (a == 3) {
 			chi.indicators[2].moveTo(
 				chi.indicators[2].pos.x,
-				chi.indicators[2].pos.y+190,
+				chi.indicators[2].pos.y+185,
 				0.5,
 				chi.objectHitTarget
 			);
@@ -520,13 +520,13 @@ var chi = new function()
 		
 		chi.indicators[0].moveTo(
 			chi.indicators[0].pos.x,
-			chi.indicators[0].pos.y+360,
+			padding+50+(spaceY/4*3),
 			0.5,
 			chi.objectHitTarget
 		);
 		chi.indicators[1].moveTo(
 			chi.indicators[0].pos.x,
-			chi.indicators[0].pos.y+360,
+			padding+50+(spaceY/4*3),
 			0.5,
 			chi.objectHitTarget
 		);
@@ -543,7 +543,7 @@ var chi = new function()
 		
 		chi.indicators[0].moveTo(
 			chi.indicators[0].pos.x,
-			chi.indicators[0].pos.y+100,
+			padding+spaceY,
 			0.5,
 			chi.objectHitTarget
 		);

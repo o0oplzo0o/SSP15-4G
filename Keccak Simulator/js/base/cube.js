@@ -1,3 +1,10 @@
+/* 31 jan 2016
+	- some code optimizations
+	- fixed graphical bug
+	- removed set onHitTarget to null (eric's fix)
+	- make text render at center irregardless of size
+*/
+
 var cube = function()
 {
 	this.pos = {x:0,y:0};
@@ -78,11 +85,14 @@ var cube = function()
 		context.restore();
 
 		//text
-		context.fillStyle = "#000000";
 		context.font = this.fontsize + "px " + this.font;
+		context.textAlign = "center";
+		context.textBaseline = "middle";
+		context.fillStyle = "#000000";
+
 		context.fillText(this.text,
-			this.pos.x+(0.15 * this.size),
-			this.pos.y+(0.70 * this.size)
+			this.pos.x+this.size/2,
+			this.pos.y+this.size/2
 		);
 
 		context.restore();
@@ -111,7 +121,6 @@ var cube = function()
 	{
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
-		self.onHitTargetCB = null;
 	}
 	
 	//Specific object update loop

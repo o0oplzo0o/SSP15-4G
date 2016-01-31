@@ -2,6 +2,7 @@
 	- changed default fontspacing to 4
 	- some code optimizations
 	- fixed graphical bug
+	- removed moveTo and relevant loops (optimization)
 */
 
 var dialog = function()
@@ -24,17 +25,16 @@ var dialog = function()
 	this.createDialog = function(context, m)
 	{
 		// constructor settings
-		context.save();
 		this.setMessage(context, m);
 		this.draw(context);
-		context.restore();
 		
-		setInterval(this.update,1000/60, this);
 		return this;
 	}
 	
 	this.draw = function(context)
 	{
+		context.save();
+
 		context.globalAlpha = this.alpha;
 		context.font = this.fontsize + "px " + this.font;
 				
@@ -69,9 +69,13 @@ var dialog = function()
 			);
 			y+=this.fontsize+this.fontspacing;
 		}
+
+		context.restore();
 	}
 
 	this.setMessage = function(context, m) {
+		context.save();
+		
 		context.font = this.fontsize + "px " + this.font;
 
 		// split the text by words 
@@ -89,22 +93,7 @@ var dialog = function()
 		lines.push(new_line);
 
 		this.message = lines;
-	}
-	
-	//Specific object update loop
-	this.update = function(self)
-	{
-		if(self.isMoving)
-		{
-			self.pos.x = util.lerp(self.ori.x,self.dest.x,self.factor);
-			self.pos.y = util.lerp(self.ori.y,self.dest.y,self.factor);
-			
-			if(self.factor >= 1)
-			{
-				self.isMoving = false;
-				self.onHitTarget(self);
-			}
-			self.factor += time.dt * self.speed;
-		}
+
+		context.restore();
 	}
 }

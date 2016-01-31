@@ -1,3 +1,7 @@
+/* 31 jan 2016
+	- removed set onHitTarget to null (eric's fix)
+*/
+
 var line = function()
 {
 	this.pos = {x:0,y:0,x2:0,y2:0};
@@ -69,8 +73,6 @@ var line = function()
 		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
-		
-		self.onHitTargetCB = null;
 	}
 
 	

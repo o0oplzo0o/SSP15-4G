@@ -1,3 +1,9 @@
+/* 31 jan 2016
+	- removed set onHitTarget to null (eric's fix)
+	- make text render at center irregardless of size
+	- changed default font to sans-serif, serif
+*/
+
 var operator = function()
 {
 	this.pos = {x:0,y:0};
@@ -6,8 +12,8 @@ var operator = function()
 	this.alpha = 1;
 	this.text = "";
 	
-	this.font = "Arial";
-	this.fontsize = "18";
+	this.font = "sans-serif, serif";
+	this.fontsize = 18;
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -49,8 +55,11 @@ var operator = function()
 
 		// text
 		context.font = this.fontsize + "px " + this.font;
+		context.textAlign = "center";
+		context.textBaseline = "middle";
 		context.fillStyle = "#000000";
-		context.fillText(this.text,this.pos.x-20,this.pos.y+8);
+		
+		context.fillText(this.text,this.pos.x,this.pos.y);
 
 		context.restore();
 	}
@@ -79,8 +88,6 @@ var operator = function()
 		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
-		
-		self.onHitTargetCB = null;
 	}
 	
 	//Specific object update loop

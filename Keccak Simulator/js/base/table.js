@@ -1,5 +1,6 @@
 /* 31 jan 2016
 	- fixed graphical bug
+	- changed default font to sans-serif, serif
 */
 
 var table = function()
@@ -12,7 +13,7 @@ var table = function()
 	this.alpha = 1;
 	this.bgcolor = "#FFFFFF";
 	this.bordercolor = "#000000";
-	this.font = "Arial";
+	this.font = "sans-serif, serif";
 	this.fontcolor = "#000000";
 	this.fontsize = 18;
 	this.padding = 5;
@@ -143,8 +144,6 @@ var table = function()
 		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
-		
-		self.onHitTargetCB = null;
 	}
 	
 	//Specific object update loop

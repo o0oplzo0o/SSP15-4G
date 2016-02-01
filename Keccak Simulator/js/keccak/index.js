@@ -14,6 +14,7 @@ var index = new function()
 		var d = document.getElementById("input_text");
 		
 		var str = d.value;
+		/*
 		//animation:init
 		//inputToState.init(str);
 		
@@ -21,6 +22,7 @@ var index = new function()
 		setTimeout(function(){
 		var hexStr = common.string2hex(str);
 		var hexValue = common.sizeOfHex(hexStr);
+		*/
 		
 		var result = KECCAK.Keccak([hexValue,hexStr], index.hashProperties.r,index.hashProperties.c * 2,0x1F,index.hashProperties.n,true);
 		

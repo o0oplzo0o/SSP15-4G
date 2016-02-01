@@ -152,7 +152,7 @@ p{
 	padding: 5px 25px;
 	background-color:	#404040  ;
 	/*give the background a gradient
-	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
+	background-color:#606060; /*required for browsers that don't support gradients*/
 	border-radius:15px ;
 	/*style to the text inside the button*/
 	font-family:Andika, Arial, sans-serif; 
@@ -198,30 +198,30 @@ p{
     -moz-border-radius: 10px;
 }
 .KNavin{
-	border:2px groove #7c93ba;
-	width: 120px;
+	/*border:2px groove #7c93ba;*/
+	width: 100%;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	
 	/*give the background a gradient
-	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
-	background: -webkit-gradient(linear, left top, left bottom, from(#88add7), to(#6b6dbb));
-	background: -webkit-linear-gradient(top, #88add7, #6b6dbb);
-	background: -moz-linear-gradient(top, #88add7, #6b6dbb);
-	background: -o-linear-gradient(top, #88add7, #6b6dbb);
-	background: linear-gradient(top, #88add7, #6b6dbb);
+	background-color:#606060; /*required for browsers that don't support gradients*/
+	background: -webkit-gradient(linear, left top, left bottom, from(#909090), to(#606060));
+	background: -webkit-linear-gradient(top, #909090, #606060);
+	background: -moz-linear-gradient(top, #909090, #606060);
+	background: -o-linear-gradient(top, #909090, #606060);
+	background: linear-gradient(top, #909090, #606060);
 	/*style to the text inside the button*/
 	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
-	font-size:1.3em;
+	font-size:1em;
 	letter-spacing:.1em;
 	font-variant:small-caps;
 	text-align: center;
 	
-	/*give the corners a small curve*/
+	/*give the corners a small curve
 	-webkit-border-radius:  15px 0  0 15px;
 	-moz-border-radius:  15px 0 0 15px ;
-	border-radius:  15px 0 0 15px ;
+	border-radius:  15px 0 0 15px ;*/
 	/*add a drop shadow to the button*/
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
@@ -231,27 +231,27 @@ p{
 .KNav{
 	vertical-align: middle;
 	float:left;
-
-	margin-left:80px;
-	margin-top: 50px;
+	margin-left:20px;
+	margin-top:50px;
+	margin-right:20px;
 	height:600px;
-	width: 100px;
+	width: 120px;
 
 	
 }
 
 
-input[type="text"] ,textarea {
-	border: 2px solid #6b6dbb;
-	border-radius: 10px;
-	height: 50px;
+input[type="text"], textarea {
+	border: 2px solid #606060;
+	/*border-radius: 10px;*/
+	height: 40px;
 	width: 60%;
 	resize: none;
 	display:inline-block;
 	vertical-align:middle;
-	font-family:Andika, Arial, sans-serif; 
+	font-family:Andika, Arial, sans-serif;
 	color:#FF9933;
-	font-size:1.2em;
+	font-size:1em;
 }
 
 .one{
@@ -316,27 +316,28 @@ input[type="text"] ,textarea {
 	}
 	
 .round1{
-	border:2px groove #7c93ba;
+	/*border:2px groove #7c93ba;*/
+	border:none;
 	cursor:pointer; /*forces the cursor to change to a hand when the button is hovered*/
-	padding: 5px 25px;
+	padding: 5px 15px;
 	background-color:	#707070;
 	/*give the background a gradient
-	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
-	background: -webkit-gradient(linear, left top, left bottom, from(#88add7), to(#6b6dbb));
-	background: -webkit-linear-gradient(top, #88add7, #6b6dbb);
-	background: -moz-linear-gradient(top, #88add7, #6b6dbb);
-	background: -o-linear-gradient(top, #88add7, #6b6dbb);
-	background: linear-gradient(top, #88add7, #6b6dbb);
+	background-color:#606060; /*required for browsers that don't support gradients*/
+	background: -webkit-gradient(linear, left top, left bottom, from(#909090), to(#606060));
+	background: -webkit-linear-gradient(top, #909090, #606060);
+	background: -moz-linear-gradient(top, #909090, #606060);
+	background: -o-linear-gradient(top, #909090, #606060);
+	background: linear-gradient(top, #909090, #606060);
 	/*style to the text inside the button*/
 	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.2em;
 	letter-spacing:.1em;
 	font-variant:small-caps;
-	/*give the corners a small curve*/
+	/*give the corners a small curve
 	-webkit-border-radius:  15px 0  0 15px;
 	-moz-border-radius:  15px 0 0 15px ;
-	border-radius:  15px 0 0 15px ;
+	border-radius:  15px 0 0 15px ;*/
 	/*add a drop shadow to the button*/
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
@@ -351,27 +352,28 @@ input[type="text"] ,textarea {
 }	
 
 .round {
-	border:2px groove #7c93ba;
+	/*border:2px groove #7c93ba;*/
+	border:none;
 	cursor:pointer; /*forces the cursor to change to a hand when the button is hovered*/
 	padding: 5px 25px;
 	background-color:	#707070;
 	/*give the background a gradient
-	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
-	background: -webkit-gradient(linear, left top, left bottom, from(#88add7), to(#6b6dbb));
-	background: -webkit-linear-gradient(top, #88add7, #6b6dbb);
-	background: -moz-linear-gradient(top, #88add7, #6b6dbb);
-	background: -o-linear-gradient(top, #88add7, #6b6dbb);
-	background: linear-gradient(top, #88add7, #6b6dbb);
+	background-color:#606060; /*required for browsers that don't support gradients*/
+	background: -webkit-gradient(linear, left top, left bottom, from(#909090), to(#606060));
+	background: -webkit-linear-gradient(top, #909090, #606060);
+	background: -moz-linear-gradient(top, #909090, #606060);
+	background: -o-linear-gradient(top, #909090, #606060);
+	background: linear-gradient(top, #909090, #606060);
 	/*style to the text inside the button*/
 	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.2em;
 	letter-spacing:.1em;
 	font-variant:small-caps;
-	/*give the corners a small curve*/
+	/*give the corners a small curve
 	-webkit-border-radius: 0 15px 15px 0;
 	-moz-border-radius: 0 15px 15px 0;
-	border-radius: 0 15px 15px 0;
+	border-radius: 0 15px 15px 0;*/
 	/*add a drop shadow to the button*/
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
@@ -392,7 +394,7 @@ input[type="text"] ,textarea {
 	padding: 5px 25px;
 	background-color:	#404040  ;
 	/*give the background a gradient
-	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
+	background-color:#606060; /*required for browsers that don't support gradients*/
 	
 	/*style to the text inside the button*/
 	font-family:Andika, Arial, sans-serif; 
@@ -443,11 +445,11 @@ input[type="text"] ,textarea {
     border: 2px groove #7c93ba;
     padding: 20px;
 	
-    background: -webkit-gradient(linear, left top, left bottom, from(#88add7), to(#6b6dbb));
-	background: -webkit-linear-gradient(top, #88add7, #6b6dbb);
-	background: -moz-linear-gradient(top, #88add7, #6b6dbb);
-	background: -o-linear-gradient(top, #88add7, #6b6dbb);
-	background: linear-gradient(top, #88add7, #6b6dbb);*/
+    background: -webkit-gradient(linear, left top, left bottom, from(#909090), to(#606060));
+	background: -webkit-linear-gradient(top, #909090, #606060);
+	background: -moz-linear-gradient(top, #909090, #606060);
+	background: -o-linear-gradient(top, #909090, #606060);
+	background: linear-gradient(top, #909090, #606060);*/
     -webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
@@ -456,7 +458,7 @@ input[type="text"] ,textarea {
 
 
 .form-style-3 textarea{
- 	border: 2px solid #6b6dbb;
+ 	border: 2px solid #606060;
 	border-radius: 10px;
 	height: 50px;
 	width: 90%;

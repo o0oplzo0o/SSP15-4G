@@ -1,5 +1,12 @@
+*, *:before, *:after {
+	margin:0;
+	padding:0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
 body{	
-	background-color: 	#FFF    ;
+	background-color:#ffffff;
 }
 
 /*Nav bar*/
@@ -8,7 +15,7 @@ body{
 	width: 100%;
     list-style-type: none;
     margin: 0;
-    padding-left: 20px;
+    padding-left: 0px;
     overflow: hidden;
     background-color: #606060  ;
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
@@ -178,17 +185,17 @@ p{
 
 .stylecanvas{
 	float:left;
-	margin-top: 30px;
-	margin-left : 20px;
-	margin-bottom: 20px;
-	margin-right: 20px;
-	padding: 20px 20px 20px 80px;
-	border:3px groove #7c93ba;
+	margin:20px;
+	padding:10px;
+	border:3px groove #909090;
+	/*
 	-webkit-border-radius: 10px;
     -moz-border-radius: 10px;
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	*/
+	width:80%;
 }
 .KCanvas{
 	width: 1600px;
@@ -235,9 +242,7 @@ p{
 	margin-top:50px;
 	margin-right:20px;
 	height:600px;
-	width: 120px;
-
-	
+	width:10%;
 }
 
 
@@ -255,7 +260,9 @@ input[type="text"], textarea {
 }
 
 .one{
-	padding: 20px 20px 20px 80px;
+	padding-top: 40px;
+	padding-bottom:10px;
+	text-align:center;
 }
 
 .first{
@@ -416,16 +423,12 @@ input[type="text"], textarea {
 	box-shadow: rgba(0, 0, 0, .25) 0 1px 0px;
 }
 
-
-
-
-
 .form-style-3{
 	padding-left: 80px;
     max-width: 80%;
     font-family: Andika, Arial, sans-serif; 
 
-	font-size:1.2em;
+	font-size:1em;
 	letter-spacing:.1em;
 	font-variant:small-caps;
 }
@@ -470,13 +473,18 @@ input[type="text"], textarea {
 	font-size:1.0em;
 }
 
+#wrapper {
+	border:none;
+	margin:0;
+	padding:0;
+	width:100%;
+}
 
-
-
-
-
-
-
-
-
-	
+.clear {
+	clear:both;
+	font-size:0;
+	line-height:0;
+	height:0;
+	margin:0;
+	padding:0;
+}

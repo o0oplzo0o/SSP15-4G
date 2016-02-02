@@ -23,11 +23,34 @@ var time = new function()
 	}
 }
 
+
+
 var util = new function()
 {
 	this.lerp = function(a, b, t)
 	{
 		return a + t * (b - a);
+	}
+	
+	this.dec2bin = function(val)
+	{
+		var initVal = 128; //8 bits
+		var bin = "";
+		
+		for(var i=0; i<8; i++)
+		{
+			if(val >= initVal)
+			{
+				bin += "1";
+				val -= initVal;
+			}
+			else
+			{
+				bin += "0";
+			}
+			initVal /= 2;
+		}
+		return bin;
 	}
 }
 

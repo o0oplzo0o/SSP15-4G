@@ -492,4 +492,4 @@ var iota = new function()
 	}
 }
 
-//iota.init();
+iota.init();

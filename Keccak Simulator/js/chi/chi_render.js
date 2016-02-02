@@ -5,9 +5,9 @@ var chi_render = new function()
 	{
 		chi.context.clearRect(0, 0, chi.canvas.width, chi.canvas.height);
 		
-		// dialogs set
-		for(var i=0; i<chi.dialogs.length; ++i) {
-			chi.dialogs[i].draw(chi.context);
+		// slices set
+		for (var i=0; i<chi.slices.length; ++i) {
+			chi.slices[i].draw(chi.context);
 		}
 		
 		// lines set
@@ -32,14 +32,14 @@ var chi_render = new function()
 			}
 		}
 
-		// slices set
-		for (var i=0; i<chi.slices.length; ++i) {
-			chi.slices[i].draw(chi.context);
-		}
-
 		// tables set
 		for (var i=0; i<chi.tables.length; ++i) {
 			chi.tables[i].draw(chi.context);
+		}
+		
+		// dialogs set
+		for(var i=0; i<chi.dialogs.length; ++i) {
+			chi.dialogs[i].draw(chi.context);
 		}
 	}
 }

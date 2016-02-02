@@ -11,6 +11,8 @@ var string = function()
 	this.pos = {x:0,y:0};
 	this.size = 0;
 	this.text = "";
+	this.textAlign = "start";
+	this.textBaseline = "alphabetic";
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -43,6 +45,8 @@ var string = function()
 		// set font settings
 		context.save();
 		context.font = this.size + "px " + this.font;
+		context.textAlign = this.textAlign;
+		context.textBaseline = this.textBaseline;
 		context.globalAlpha = this.alpha;
 		context.fillStyle = this.color;
 

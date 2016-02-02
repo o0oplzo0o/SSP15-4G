@@ -1,13 +1,13 @@
-var operator = function()
+/* 31 jan 2016
+	- removed set onHitTarget to null (eric's fix)
+*/
+
+var line = function()
 {
-	this.pos = {x:0,y:0};
+	this.pos = {x:0,y:0,x2:0,y2:0};
 	this.size = 0;
 	this.color = "#FFFFFF";
 	this.alpha = 1;
-	this.text = "";
-	
-	this.font = "Arial";
-	this.fontsize = "18";
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -17,14 +17,14 @@ var operator = function()
 	
 	this.onHitTargetCB = null; //Function callback when cube moveTo hit destination
 	
-	this.createOperator = function(context, x, y, size, color, alpha, text)
+	this.createLine = function(context, x, y, x2, y2, color, alpha)
 	{
 		this.pos.x = x;
 		this.pos.y = y;
-		this.size = size;
+		this.pos.x2 = x2;
+		this.pos.y2 = y2;
 		this.color = color;
 		this.alpha = alpha;
-		this.text = text;
 		
 		this.draw(context);
 		
@@ -34,27 +34,19 @@ var operator = function()
 	
 	this.draw = function(context)
 	{
-		var prevAlpha = context.globalAlpha;
-		var prevFont = context.font;
+		context.save();
 
 		// settings
-		context.fillStyle = this.color;
-		context.strokeStyle = "#000000";
+		context.strokeStyle = this.color;
 		context.globalAlpha = this.alpha;
 
-		// circle
+		// line
 		context.beginPath();
-		context.arc(this.pos.x, this.pos.y, this.size/2, 0, 2 * Math.PI, false);
-		context.fill();
+		context.moveTo(this.pos.x,this.pos.y);
+		context.lineTo(this.pos.x2,this.pos.y2);
 		context.stroke();
 
-		// text
-		context.font = this.fontsize + "px " + this.font;
-		context.fillStyle = "#000000";
-		context.fillText(this.text,this.pos.x-20,this.pos.y+8);
-
-		context.globalAlpha = prevAlpha;
-		context.font = prevFont;
+		context.restore();
 	}
 	
 	this.getPosition = function()
@@ -81,9 +73,8 @@ var operator = function()
 		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
-		
-		self.onHitTargetCB = null;
 	}
+
 	
 	//Specific object update loop
 	this.update = function(self)

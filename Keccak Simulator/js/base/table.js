@@ -1,3 +1,8 @@
+/* 31 jan 2016
+	- fixed graphical bug
+	- changed default font to sans-serif, serif
+*/
+
 var table = function()
 {
 	// constructor settings
@@ -8,7 +13,7 @@ var table = function()
 	this.alpha = 1;
 	this.bgcolor = "#FFFFFF";
 	this.bordercolor = "#000000";
-	this.font = "Arial";
+	this.font = "sans-serif, serif";
 	this.fontcolor = "#000000";
 	this.fontsize = 18;
 	this.padding = 5;
@@ -38,8 +43,7 @@ var table = function()
 	
 	this.draw = function(context)
 	{
-		var prevAlpha = context.globalAlpha;
-		var prevFont = context.font;
+		context.save();
 
 		context.globalAlpha = this.alpha;
 		context.font = this.fontsize + "px " + this.font;
@@ -55,6 +59,7 @@ var table = function()
 		for (var r = 0; r < this.input.length; ++r) {
 			for (var c = 0; c < this.input[r].length; ++c) {
 				// draw cell
+				context.beginPath();
 				context.rect(
 					this.pos.x+(c*(this.size+space)),
 					this.pos.y+(r*(this.fontsize+space)),
@@ -79,8 +84,7 @@ var table = function()
 			}
 		}
 
-		context.globalAlpha = prevAlpha;
-		context.font = prevFont;
+		context.restore();
 	}
 
 	this.getLongestWidth = function(context)
@@ -140,8 +144,6 @@ var table = function()
 		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
-		
-		self.onHitTargetCB = null;
 	}
 	
 	//Specific object update loop

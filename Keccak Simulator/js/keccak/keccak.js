@@ -1,8 +1,6 @@
 var KECCAK = new function()
 {
-	// byan
-	var animate = new Array();
-	var done = false;
+	this.data = new Array();
 	
 	this.BLOCKSIZE = [25, 50, 100, 200, 400, 800, 1600];
 	
@@ -49,6 +47,8 @@ var KECCAK = new function()
 		/*
 		b: parameter b, must be 25, 50, 100, 200, 400, 800 or 1600 (default value)"""
         */
+		
+		this.data = new Array();
 		this.setB(b);
 	};
 	
@@ -218,7 +218,7 @@ var KECCAK = new function()
 		return output.toUpperCase();
 	};
 	
-	this.Round = function(A,RCfixed)
+	this.Round = function(A,RCfixed,index,name)
 	{
 		/*
 		Perform one round of computation as defined in the Keccak-f permutation
@@ -235,39 +235,50 @@ var KECCAK = new function()
         var C = [0,0,0,0,0];
         var D = [0,0,0,0,0];
 		
+		
+		this.data[name + "_round" + index]["theta_step1"] = new Array();
 		//Theta step Start
 		for(var i=0; i<5; i++)
 		{
 			C[i] = bigInt(A[i][0]).xor(bigInt(A[i][1])).xor(bigInt(A[i][2])).xor(bigInt(A[i][3])).xor(bigInt(A[i][4])).toString();
+			this.data[name + "_round" + index]["theta_step1"].push(A[i][0],A[i][1],A[i][2],A[i][3],A[i][4],C[i]);
 		}
 		
+		this.data[name + "_round" + index]["theta_step2"] = new Array();
 		for(var i=0; i<5; i++)
 		{
 			var tempA = bigInt(C[common.mod(i-1,5)]);
 			var tempB = this.rot(C[common.mod(i+1,5)],1);
 			D[i] = tempA.xor(tempB).toString();
+			this.data[name + "_round" + index]["theta_step2"].push(tempA,tempB,D[i]);
 		}
 		
+		this.data[name + "_round" + index]["theta_step3"] = new Array();
 		for(var i=0; i<5; i++)
 		{
 			for(var j=0; j<5; j++)
 			{
+				this.data[name + "_round" + index]["theta_step3"].push(A[i][j],D[i]);
 				A[i][j] = bigInt(A[i][j]).xor(bigInt(D[i])).toString();
+				this.data[name + "_round" + index]["theta_step3"].push(A[i][j]);
 			}
 		}
-		
 		//Theta step End
 		
+		this.data[name + "_round" + index]["rhopi_step1"] = new Array();
 		//Rho and Pi steps Start
 		for(var i=0; i<5; i++)
 		{
 			for(var j=0; j<5; j++)
 			{
+				this.data[name + "_round" + index]["rhopi_step1"].push(A[i][j],this.r[i][j]);
 				B[j][common.mod(2*i+3*j,5)] = this.rot(A[i][j], this.r[i][j]);
+				this.data[name + "_round" + index]["rhopi_step1"].push(B[j][common.mod(2*i+3*j,5)]);
 			}
 		}
 		//Rho and Pi steps End
 		
+		this.data[name + "_round" + index]["chi_step1"] = new Array();
 		//Chi step Start
 		for(var i=0; i<5; i++)
 		{
@@ -279,59 +290,22 @@ var KECCAK = new function()
 				var tempD = tempB.and(tempC);
 				var tempE = tempA.xor(tempD);
 				A[i][j] = tempE.toString();
+				this.data[name + "_round" + index]["chi_step1"].push(B[i][j],B[common.mod(i+1,5)][j],B[common.mod(i+2,5)][j],A[i][j]);
 			}
 		}
 		//Chi step End
-
-		// animate Chi part
-		if (done == false && inputToState.done==true) {
-			done = true;
-			//document.getElementById("keccakCanvas").style.background='-webkit-gradient(linear, left top, left bottom, color-stop(0, #DEFCD4), color-stop(100, #abbd73))';
-			for(var i=0; i<5; i++)
-			{
-				animate.push(new Array());
-				/*
-				var str = parseInt(strB[i][0], 16);
-				var bin = parseInt(str).toString(2);
-
-				while (bin.length < 4) {
-					bin = "0" + bin;
-				}
-
-				animate.push(bin);
-				*/
-
-				// push a
-				var tempA = bigInt(B[i][1]);
-				animate[i].push(common.hex(tempA));
-				
-				// push not
-				var tempB = bigInt(B[common.mod(i+1,5)][1]).add(1).multiply(-1);
-				animate[i].push(common.hex(tempB));
-
-				// push c
-				var tempC = bigInt(B[common.mod(i+2,5)][1]);
-				animate[i].push(common.hex(tempC));
-
-				// push and
-				var tempD = tempB.and(tempC);
-				animate[i].push(common.hex(tempD));
-
-				// push xor
-				var tempE = tempA.xor(tempD);
-				animate[i].push(common.hex(tempE));
-			}
-			chi.init(animate);
-		}
 		
+		this.data[name + "_round" + index]["iota_step1"] = new Array();
 		//Iota step Start
+		this.data[name + "_round" + index]["iota_step1"].push(A[0][0],RCfixed);
 		A[0][0] = bigInt(A[0][0]).xor(RCfixed).toString();
+		this.data[name + "_round" + index]["iota_step1"].push(A[0][0]);
 		//Iota step End
 		
 		return A;		
 	};
 	
-	this.KeccakF = function(A, verbose)
+	this.KeccakF = function(A, verbose, name)
 	{
 		/*
 		Perform Keccak-f function on the state A
@@ -352,7 +326,8 @@ var KECCAK = new function()
 		
 		for(var i=0; i<this.nr; i++)
 		{
-			A = this.Round(A,bigInt(this.RC[i]).mod((bigInt(1).shiftLeft(this.w))));
+			this.data[name + "_round" + i] = new Array();
+			A = this.Round(A,bigInt(this.RC[i]).mod((bigInt(1).shiftLeft(this.w))),i, name);
 			if(verbose)
 			{
 				this.printState(A, " : Status end of round " + (i+1) + "/" + this.nr);
@@ -502,6 +477,8 @@ var KECCAK = new function()
 			{
 				my_string = my_string + "00";
 			}
+			console.log("Padded "+(8*my_string.length/2)+" 00s");
+
 			my_string = my_string + "80";
 		}
 		
@@ -586,6 +563,8 @@ var KECCAK = new function()
 		}
 		
 		//Absorbing phase
+		console.log("Length of P: "+P.length);
+		
 		for(var i=0; i<Math.floor(Math.floor((P.length*8)/2)/r); i++)
 		{
 			var Pi = this.convertStrToTable(P.slice(i*(2*Math.floor(r/8)),(i+1)*Math.floor(2*r/8)) + common.padWith("00",Math.floor(c/8)));
@@ -596,7 +575,7 @@ var KECCAK = new function()
 					S[x][y] = bigInt(S[x][y]).xor(Pi[x][y]).toString();
 				}
 			}
-			S = this.KeccakF(S, verbose);
+			S = this.KeccakF(S, verbose, "absorb");
 		}
 		
 		if(verbose)
@@ -614,7 +593,7 @@ var KECCAK = new function()
 			outputLength -= r;
 			if(outputLength > 0)
 			{
-				S = this.KeccakF(S, verbose);
+				S = this.KeccakF(S, verbose, "squeeze");
 			}
 			
 			// NB: done by block of length r, could have to be cut if outputLength
@@ -625,7 +604,7 @@ var KECCAK = new function()
 		{
 			console.log("Value after squeezing : " + this.convertTableToStr(S));
 		}
-		
+		console.log(this.data);
 		return Z.slice(0,Math.floor(2*n/8));
 	};
 }

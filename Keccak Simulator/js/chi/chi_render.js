@@ -5,6 +5,11 @@ var chi_render = new function()
 	{
 		chi.context.clearRect(0, 0, chi.canvas.width, chi.canvas.height);
 		
+		// slices set
+		for (var i=0; i<chi.slices.length; ++i) {
+			chi.slices[i].draw(chi.context);
+		}
+		
 		// lines set
 		for(var i=0; i<chi.lines.length; ++i) {
 			chi.lines[i].draw(chi.context);
@@ -30,6 +35,11 @@ var chi_render = new function()
 		// tables set
 		for (var i=0; i<chi.tables.length; ++i) {
 			chi.tables[i].draw(chi.context);
+		}
+		
+		// dialogs set
+		for(var i=0; i<chi.dialogs.length; ++i) {
+			chi.dialogs[i].draw(chi.context);
 		}
 	}
 }

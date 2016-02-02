@@ -1,9 +1,19 @@
-var line = function()
+/* 31 jan 2016
+	- removed set onHitTarget to null (eric's fix)
+	- make text render at center irregardless of size
+	- changed default font to sans-serif, serif
+*/
+
+var operator = function()
 {
-	this.pos = {x:0,y:0,x2:0,y2:0};
+	this.pos = {x:0,y:0};
 	this.size = 0;
 	this.color = "#FFFFFF";
 	this.alpha = 1;
+	this.text = "";
+	
+	this.font = "sans-serif, serif";
+	this.fontsize = 18;
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -13,14 +23,14 @@ var line = function()
 	
 	this.onHitTargetCB = null; //Function callback when cube moveTo hit destination
 	
-	this.createLine = function(context, x, y, x2, y2, color, alpha)
+	this.createOperator = function(context, x, y, size, color, alpha, text)
 	{
 		this.pos.x = x;
 		this.pos.y = y;
-		this.pos.x2 = x2;
-		this.pos.y2 = y2;
+		this.size = size;
 		this.color = color;
 		this.alpha = alpha;
+		this.text = text;
 		
 		this.draw(context);
 		
@@ -29,20 +39,29 @@ var line = function()
 	}
 	
 	this.draw = function(context)
-	{
-		var prevAlpha = context.globalAlpha;
+	{	
+		context.save();
 
 		// settings
-		context.strokeStyle = this.color;
+		context.fillStyle = this.color;
+		context.strokeStyle = "#000000";
 		context.globalAlpha = this.alpha;
 
-		// line
+		// circle
 		context.beginPath();
-		context.moveTo(this.pos.x,this.pos.y);
-		context.lineTo(this.pos.x2,this.pos.y2);
+		context.arc(this.pos.x, this.pos.y, this.size/2, 0, 2 * Math.PI, false);
+		context.fill();
 		context.stroke();
 
-		context.globalAlpha = prevAlpha;
+		// text
+		context.font = this.fontsize + "px " + this.font;
+		context.textAlign = "center";
+		context.textBaseline = "middle";
+		context.fillStyle = "#000000";
+		
+		context.fillText(this.text,this.pos.x,this.pos.y);
+
+		context.restore();
 	}
 	
 	this.getPosition = function()
@@ -69,10 +88,7 @@ var line = function()
 		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
-		
-		self.onHitTargetCB = null;
 	}
-
 	
 	//Specific object update loop
 	this.update = function(self)

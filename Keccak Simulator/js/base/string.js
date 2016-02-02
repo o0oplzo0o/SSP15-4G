@@ -1,11 +1,18 @@
+/* 31 jan 2016
+	- removed set onHitTarget to null (eric's fix)
+	- changed default font to monospaced
+*/
+
 var string = function()
 {
-	this.pos = {x:0,y:0};
-	this.font = "Arial";
-	this.size = 0;
-	this.color = "#FFFFFF";
 	this.alpha = 1;
+	this.color = "#FFFFFF";
+	this.font = "monospaced";
+	this.pos = {x:0,y:0};
+	this.size = 0;
 	this.text = "";
+	this.textAlign = "start";
+	this.textBaseline = "alphabetic";
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -33,21 +40,20 @@ var string = function()
 	
 	this.draw = function(context)
 	{
-		// store previous alpha and font
-		var prevAlpha = context.globalAlpha;
-		var prevFont = context.font;
+		context.save();
 
 		// set font settings
 		context.save();
 		context.font = this.size + "px " + this.font;
+		context.textAlign = this.textAlign;
+		context.textBaseline = this.textBaseline;
 		context.globalAlpha = this.alpha;
 		context.fillStyle = this.color;
 
 		// draw text
 		context.fillText(this.text,this.pos.x,this.pos.y);
 
-		context.globalAlpha = prevAlpha;
-		context.font = prevFont;
+		context.restore();
 	}
 	
 	this.getPosition = function()
@@ -71,10 +77,9 @@ var string = function()
 	
 	this.onHitTarget = function(self)
 	{
+		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
-		
-		self.onHitTargetCB = null;
 	}
 	
 	//Specific object update loop

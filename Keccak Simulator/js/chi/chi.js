@@ -4,6 +4,7 @@ var chi = new function()
 	this.context;
 
 	// track moving object
+	this.speedMultiplier = 1;
 	this.currentPhase = 0;
 	this.hitCounter = 0;
 	this.targetCounter = 0;
@@ -11,9 +12,11 @@ var chi = new function()
 
 	// animation sets
 	this.cubes = new Array();
+	this.dialogs = new Array();
 	this.lines = new Array();
 	this.operators = new Array();
 	this.indicators = new Array(); // yellow cubes
+	this.slices = new Array();
 	this.tables = new Array();
 	
 	// storage
@@ -21,63 +24,54 @@ var chi = new function()
 
 	// animation timers
 	this.refresh;
-	this.blink;
 	
 	// display settings	
 	var padding = 25;
 	var spaceX = 150;
-	var spaceY = 500;
+	var spaceY = 450;
 	
-	this.init = function(i)
+	this.init = function(input)
 	{
 		this.canvas = document.getElementById("keccakCanvas");
 		this.context = this.canvas.getContext("2d");
 		this.context.font = "18px arial";
 
-		this.input = i;
-		
-    	// resize the canvas to fill browser window dynamically
-		/*
-		window.addEventListener('resize', resizeCanvas, false);
+		this.input = input;
 
-		function resizeCanvas() {
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
-		}
-		resizeCanvas();
-		*/
-
-		// start by showing state
-		this.playAnimationPhase(this.currentPhase); // Play 0
+		// create dialog box
+		var d = new dialog();
+		this.dialogs.push(d.createDialog(
+			this.context,
+			"The Chi function operates on a single row at a time, starting from the middle most row"
+		));
 		
 		// 60 fps update loop
 		this.update();
-		//this.blink = setInterval(this.textblink, 750);
 		this.refresh = setInterval(this.update,1000/60);
+
+		// start by showing state
+		this.playAnimationPhase(this.currentPhase); // Play 0
 	}
 	
 	this.showState = function() {
-		//create new slice with specific ordering
-		for (var i = 0; i < 5; ++i)
-		{
-			this.cubes.push(new Array());
+		console.log("showState");
 
-			for (var j = 0; j < 5; ++j)
-			{
-				var posX = ((i + 2) % 5) * 50;
-				var posY = ((j + 2) % 5) * 50;
-				var a = new cube();
-				this.cubes[i].push(a.createCube(
-					this.context,
-					515+posX,
-					275+posY,
-					50,
-					"#8ED6FF",
-					1,
-					" "
-				));
-			}
+		// draw state
+		var filler = new Array();
+		for (var i=0; i<25; ++i) {
+			filler.push("");
 		}
+
+		var s = new slice();
+		this.slices.push(s.createSlice(
+			this.context,
+			515,
+			175,
+			50,
+			"#8ED6FF",
+			1,
+			filler
+		));
 
 		// start animation
 		setTimeout(function() {
@@ -87,6 +81,8 @@ var chi = new function()
 
 	this.moveState = function()
 	{
+		console.log("moveState");
+
 		// we want middle row (y = 0), so:
 		// this.cubes[3][0]
 		// this.cubes[4][0]
@@ -95,36 +91,36 @@ var chi = new function()
 		// this.cubes[2][0]
 		
 		// set opacity of all unneeded cubes to 0.25
+		chi.slices[0].cubes = arrayToState(chi.slices[0].cubes);
 		for (var i = 0; i < 5; ++i) {
 			for (var j = 0; j < 5; ++j) {
 				if (j != 0) {
-					chi.cubes[i][j].alpha = 0.25;
+					this.slices[0].cubes[i][j].alpha = 0.25;
 				}
 			}
 		}
+		chi.slices[0].cubes = stateToArray(chi.slices[0].cubes);
 
 		setTimeout(function(){
 			chi.targetCounter = 5;
 			
 			// move all needed cubes on x axis
+			chi.slices[0].cubes = arrayToState(chi.slices[0].cubes);
 			for (var i=0; i<5; ++i) {
 				var posX = ((i+2)%5) * spaceX;
-				chi.cubes[i][0].moveTo(
+				chi.slices[0].cubes[i][0].moveTo(
 					padding+posX,
 					padding,
 					0.5,
 					chi.objectHitTarget
 				);
 			}
+			chi.slices[0].cubes = stateToArray(chi.slices[0].cubes);
+
 		}, 1000*this.speedMultiplier);
 	}
 
 	this.clearSlice = function() {
-		// clear all 25 cubes
-		for (var i = 0; i < 5; ++i) {
-			chi.cubes[i] = [];
-		}
-
 		// replace with operations scene
 		setTimeout(function() {
 			chi.playAnimationPhase(++chi.currentPhase);
@@ -134,25 +130,29 @@ var chi = new function()
 	this.showOperations = function() {
 		console.log("showing operations");
 
+		// update dialog box
+		this.dialogs[0].setMessage(this.context, "For each \"cube\" (A, B, C, D, E) in the row, 2 other succeeding cubes are used along with NOT, AND and XOR bitwise operations to calculate the final value, marked with prime (A', B', C', D', E').");
+
+		chi.slices = [];
+
 		// create 10 cubes
 		// gonna change this to grouped operations
-		var labels = [["A", "A'"],
-			["B", "B'"],
-			["C", "C'"],
+		var labels = [
 			["D", "D'"],
 			["E", "E'"],
+			["A", "A'"],
+			["B", "B'"],
+			["C", "C'"]
 		]
 
-		for (var i = 0; i < 5; ++i)
-		{
+		for (var i = 0; i < 5; ++i) {
 			this.cubes.push(new Array());
 
-			for (var j = 0; j < 2; ++j)
-			{
+			for (var j = 0; j < 2; ++j) {
 				var posX = i * spaceX;
 				var posY = j * spaceY;
-				var a = new cube();
-				this.cubes[i].push(a.createCube(
+				var c = new cube();
+				this.cubes[i].push(c.createCube(
 					this.context,
 					padding+posX,
 					padding+posY,
@@ -330,7 +330,7 @@ var chi = new function()
 
 		// draw 3 small cubes at a b and c
 		var posX = a*spaceX+25;
-		var posY = spaceY-450;
+		var posY = 50;
 		
 		var ac = new cube();
 		this.indicators.push(ac.createCube(
@@ -368,7 +368,7 @@ var chi = new function()
 		));
 
 		// draw table
-		var translate = ["A", "B", "C", "D", "E"];
+		var translate = ["E", "D", "A", "B", "C"];
 
 		var tableInput = [[translate[a], "Default value"],
 			["NOT "+translate[b], ""],
@@ -380,7 +380,7 @@ var chi = new function()
 		var t = new table();
 		this.tables.push(t.createTable(
 			this.context,
-			5*spaceX+padding,
+			5*spaceX+2*padding,
 			0.5*spaceY,
 			tableInput
 		));
@@ -407,7 +407,7 @@ var chi = new function()
 
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x,
-			chi.indicators[1].pos.y+125,
+			padding+50+(spaceY/4),
 			0.5,
 			chi.objectHitTarget
 		);
@@ -416,14 +416,14 @@ var chi = new function()
 		if (a == 3) {
 			chi.indicators[2].moveTo(
 				chi.indicators[2].pos.x,
-				chi.indicators[2].pos.y+50,
+				padding+(spaceY/4)-25,
 				0.5,
 				chi.objectHitTarget
 			);
 		} else {
 			chi.indicators[2].moveTo(
 				chi.indicators[2].pos.x,
-				chi.indicators[2].pos.y+80,
+				padding+(spaceY/4),
 				0.5,
 				chi.objectHitTarget
 			);
@@ -433,7 +433,7 @@ var chi = new function()
 	this.moveBC2 = function() {
 		console.log("moveBC2");
 
-		chi.targetCounter = 1;
+		chi.targetCounter = 2;
 
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x+40,
@@ -463,7 +463,7 @@ var chi = new function()
 	this.moveBC3 = function() {
 		console.log("moveBC3");
 
-		chi.targetCounter = 1;
+		chi.targetCounter = 2;
 		
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x,
@@ -476,7 +476,7 @@ var chi = new function()
 		if (a == 3) {
 			chi.indicators[2].moveTo(
 				chi.indicators[2].pos.x,
-				chi.indicators[2].pos.y+190,
+				chi.indicators[2].pos.y+185,
 				0.5,
 				chi.objectHitTarget
 			);
@@ -497,7 +497,7 @@ var chi = new function()
 	this.moveBC4 = function() {
 		console.log("moveBC4");
 
-		chi.targetCounter = 1;
+		chi.targetCounter = 2;
 		
 		chi.indicators[1].moveTo(
 			chi.indicators[1].pos.x+25,
@@ -520,17 +520,17 @@ var chi = new function()
 	this.moveAB = function() {
 		console.log("moveAB");
 
-		chi.targetCounter = 1;
+		chi.targetCounter = 2;
 		
 		chi.indicators[0].moveTo(
 			chi.indicators[0].pos.x,
-			chi.indicators[0].pos.y+360,
+			padding+50+(spaceY/4*3),
 			0.5,
 			chi.objectHitTarget
 		);
 		chi.indicators[1].moveTo(
 			chi.indicators[0].pos.x,
-			chi.indicators[0].pos.y+360,
+			padding+50+(spaceY/4*3),
 			0.5,
 			chi.objectHitTarget
 		);
@@ -543,11 +543,11 @@ var chi = new function()
 	this.moveA = function() {
 		console.log("moveA");
 
-		chi.targetCounter = 0;
+		chi.targetCounter = 1;
 		
 		chi.indicators[0].moveTo(
 			chi.indicators[0].pos.x,
-			chi.indicators[0].pos.y+100,
+			padding+spaceY,
 			0.5,
 			chi.objectHitTarget
 		);
@@ -563,15 +563,126 @@ var chi = new function()
 		// start next set in series
 		setTimeout(function(){
 			chi.indicators = [];
+			chi.tables = [];
 
 			if (chi.index < 4) {
 				chi.index += 1;
 				chi.currentPhase = 4;
 				chi.animateOperations();
 			} else {
-				clearInterval(chi.refresh);			
+				chi.playAnimationPhase(++chi.currentPhase);
 			}
 		}, 1000*this.speedMultiplier);
+	}
+
+	this.showUpdatedRow = function() {
+		console.log("showUpdatedRow");
+
+		// change dialog msg
+		this.dialogs[0].setMessage(this.context, "The row is then replaced with the computed results of each of the cubes (A', B', C', D', E').");
+
+		// take results (primes), store in temp
+		var temp = new Array();
+		for (var i = 0; i<5; ++i) {
+			temp.push(this.cubes[i][1]);
+			console.log(temp[i].text);
+		}
+
+		// flush cubes array, and operations
+		for (var i = 0; i<5; ++i) {
+			this.cubes[i] = [];
+		}
+		this.cubes = [];
+		this.operators = [];
+		this.lines = [];
+		this.indicators = [];
+		this.tables = [];
+
+		this.cubes = new Array();
+		this.cubes.push(new Array());
+
+		this.cubes[0] = temp;
+
+		// show table of updated values
+		var tableInput = [["E'", ""],
+			["D'", ""],
+			["A'", ""],
+			["B'", ""],
+			["C'", ""]
+		];
+
+		var t = new table();
+		this.tables.push(t.createTable(
+			this.context,
+			5*spaceX+2*padding,
+			0.5*spaceY,
+			tableInput
+		));
+
+		setTimeout(function(){
+			chi.playAnimationPhase(++chi.currentPhase);
+		}, 3000*this.speedMultiplier);
+	}
+
+	this.moveBack = function() {
+		console.log("moveBack");
+
+		// wipe table
+		this.tables = [];
+
+		// show state
+		var filler = new Array();
+		for (var i=0; i<25; ++i) {
+			filler.push("");
+		}
+
+		var s = new slice();
+		this.slices.push(s.createSlice(
+			this.context,
+			515,
+			175,
+			50,
+			"#8ED6FF",
+			0.5,
+			filler
+		));
+
+		// move cubes to state
+		chi.targetCounter = 5;
+
+		for (var i = 0; i<5; ++i) {
+			this.cubes[0][i].moveTo(
+				chi.slices[0].cubes[i][2].pos.x,
+				chi.slices[0].cubes[i][2].pos.y,
+				0.5,
+				chi.objectHitTarget
+			);
+		}
+	}
+
+	this.showRepeat = function() {
+		console.log("showRepeat");
+
+		// change dialog msg
+		this.dialogs[0].setMessage(this.context, "The process is then repeated for the other 4 rows in the state.");
+
+		// show row numbers
+		for (var i = 0; i < 5; ++i) {
+			var index = ((i+2)%5);
+			var s = new string();
+			this.indicators.push(s.createString(
+				this.context,
+				this.slices[0].cubes[0][0].pos.x-25,
+				this.slices[0].cubes[i][0].pos.y+32,
+				"sans-serif, serif",
+				16,
+				"#000000",
+				1,
+				""+index
+			));
+		}
+
+		// show repeats
 	}
 
 	// loop
@@ -581,66 +692,6 @@ var chi = new function()
 		
 		chi_render.update();
 	}
-	
-	this.textblink = function(){
-		var chi_text = document.getElementById('chi');
-		chi_text.style.visibility = (chi_text.style.visibility == 'hidden' ? '' : 'hidden');
-	}
-
-	this.reorderCube = function() {
-		var newSortedListX = new Array();
-		var newSortedList = new Array();
-		//Reorder X 
-		for(var i=0; i<chi.cubes.length; i++)
-		{
-			var pos = 0;
-			if(newSortedListX.length == 0)
-			{
-				newSortedListX.push(chi.cubes[i]);
-				continue;
-			}
-			for(var j=0; j<newSortedListX.length; j++)
-			{
-				if(chi.cubes[i].pos.x >= newSortedListX[j].pos.x)
-					pos = j+1;
-			}
-			newSortedListX.splice(pos,0,chi.cubes[i]);
-		}
-		//Reorder Y
-		//newSortedList = newSortedListX.slice();
-		for(var i=0; i<newSortedListX.length;i++)
-		{
-			var pos = 0;
-			var isFirst = false;
-			if(newSortedList.length == 0)
-			{
-				newSortedList.push(newSortedListX[i]);
-				continue;
-			}
-			for(var j=0; j<newSortedList.length; j++)
-			{
-				//if x pos is the same then order
-				if(newSortedListX[i].pos.x == newSortedList[j].pos.x)
-				{
-					if(!isFirst)
-					{
-						pos = j;
-						isFirst = true;
-					}
-					if(newSortedListX[i].pos.y > newSortedList[j].pos.y)
-					{
-						pos = j+1;
-					}
-					
-				}
-			}
-			newSortedList.splice(pos,0,newSortedListX[i]);
-		}
-		
-		chi.cubes = newSortedList.slice().reverse();
-		newSortedListX = null;
-		newSortedList = null;
-	}
 
 	this.objectHitTarget = function()
 	{
@@ -648,7 +699,6 @@ var chi = new function()
 		
 		if(chi.hitCounter >= chi.targetCounter)
 		{
-			//chi.reorderCube();
 			chi.hitCounter = 0;
 			chi.playAnimationPhase(++chi.currentPhase);
 		}
@@ -695,10 +745,15 @@ var chi = new function()
 			case 11:
 				this.nextSet();
 				break;
+			case 12:
+				this.showUpdatedRow();
+				break;
+			case 13:
+				this.moveBack();
+				break;
+			case 14:
+				this.showRepeat();
+				break;
 		}
 	}
 }
-
-var go = new Array();
-
-chi.init(go);

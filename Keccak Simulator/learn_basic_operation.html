@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="utf-8" />
+	<head>
+		<title>KECCAK Learning</title>
+
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<div style="width:100%">
+		<div class="one2">
+		keccak- cryptographic sponge function
+		</div>
+		<div>
+		  <ul class="ul1">
+			  <li><a href="index.html">home</a></li>
+			  <li><a class="active" href="learn_basic_operation.html">learn keccak</a></li>
+			   <li><a href="simulator.html">understand with simulation</a></li>
+			  <li><a href="try_out_quiz.html">try out quiz</a></li>
+			  <li><a href="proj_ref.html">project reference</a></li>
+		 </ul>
+		 </div>
+		  <div class="rounddiv">
+			<h1>overview design construction</h1>
+			<p>Keccak is a family of sponge functions designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche. 
+			In October 2012, Keccak won the NIST hash function competition, and is proposed as the SHA-3 standard. 
+			Keccak uses the sponge construction,in which data is "absorbed" into the sponge, then the result is "squeezed" out. 
+			In the absorbing phase, the message blocks are XORed into the initial bits of the state, and then invertibly permuted. 
+			In the "squeeze" phase, output blocks are read from the same subset of the state, alternated with state transformations.
+			In SHA-3, the state consists of a 5 × 5 array of 64-bit words, 1600 bits total.</br>
+			<a href="http://keccak.noekeon.org/">Click here for details</a></br></br>
+			</p>
+		  </div>
+		  
+		  <div class="rounddiv1">
+			
+			<h1>keccak-f permutation</h1>
+			<p>
+			<img src="image/namingcov.png" alt="namingcov" style="padding-right:15px;width:400px;height:420px;float:left; position:static">
+			The figure on left show naming convention of keccak may help use a common terminology when analyzing or describing
+			properties of KECCAK-f permutation.</br>
+			The one-dimensional parts are:</br>
+				• A row is a set of 5 bits with constant y and z coordinates.</br>
+				• A column is a set of 5 bits with constant x and z coordinates.</br>
+				• A lane is a set of w bits with constant x and y coordinates.</br>
+			The two-dimensional parts are:</br>
+				• A sheet is a set of 5w bits with constant x coordinate.</br>
+				• A plane is a set of 5w bits with constant y coordinate.</br>
+				• A slice is a set of 25 bits with constant z coordinate.</br></br>
+			This permutation defined for any power-of-two word size, w = 2ℓ bits. The main SHA-3 submission uses 64-bit words, ℓ = 6.
+			The state can be considered to be a 5 × 5 × w array of bits. Let a[i][ j][k] be bit (5i + j) × w + k of the input, 
+			using a little-endian bit numbering convention and row-major indexing. I.e. i selects the column, j the row, and k the bit.
+			Index arithmetic is performed modulo 5 for the first two dimensions and modulo w for the third.
+			The basic block permutation function consists of 12 + 2ℓ iterations of five sub-rounds:</br></br>
+			• θ(Theta): computes parities of each column and combines with XOR operator</br>
+			• ρ(Rho): rotates each 64-bit element by triangular number 0,1,3,6,10,15,...</br>
+			• π(Pi): </br>
+			• χ(Chi): </br>
+			• ι(Iota): </br>
+			<a href="http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf">Click here for details</a></br></br>
+			</p>
+			</div>
+			<div class="rounddiv1">
+			<h1>basic bitwise operations</h1>
+			<p>Bitwise operation perform on one ore more bit patterns or binary numerals at the level of individual bit.
+			Operation are directly supported by processor so , it is fast and primitive action even in low cost processors.
+			In Keccak, the choice of operations are limited to bitwise XOR, AND and NOT and Rotation (shift left,right).</br>
+			</br>Bitwise XOR Example:(decimal 5)=0101 [XOR] (decimal 3)= 0011, result is 0110(decimal 6)</br>
+			</br>Bitwise AND Example:(decimal 5)=0101 [XOR] (decimal 3)= 0011, result is 0001(decimal 1)</br>
+			</br>Bitwise Rotation Left Example:(decimal 5)=0000 0101 [ROL] 3 times, result is 0010 1000(decimal 40)</br>
+			</br>Bitwise Rotation Right Example:(decimal 50)=0011 0010 [ROR] 3 times, result is 0100 0110(decimal 70)</br></br>
+			</p> 
+			</div>
+		  </div>
+</div>
+
+	</body>
+</html>

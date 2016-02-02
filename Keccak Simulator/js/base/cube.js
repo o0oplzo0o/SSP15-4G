@@ -1,3 +1,10 @@
+/* 31 jan 2016
+	- some code optimizations
+	- fixed graphical bug
+	- removed set onHitTarget to null (eric's fix)
+	- make text render at center irregardless of size
+*/
+
 var cube = function()
 {
 	this.pos = {x:0,y:0};
@@ -6,7 +13,7 @@ var cube = function()
 	this.alpha = 1;
 	this.text = "";
 
-	this.font = "Arial";
+	this.font = "monospaced";
 	this.fontsize = "18";
 	
 	this.isMoving = false;
@@ -28,14 +35,14 @@ var cube = function()
 		
 		this.draw(context);
 		
-		setInterval(this.update,1000/60, this);
+		setInterval(this.update,1000/60,this);
+
 		return this;
 	}
 	
 	this.draw = function(context)
 	{
-		var prevAlpha = context.globalAlpha;
-		var prevFont = context.font;
+		context.save();
 
 		//cube
 		context.fillStyle = this.color;
@@ -48,17 +55,7 @@ var cube = function()
 		context.fill();
 		context.stroke();
 
-		//top face
-		context.fillStyle = convertColor(this.color, 0.10);
-		context.beginPath();
-		context.moveTo(this.pos.x,this.pos.y);
-		context.lineTo((this.pos.x+(this.size/2)),(this.pos.y-(this.size/2)));
-		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y-(this.size/2)));
-		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y-(this.size/2)));
-		context.lineTo((this.pos.x+this.size),this.pos.y);
-		context.closePath();
-		context.fill();
-		context.stroke();
+		context.save();
 
 		//right face
 		context.fillStyle = convertColor(this.color, -0.25);
@@ -66,19 +63,39 @@ var cube = function()
 		context.moveTo((this.pos.x+this.size),this.pos.y);
 		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y-(this.size/2)));
 		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y+(this.size/2)));
-		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y+(this.size/2)));
 		context.lineTo((this.pos.x+this.size),(this.pos.y+this.size));
 		context.closePath();
 		context.fill();
 		context.stroke();
-		
+
+		context.restore();
+		context.save();
+
+		//top face
+		context.fillStyle = convertColor(this.color, 0.10);
+		context.beginPath();
+		context.moveTo(this.pos.x,this.pos.y);
+		context.lineTo((this.pos.x+(this.size/2)),(this.pos.y-(this.size/2)));
+		context.lineTo((this.pos.x+this.size+(this.size/2)),(this.pos.y-(this.size/2)));
+		context.lineTo((this.pos.x+this.size),this.pos.y);
+		context.closePath();
+		context.fill();
+		context.stroke();
+
+		context.restore();
+
 		//text
 		context.font = this.fontsize + "px " + this.font;
+		context.textAlign = "center";
+		context.textBaseline = "middle";
 		context.fillStyle = "#000000";
-		context.fillText(this.text,this.pos.x+(0.15 * this.size),this.pos.y+(0.70 * this.size));
 
-		context.globalAlpha = prevAlpha;
-		context.font = prevFont;
+		context.fillText(this.text,
+			this.pos.x+this.size/2,
+			this.pos.y+this.size/2
+		);
+
+		context.restore();
 	}
 	
 	this.getPosition = function()
@@ -92,7 +109,7 @@ var cube = function()
 			this.onHitTargetCB = null;
 		else
 			this.onHitTargetCB = cb;
-		
+
 		this.factor = 0;
 		this.ori = {x:this.pos.x, y:this.pos.y};
 		this.dest = {x:x,y:y};
@@ -102,11 +119,8 @@ var cube = function()
 	
 	this.onHitTarget = function(self)
 	{
-		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
-		
-		self.onHitTargetCB = null;
 	}
 	
 	//Specific object update loop
@@ -116,12 +130,13 @@ var cube = function()
 		{
 			self.pos.x = util.lerp(self.ori.x,self.dest.x,self.factor);
 			self.pos.y = util.lerp(self.ori.y,self.dest.y,self.factor);
-			
+
 			if(self.factor >= 1)
 			{
 				self.isMoving = false;
 				self.onHitTarget(self);
 			}
+
 			self.factor += time.dt * self.speed;
 		}
 	}

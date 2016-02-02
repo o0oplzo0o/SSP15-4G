@@ -23,8 +23,6 @@ var time = new function()
 	}
 }
 
-
-
 var util = new function()
 {
 	this.lerp = function(a, b, t)
@@ -52,6 +50,28 @@ var util = new function()
 		}
 		return bin;
 	}
+}
+
+function Timer(cb, delay)
+{
+	this.tId;
+	this.start;
+	this.remaining = delay;
+	
+	this.resume = function()
+	{
+		this.start = new Date();
+		clearTimeout(this.tId);
+		this.tId = setTimeout(cb,this.remaining);
+	};
+	
+	this.pause = function()
+	{
+		clearTimeout(this.tId);
+		this.remaining -= new Date() - this.start;
+	};
+	
+	this.resume();
 }
 
 // converts input array to state-based coordinates (where 0,0 is at the center)

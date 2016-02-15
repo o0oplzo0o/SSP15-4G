@@ -1,65 +1,107 @@
 <!DOCTYPE html>
 <html>
-<meta charset="utf-8" />
-<head>
-	<title>KECCAK Simulator</title>
+	<meta charset="utf-8" />
+	<head>
+		<title>KECCAK Simulator</title>
 
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<script src="js/base/big_integer.js"></script>
-	<script src="js/base/util.js"></script>
-	<script src="js/base/cube.js"></script>
-	<script src="js/base/line.js"></script>
-	<script src="js/base/operator.js"></script>
-	<script src="js/base/string.js"></script>
-</head>
-<body>
-<div id="wrapper">
-	<div class="one2">keccak - cryptographic sponge function</div>
-	<div>
-		<ul class="ul1">
-		<li><a href="index.html">home</a></li>
-		<li><a href="learn_basic_operation.html">learn keccak</a></li>
-		<li><a class="active" href="simulator.html">understand with simulation</a></li>
-		<li><a  href="try_out_quiz.html">try out quiz</a></li>
-		<li><a href="proj_ref.html">project reference</a></li>
-		</ul>
-	</div>
-	<div class="one" style="width:100%">
-		<select class="round1" id="hashFunction" onChange="index.hashFunctionChanged()">
-		<option value=0>select...</option>
-		<option value=1>shake128,output256</option>
-		<option value=2>shake256,output512</option>
-		</select>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="js/base/dialog.js"></script>
+		<script src="js/base/util.js"></script>
+		<script src="js/base/cube.js"></script>
+		<script src="js/base/table.js"></script>
+		<script src="js/base/slice.js"></script>
+		<script src="js/base/line.js"></script>
+		<script src="js/base/operator.js"></script>
+		<script src="js/base/string.js"></script>
+	</head>
+	<body>
+	<div style="width:100%;height:100%;min-width:900px;min-height:650px;">
+		 <div class="one2">
+		keccak- cryptographic sponge function
+		</div>
+		<div>
+		  <ul class="ul1">
+			  <li><a href="index.html">home</a></li>
+			  <li><a href="learn_basic_operation.html">learn keccak</a></li>
+			   <li><a class="active" href="simulator.html">understand with simulation</a></li>
+			  <li><a  href="try_out_quiz.html">try out quiz</a></li>
+			  <li><a href="proj_ref.html">project reference</a></li>
+		 </ul class="ul2">
+		 </div>
+		  <div class="one">
+			<div style="width:20%;display:inline-block;">
+			  <select class="round1" id="hashFunction" onChange="index.hashFunctionChanged()">
+				<option value=0>select hash...</option>
+				<option value=1>shake128,output256</option>
+				<option value=2>shake256,output512</option>
+			  </select>
+			</div>
+			<div style="width:50%;display:inline-block;padding-right:8px;">
+				<textarea name="textarea" id="input_text"></textarea>
+			</div>
 
-		<textarea name="textarea" id="input_text"></textarea>
-
-		<input class="round" type="submit" value="submit" onclick="index.hash()" />
-	</div>
-	<div class="KNav">
-		<div class="KNavin" id="init">initialisation</div>
-		<div class="KNavin" id="absorbe">absorption</div>
-		<div class="KNavin" id="squeeze">squeeze</div>
-		<div class="KNavin" id="theta">theta</div>
-		<div class="KNavin" id="rho">rho</div>
-		<div class="KNavin" id="pi">pi</div>
-		<div class="KNavin" id="chi">chi</div>
-		<div class="KNavin" id="lota">iota</div>
-	</div>
-	<canvas class="stylecanvas" id="keccakCanvas" width="1280" height="600">
-		<p>Canvas not supported.</p>
-	</canvas>
-	<div class="clear">&nbsp;</div>
+			<div style="width:20%;display:inline-block;">
+				<input class="round" type="submit" value="submit" onclick="index.hash()" />
+			</div>
+		   </div>
+		  <div id="step_tab" class="KNav">
+			  <div class="KNavin KNavinUnselected" id="tab_init" onclick="index.goToStep('init')"><b>init</b></div>
+			  <div class="KNavin KNavinUnselected" id="tab_absorb" onclick="index.goToStep('absorb')"><b>absorb</b></div>
+			  <div class="KNavin KNavinUnselected" id="tab_squeeze" onclick="index.goToStep('squeeze')"><b>squeeze</b></div>
+			  <div class="KNavin KNavinUnselected" id="tab_theta" onclick="index.goToStep('theta')"><b>theta</b></div>
+			  <div class="KNavin KNavinUnselected" id="tab_rho" onclick="index.goToStep('rho')"><b>rho</b></div>
+			  <div class="KNavin KNavinUnselected" id="tab_pi" onclick="index.goToStep('pi')"><b>pi</b></div>
+			  <div class="KNavin KNavinUnselected" id="tab_chi" onclick="index.goToStep('chi')"><b>chi</b></div>
+			  <div class="KNavin KNavinUnselected" id="tab_iota" onclick="index.goToStep('iota')"><b>iota</b></div>
+			  
+		  </div>
+		  <div class="KCanvas">
+			<canvas class="stylecanvas" id="keccakCanvas" width="1280" height="600">
+				<p>Canvas not supported.</p>
+			</canvas>
+		  </div>
+		  <div class="KPlayBtn">
+			<div onclick="index.playPrevious()">
+			  <img src="image/Previous.png" style="height:50px;"/>
+			</div>
+			<div onclick="index.togglePause()">
+			  <img id="pausebutton" src="image/Pause.png" style="height:50px;" />
+			</div>
+			<div onclick="index.playNext()">
+			  <img src="image/Next.png" style="height:50px;" />
+			</div>
+		  </div>
+					 
 	<div class="form-style-3">
-		<fieldset>
-		<span><b>result: </b></span>
-		<textarea readonly id="hash_result"></textarea>
-		</fieldset>
+	
+	<fieldset>
+	<span><b>	result: </b> </span><br>
+	<textarea readonly id="hash_result"></textarea>
+	</fieldset> 
+				
 	</div>
 </div>
 
-<script src="js/keccak/common.js"></script>
-<script src="js/keccak/keccak.js"></script>
-<script src="js/keccak/index.js"></script>
+		<script src="js/keccak/big_integer.js"></script>
+		<script src="js/keccak/common.js"></script>
+		<script src="js/keccak/keccak.js"></script>
+		<script src="js/keccak/index.js"></script>
+		<script src="js/inputToState/inputToState_render.js"></script>
+		<script src="js/inputToState/inputToState.js"></script>
+		<script src="js/absorb/absorb_render.js"></script>
+		<script src="js/absorb/absorb.js"></script>
+		<script src="js/squeezing/squeezing_render.js"></script>
+		<script src="js/squeezing/squeezing.js"></script>
+		<script src="js/theta/theta_render.js"></script>
+		<script src="js/theta/theta.js"></script>
+		<script src="js/rho/rho_render.js"></script>
+		<script src="js/rho/rho.js"></script>
+		<script src="js/pi/pi_render.js"></script>
+		<script src="js/pi/pi.js"></script>
+		<script src="js/chi/chi_render.js"></script>
+		<script src="js/chi/chi.js"></script>
+		<script src="js/iota/iota_render.js"></script>
+		<script src="js/iota/iota.js"></script>
 
-</body>
+	</body>
 </html>

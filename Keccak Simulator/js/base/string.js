@@ -5,14 +5,13 @@
 
 var string = function()
 {
+	this.uid = 0;
 	this.alpha = 1;
 	this.color = "#FFFFFF";
 	this.font = "monospaced";
 	this.pos = {x:0,y:0};
 	this.size = 0;
 	this.text = "";
-	this.textAlign = "start";
-	this.textBaseline = "alphabetic";
 	
 	this.isMoving = false;
 	this.ori = {x:0,y:0};
@@ -20,10 +19,13 @@ var string = function()
 	this.speed = 0;
 	this.factor = 0;
 	
+	this.updateID = null;
+	
 	this.onHitTargetCB = null; //Function callback when cube moveTo hit destination
 	
 	this.createString = function(context, x, y, font, size, color, alpha, text)
 	{
+		this.uid = uid++;
 		this.pos.x = x;
 		this.pos.y = y;
 		this.font = font;
@@ -34,7 +36,7 @@ var string = function()
 		
 		this.draw(context);
 		
-		setInterval(this.update,1000/60, this);
+		this.updateID = setInterval(this.update,1000/60, this);
 		return this;
 	}
 	
@@ -45,8 +47,6 @@ var string = function()
 		// set font settings
 		context.save();
 		context.font = this.size + "px " + this.font;
-		context.textAlign = this.textAlign;
-		context.textBaseline = this.textBaseline;
 		context.globalAlpha = this.alpha;
 		context.fillStyle = this.color;
 
@@ -69,7 +69,7 @@ var string = function()
 			this.onHitTargetCB = cb;
 		
 		this.factor = 0;
-		this.ori = this.pos;
+		this.ori = {x:this.pos.x,y:this.pos.y};
 		this.dest = {x:x,y:y};
 		this.speed = speed;
 		this.isMoving = true;
@@ -77,7 +77,6 @@ var string = function()
 	
 	this.onHitTarget = function(self)
 	{
-		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
 	}
@@ -97,5 +96,16 @@ var string = function()
 			}
 			self.factor += time.dt * self.speed;
 		}
+	}
+	
+	this.pause = function()
+	{
+		clearInterval(this.updateID);
+		this.updateID = null;
+	}
+	
+	this.resume = function()
+	{
+		this.updateID = setInterval(this.update,1000/60, this);
 	}
 }

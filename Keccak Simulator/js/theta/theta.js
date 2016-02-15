@@ -41,20 +41,26 @@ var theta = new function()
 	this.hitCounter = 0;
 	this.targetCounter = 0;
 	
-	// input
-	this.indexStringX=["3","4","0","1","2"];
-	this.indexStringY=["2","1","0","4","3"];
-	this.numBlocks;
+	//ERIC: all timeouts will be stored here, when the game is pause,
+	// all setTimeout(Timer function in util.js) will be handle in that function
+	this.currentTimeout = new Array();
+	this.m_dialog;
+	this.message = "";
 	
 	// animation sets
-	this.oparray = new Array();
 	this.object = new Array();
-	this.object1=new Array();
-	this.extra = new Array();
-	this.indexX=new Array();
-	this.indexX2=new Array();
-	this.indexY=new Array();
-	this.indicators=new Array();
+	this.sortedObject = new Array();
+	this.maxPhase = 5;
+	this.dialogs=new Array();
+	this.indexStringX=["3","4","0","1","2"];
+	this.indexStringY=["2","1","0","4","3"];
+	this.labels = ["D","E","A","B","C"];
+	this.labelprimes = ["D'","E'","A'","B'","C'"];
+	
+	//ERIC: Insert all critical steps into this array
+	// Objects will be cleared automatically in playAnimationPhase() on critical steps
+	this.step_array = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36];
+	
 	// animation loop
 	this.refresh;
 
@@ -66,14 +72,24 @@ var theta = new function()
 	this.startY=175;
 	
 	
-	this.init = function(inputString)
+	this.init = function()
 	{
 		this.canvas = document.getElementById("keccakCanvas");
 		this.context = this.canvas.getContext("2d");
+		
+		this.currentPhase = 0;
+		this.hitCounter = 0;
+		this.targetCounter = 0;
+		this.object = new Array();
+		this.sortedObject = new Array();
+		// object input string
+		//this.inputString = inputString;
 
-		// store input string
-		this.inputString = inputString;
-
+		var d = new dialog();
+		this.dialogs.push(d.createDialog(
+			this.context,
+			"Theta Step is one of the operation to athetaeve diffusion."
+		));
 		// start by showing state
 		//this.showInput();
 		this.playAnimationPhase(this.currentPhase); 
@@ -86,231 +102,428 @@ var theta = new function()
 	}
 	
 	
-	
-		// draw state 
-       this.showStateSkeleton = function() { //play 0
-		var filler = new Array();
-		for (var i=0; i<25; ++i) {
-			filler.push("");
+	//ERIC: Called when user skip this theta steps,
+	// remove/reinitialise object so that it will not continue running
+	this.stop = function()
+	{
+		this.pause();
+		clearInterval(this.refresh);
+		
+		for(var i=0; i<this.currentTimeout.length; i++)
+		{
+			this.currentTimeout[i].remove();
 		}
+			
+		this.currentPhase = 0;
+		this.hitCounter = 0;
+		this.targetCounter = 0;
+		this.object = new Array();
+		this.sortedObject = new Array();
+		
+		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	}
+	
+	//ERIC: Handle pause here
+	// For each of the objects created, call pause to stop their updates (movement, etc)
+	this.pause = function()
+	{
+		clearInterval(this.refresh);
+		//Stop objects update
+		for(var i=0; i<this.object.length; i++)
+		{
+			this.object[i].pause();
+		}
+		for(var i=0; i<this.currentTimeout.length; i++)
+		{
+			this.currentTimeout[i].pause();
+		}
+	}
+	
+	//ERIC: Handle resume here
+	// For each of the objects created, call resume to continue their updates (movement, etc)
+	this.resume = function()
+	{
+		//Resume main update
+		this.refresh = setInterval(this.update,1000/60);
+		//Resume objects update
+		for(var i=0; i<this.object.length; i++)
+		{
+			this.object[i].resume();
+		}
+		
+		for(var i=0; i<this.currentTimeout.length; i++)
+		{
+			this.currentTimeout[i].resume();
+		}
+	}
+	
+	this.update = function()
+	{
+		time.updateTime();
+		
+		theta_render.update();
+	}
+	//Theta Step I Start
+	this.storedraw1=function(){
+				var filler = new Array();
+				for (var i=0; i<25; ++i) {
+					filler.push("");
+				}
 
-		// (context, x, y, size, color, alpha, input)
-		var skeleton = new slice();
-		this.extra.push(skeleton.createSlice(
-			this.context,
-			515,
-			175,
-			50,
-			"#8ED6FF",
-			0.25,
-			filler
-		));
-
-		//this.moveCubes(1000, 750, 0.5);
-		
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
-	}
-	
-	
-	//display XY index (label)
-	this.showindexXY=function(){//play1
-		for (var i=0; i<5; ++i){
-			var str=new string();
-			index=this.indexStringX[i];
-			this.indexX.push(str.createString(
-				this.context,
-				520+i*55,
-				450,
-				"Consolas",
-				24,
-				"#000000",
-				1,
-				index
-			));
-		}
-		for (var i=0; i<5; ++i){
-			var str=new string();
-			indexy=this.indexStringY[i];
-			this.indexY.push(str.createString(
-				this.context,
-				480,
-				200+i*55,
-				"Consolas",
-				24,
-				"#000000",
-				1,
-				indexy
-			));
-		}
-		
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
-	}
-	
-	//display X index (label for 2nd theta loop)
-	this.showindexX1=function(){
-		for (var i=0; i<5; ++i){
-			var str=new string();
-			index=this.indexStringX[i];
-			this.indexX.push(str.createString(
-				this.context,
-				550+i*55,
-				80,
-				"Consolas",
-				24,
-				"#000000",
-				1,
-				index
-			));
-		}
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
-	}
-	
-	//display X index (lable for 2nd theta loop)
-	this.showindexX2=function(){
-		for (var i=0; i<5; ++i){
-			var posX = i * this.spaceX;
-			var str=new string();
-			index=this.indexStringX[i];
-			this.indexX2.push(str.createString(
-				this.context,
-				50+posX,
-				485,
-				"Consolas",
-				24,
-				"#000000",
-				1,
-				index
-			));
-		}
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
-	}
-	
-	
-	// create cubes row to Xor up (show first cubes to start 1st theta loop )
-	this.showCubes = function() {
-
-		for (var i=0; i<5; ++i) {
-			var c = new cube();
-			this.object.push(c.createCube(
-				this.context,
-					this.startX+50*i,
-					this.startY+200,
-					50,
-					"#8ED6FF",
-					1,
-					""
-			));
-		}
-
-	
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
-	}
-	
-	// operators XOR (show together with cubes for 1st theta loop )
-	this.showOperatorXOR= function(k) {
-		var i=k;
-		for(var j=0; j<5; ++j){
-		var opxor = new operator();
-			this.oparray.push(opxor.createOperator(
-				this.context,
-				this.padding+this.startX+50*j,
-				this.startY+200-i*50-this.padding,
-				20,
-				"#ffd66a",
-				1,
-				""
-			));
-		}
-		/*setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 6000*this.speedMultiplier);*/
-	}
-	
-	//cubes row to Xor Up (animation for 1st theta loop)
-	this.xorRowUp=function(k){
-			
-			var delay = 1000;
-			var i=k;
-			var g=500;
-			for(var j=0; j<5; ++j){
-				theta.object[j].moveTo(theta.object[j].pos.x,theta.object[j].pos.y-50,0.5);
-	
-			}
-			setTimeout(function(){
-						if(i<4){
-						theta.showOperatorXOR(i);
-						}
-						
-					}, delay);
-					
-				
-					delay += g;
-					setTimeout(function(){
-					
-					theta.oparray=[];
-					if (i < 4) {
-						
-						theta.xorRowUp(k+1);
-						
-					}
-					
-				}, delay);
-			
-			
-			setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-			}, 6000*this.speedMultiplier);
-			
-			
-		
-		
-	}
-	
-	// move rows new postion (ready for 2nd theta loop)
-	this.moveXoredRow=function(){
-		
-		for(var i = 0;i<5;++i){
-			var posX = i * this.spaceX;
-			theta.object[i].moveTo(25+posX,27,0.5);
-			theta.indexX[i].moveTo(50+posX,20,0.5);
-			}
-		
-	}
-	
-	// draw skeleton (ready for 2nd theta loop)
-	this.showRowSkeleton=function(){
-		
-		for (var i=0; i<5; ++i) {
-			var posX = i * 150;
-			var c = new cube();
-			this.object1.push(c.createCube(//theta.object[i].pos.x,theta.object[i].pos.y-50
+				// (context, x, y, size, color, alpha, input)
+				var skeleton = new slice();
+				this.object.push(skeleton.createSlice(
 					this.context,
-					25+posX,
-					450,
+					515,
+					175,
 					50,
 					"#8ED6FF",
-					1,
-					""
-			));
-		}
-
-	
+					0.25,
+					filler
+				));
+				
+				for (var i=0; i<5; ++i){
+					var str=new string();
+					
+					this.object.push(str.createString(
+						this.context,
+						520+i*55,
+						450,
+						"Consolas",
+						24,
+						"#000000",
+						1,
+						theta.indexStringX[i]
+					));
+				}
+				for (var i=0; i<5; ++i){
+					var str=new string();
+					
+					this.object.push(str.createString(
+						this.context,
+						480,
+						200+i*55,
+						"Consolas",
+						24,
+						"#000000",
+						1,
+						theta.indexStringY[i]
+					));
+				}
+	}
+	this.step1=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 1");
+		theta.storedraw1();
+		//theta.object=theta.storedraw1.object;
+		this.currentTimeout.push(new Timer(function(){
+			if(theta.currentPhase != 0)
+				return;
+			theta.sortedObject = theta.object;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+			
+		},1000*this.speedMultiplier));
+	}
+	this.step2=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 2");
+		theta.storedraw1();
+		for (var i=0; i<5; ++i) {
+				var c = new cube();
+				this.object.push(c.createCube(
+					this.context,
+						this.startX+50*i,
+						this.startY+200,
+						50,
+						"#8ED6FF",
+						1,
+						theta.labels[i]
+				));
+			}
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 1)
+				return;
+			//theta.sortedObject = theta.object;
+			theta.targetCounter = theta.object.length;
+			for(var i=0; i<theta.object.length; i++)
+				theta.object[i].moveTo(theta.object[i].pos.x,theta.object[i].pos.y-50,1, theta.objectHitTarget);
+				
+		},2000*this.speedMultiplier));
 	}
 	
-	//show Xor and Rot operators, lines (ready for 2nd theta loop)
-	this.showOperation=function(){
-		var opxor = new operator();
-			this.oparray.push(opxor.createOperator(
+	this.step3=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 3");
+		
+		theta.storedraw1();
+		for(var i=0; i<5; ++i){
+			var opxor = new operator();
+				this.object.push(opxor.createOperator(
+					this.context,
+					this.padding+this.startX+50*i,
+					this.startY+200-this.padding,
+					20,
+					"#ffd66a",
+					1,
+					""
+				));
+			}
+		
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 2)
+				return;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step4=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 4");
+		theta.storedraw1();
+		for (var i=0; i<5; ++i) {
+				var c = new cube();
+				this.object.push(c.createCube(
+					this.context,
+						this.startX+50*i,
+						this.startY+150,
+						50,
+						"#8ED6FF",
+						1,
+						theta.labels[i]
+				));
+			}
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 3)
+				return;
+			//theta.sortedObject = theta.object;
+			theta.targetCounter = theta.object.length;
+			for(var i=0; i<theta.object.length; i++)
+				theta.object[i].moveTo(theta.object[i].pos.x,theta.object[i].pos.y-50,1, theta.objectHitTarget);
+			
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step5=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 5");
+		
+		theta.storedraw1();
+		for(var i=0; i<5; ++i){
+			var opxor = new operator();
+				this.object.push(opxor.createOperator(
+					this.context,
+					this.padding+this.startX+50*i,
+					this.startY+150-this.padding,
+					20,
+					"#ffd66a",
+					1,
+					""
+				));
+			}
+		
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 4)
+				return;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step6=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 6");
+		theta.storedraw1();
+		for (var i=0; i<5; ++i) {
+				var c = new cube();
+				this.object.push(c.createCube(
+					this.context,
+						this.startX+50*i,
+						this.startY+100,
+						50,
+						"#8ED6FF",
+						1,
+						theta.labels[i]
+				));
+			}
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 5)
+				return;
+			//theta.sortedObject = theta.object;
+			theta.targetCounter = theta.object.length;
+			for(var i=0; i<theta.object.length; i++)
+				theta.object[i].moveTo(theta.object[i].pos.x,theta.object[i].pos.y-50,1, theta.objectHitTarget);
+			
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step7=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 7");
+		
+		theta.storedraw1();
+		for(var i=0; i<5; ++i){
+			var opxor = new operator();
+				this.object.push(opxor.createOperator(
+					this.context,
+					this.padding+this.startX+50*i,
+					this.startY+100-this.padding,
+					20,
+					"#ffd66a",
+					1,
+					""
+				));
+			}
+		
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 6)
+				return;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step8=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 8");
+		theta.storedraw1();
+		for (var i=0; i<5; ++i) {
+				var c = new cube();
+				this.object.push(c.createCube(
+					this.context,
+						this.startX+50*i,
+						this.startY+50,
+						50,
+						"#8ED6FF",
+						1,
+						theta.labels[i]
+				));
+			}
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 7)
+				return;
+			//theta.sortedObject = theta.object;
+			theta.targetCounter = theta.object.length;
+			for(var i=0; i<theta.object.length; i++)
+				theta.object[i].moveTo(theta.object[i].pos.x,theta.object[i].pos.y-50,1, theta.objectHitTarget);
+			
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step9=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 7");
+		
+		theta.storedraw1();
+		for(var i=0; i<5; ++i){
+			var opxor = new operator();
+				this.object.push(opxor.createOperator(
+					this.context,
+					this.padding+this.startX+50*i,
+					this.startY+50-this.padding,
+					20,
+					"#ffd66a",
+					1,
+					""
+				));
+			}
+		
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 8)
+				return;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step10=function(){
+		this.dialogs[0].setMessage(this.context, "This is Step 10");
+		theta.storedraw1();
+		for (var i=0; i<5; ++i) {
+				var c = new cube();
+				this.object.push(c.createCube(
+					this.context,
+						this.startX+50*i,
+						this.startY,
+						50,
+						"#8ED6FF",
+						1,
+						theta.labels[i]
+				));
+			}
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 9)
+				return;
+			//theta.sortedObject = theta.object;
+			theta.targetCounter = theta.object.length;
+			for(var i=0; i<theta.object.length; i++)
+				//var posX = ;
+				theta.object[i].moveTo(25+i*theta.spaceX,27,0.5,theta.objectHitTarget);
+			
+		},2000*this.speedMultiplier));
+	}
+	//Theta Step I finished
+	
+	
+	
+	//Theta Step II Start
+	this.storedraw2=function(){
+		/*var opxor = new operator();
+			this.object.push(opxor.createOperator(
 				this.context,
 				780,
 				180,
@@ -321,7 +534,7 @@ var theta = new function()
 			));
 		
 		var oprot = new operator();
-			this.oparray.push(oprot.createOperator(
+			this.object.push(oprot.createOperator(
 				this.context,
 				780,
 				280,
@@ -329,7 +542,33 @@ var theta = new function()
 				"#9900CC",
 				1,
 				"ROT"
+			));*/
+		for (var i=0; i<5; ++i) {//cube ABCDE
+				var c = new cube();
+				this.object.push(c.createCube(
+					this.context,
+						25+i*theta.spaceX,
+						27,
+						50,
+						"#8ED6FF",
+						1,
+						theta.labels[i]
+				));
+			}
+			
+			for (var i=0; i<5; ++i) {
+			var posX = i * 150;
+			var c = new cube();
+			this.object.push(c.createCube(
+					this.context,
+					25+posX,
+					450,
+					50,
+					"#8ED6FF",
+					1,
+					theta.labelprimes[i]
 			));
+		}
 		
 		for(var i=0;i<5;++i) {
 			var posX = i * this.spaceX;
@@ -341,41 +580,41 @@ var theta = new function()
 			var y2 = y1+(this.spaceY/4)+100;
 
 			var opand = new operator();//Rot
-			this.extra.push(opand.createOperator(
+			this.object.push(opand.createOperator(
 				this.context,
-				x2+25,
+				x2+10,
 				y2,
-				30,
+				60,
 				"#9900CC",
 				1,
-				""
+				"ROT"
 			));
 
 			var opxor = new operator();
-			this.extra.push(opxor.createOperator(
+			this.object.push(opxor.createOperator(
 				this.context,
 				x1,
 				y1+(this.spaceY/4*3)-50,
-				30,
+				60,
 				"#ffd66a",
 				1,
-				""
+				"XOR"
 			));
 			// rot to xor
 			var rottoxor=new line();
-			this.extra.push(rottoxor.createLine(
+			this.object.push(rottoxor.createLine(
 					this.context,
-					x2+20,
+					x2+10,
 					y2+15,
 					x1+15,
-					y1+(this.spaceY/4*3)-50,
+					y1+(this.spaceY/4*3)-78,
 					"#000000",
 					1
 				));
 			
 			// xor to cube
 			var xortocube=new line();
-			this.extra.push(xortocube.createLine(
+			this.object.push(xortocube.createLine(
 					this.context,
 					x1,
 					y1+(this.spaceY/4*3)-35,
@@ -392,27 +631,27 @@ var theta = new function()
 			var torot1 = new line();
 			var toxor1= new line();
 			if (i < 4) {
-				this.extra.push(torot1.createLine(
+				this.object.push(torot1.createLine(
 					this.context,
 					x3,
 					y3,
 					x1+67,
-					y1+(this.spaceY/4*3)-165,
+					y1+(this.spaceY/4*3)-173,
 					"#000000",
 					1
 				));
-				this.extra.push(toxor1.createLine(
+				this.object.push(toxor1.createLine(
 					this.context,
 					x1-12,
 					y3,
 					x3,
-					y1+(this.spaceY/4*3)-50,
+					y1+(this.spaceY/4*3)-78,
 					"#000000",
 					1
 				));	
 			} else {
 				var torot= new line();
-				this.extra.push(torot.createLine(
+				this.object.push(torot.createLine(
 					this.context,
 					this.padding+25,
 					y3,
@@ -422,7 +661,7 @@ var theta = new function()
 					1
 				));
 				var torot2= new line();
-				this.extra.push(torot2.createLine(
+				this.object.push(torot2.createLine(
 					this.context,
 					this.padding+25,
 					y3+50,
@@ -432,17 +671,17 @@ var theta = new function()
 					1
 				));
 				var torot3= new line();
-				this.extra.push(torot3.createLine(
+				this.object.push(torot3.createLine(
 					this.context,
 					this.padding+700,
 					y3+50,
 					this.padding+700,
-					y3+210,
+					y3+200,
 					"#000000",
 					1
 				));
 				var toxor2=new line();
-				this.extra.push(toxor2.createLine(
+				this.object.push(toxor2.createLine(
 					this.context,
 					this.padding+625,
 					y3,
@@ -452,7 +691,7 @@ var theta = new function()
 					1
 				));
 				var toxor3=new line();
-				this.extra.push(toxor3.createLine(
+				this.object.push(toxor3.createLine(
 					this.context,
 					this.padding+625,
 					y3+100,
@@ -462,12 +701,12 @@ var theta = new function()
 					1
 				));
 				var toxor4=new line();
-				this.extra.push(toxor4.createLine(
+				this.object.push(toxor4.createLine(
 					this.context,
 					this.padding+25,
 					y3+100,
 					this.padding+25,
-					y3+317,
+					y3+300,
 					"#000000",
 					1
 				));
@@ -476,15 +715,9 @@ var theta = new function()
 
 			
 		}
-
-		
-		
-		
 	}
 	
-	//move indicators (animation for 2nd theta loop)
-	this.animatexorWithRot=function(i){
-		var delay = 1000;
+	this.storedraw3=function(i){
 		var s = 0.5 ;
 		var g = 500 ;
 		var k=i;
@@ -502,7 +735,7 @@ var theta = new function()
 		var posY = this.spaceY-450;
 		// create 2 indicator for Xor+Rot animation
 		var ac = new cube();
-		theta.indicators.push(ac.createCube(
+		theta.object.push(ac.createCube(
 			this.context,
 			this.padding+posX,
 			this.padding+posY,
@@ -524,7 +757,7 @@ var theta = new function()
 		posX = k*150+465;
 		}
 		var dc = new cube();
-		theta.indicators.push(dc.createCube(
+		theta.object.push(dc.createCube(
 			this.context,
 			this.padding+posX,
 			this.padding+posY,
@@ -533,136 +766,437 @@ var theta = new function()
 			1,
 			""
 		));
-		setTimeout(function(){//1
-				
-				if(k==2){
-					theta.indicators[1].moveTo(theta.indicators[1].pos.x,theta.indicators[1].pos.y+50,s);
-					
-				}
-				else if(k==3){
-					theta.indicators[0].moveTo(theta.indicators[0].pos.x,theta.indicators[0].pos.y+115,s-0.2);
-					
-				}
-				else{
-					theta.indicators[1].moveTo(theta.indicators[1].pos.x-80,theta.indicators[1].pos.y+220,s);
-				}
-			
-		}, delay);
-
-		delay += g;
-		setTimeout(function(){//2
-			if(k==2){
-				theta.indicators[1].moveTo(theta.indicators[1].pos.x+685,theta.indicators[1].pos.y,s);
-			}
-			else if(k==3){
-				theta.indicators[0].moveTo(theta.indicators[0].pos.x-645,theta.indicators[0].pos.y,s-0.2);
-				theta.indicators[1].moveTo(theta.indicators[1].pos.x-80,theta.indicators[1].pos.y+220,s+0.2);
-			}
-			else{
-			theta.indicators[0].moveTo(theta.indicators[0].pos.x+158,theta.indicators[0].pos.y+320,s+0.2);
-			theta.indicators[1].moveTo(theta.indicators[0].pos.x+158,theta.indicators[0].pos.y+320,s-0.2);
-			}
-			
-			
-			
-		}, delay);
-		delay += g;
-		setTimeout(function(){//3
-			if(k==2){
-				
-				theta.indicators[1].moveTo(theta.indicators[1].pos.x,theta.indicators[1].pos.y+185,s-0.2);
-			}
-			else if(k==3){
-				
-				theta.indicators[0].moveTo(theta.indicators[0].pos.x,theta.indicators[0].pos.y+220,s-0.2);
-				theta.indicators[1].moveTo(theta.indicators[0].pos.x,theta.indicators[0].pos.y+220,s+0.2);
-			}
-			else{
-			
-			theta.indicators[0].alpha=0;
-			theta.indicators[1].moveTo(theta.indicators[1].pos.x,theta.indicators[1].pos.y+80,s);
-			}
-			
-		}, delay);
 		
-		delay +=g;
-		setTimeout(function(){
-			if(k==2){
-				theta.indicators[0].moveTo(theta.indicators[0].pos.x+158,theta.indicators[0].pos.y+320,s+0.2);
-				theta.indicators[1].moveTo(theta.indicators[0].pos.x+158,theta.indicators[0].pos.y+320,s-0.2);
-			}
-			if(k==3){
-			theta.indicators[0].alpha=0;
-			theta.indicators[1].moveTo(theta.indicators[1].pos.x,theta.indicators[1].pos.y+80,s);
-			}
-		}, delay);
-		
-		delay +=g;
-		setTimeout(function(){
-			if(k==2){
-			theta.indicators[0].alpha=0;
-			theta.indicators[1].moveTo(theta.indicators[1].pos.x,theta.indicators[1].pos.y+80,s);
-			}
-		}, delay);
-		
-		delay += g;
-		setTimeout(function(){
-			theta.indicators=[];
-			if (i < 4) {
-				theta.animatexorWithRot(i+1);
-				
-			}else{
-				setTimeout(function(){
-				theta.playAnimationPhase(++theta.currentPhase) 
-				}, 1000*this.speedMultiplier);
-			}
-			
-			
-		}, delay);
+	}
+	
+	this.storedraw4=function(i){
+		var s = 0.5 ;
+		var g = 500 ;
+		var k=i;
+		//var start=k%5;
+		var a=(((k-1)%5)+5)%5;//(val%n)+n)%n
+		var b=(((k+1)%5)+5)%5;
+		if(k==4){
+			//var 
+			var posX = k*0+15;
+		}else{
+		//	posX = k*0+15;
+			posX = k*150+165;
+			//posY = this.spaceY-450;
+		}
+		var posY = this.spaceY-450;
+		// create 2 indicator for Xor+Rot animation
+		var ac = new cube();
+		theta.object.push(ac.createCube(
+			this.context,
+			this.padding+posX,
+			this.padding+posY,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
 		
 		
 		
 	}
 	
-	//move xor+rot-ed row (ready for 3rd theta loop)
-	this.moveXorRotRow=function(){
-		for(var i = 0;i<5;++i){
-			var posX = i * 50;
-			theta.object1[i].moveTo(posX+50,275,0.5);
-			theta.indexX2[i].moveTo(posX+58,350,0.5);
-
-			}
-			
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
+	this.step11=function(){ //torot A'
+		theta.storedraw3(0);
+		theta.storedraw2();
 		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 10)
+				return;
+			
+			theta.targetCounter = 1;
+				theta.object[1].moveTo(400,300,1,theta.objectHitTarget);
+		},2000*this.speedMultiplier));
 	}
 	
-	//create cubes row to Xor up (show first cubes to start 3rd theta loop )
-	this.showCubes1 = function() {
-
+	this.step12=function(){ //toxor
+		theta.storedraw4(0);
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			400,
+			300,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 11)
+				return;
+			
+			theta.targetCounter = 2;
+				theta.object[0].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.5,theta.objectHitTarget);
+				theta.object[1].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.2,theta.objectHitTarget);
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step13=function(){ //toprime
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			350,
+			400,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 12)
+				return;
+			
+			theta.targetCounter = 1;
+				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
+				
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step14=function(){ //torot B'
+		theta.storedraw3(1);
+		theta.storedraw2();
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 13)
+				return;
+			
+			theta.targetCounter = 1;
+				theta.object[1].moveTo(550,300,1,theta.objectHitTarget);
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step15=function(){ //toxor
+		theta.storedraw4(1);
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			550,
+			300,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 14)
+				return;
+			
+			theta.targetCounter = 2;
+				theta.object[0].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.5,theta.objectHitTarget);
+				theta.object[1].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.2,theta.objectHitTarget);
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step16=function(){ //toprime
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			500,
+			400,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 15)
+				return;
+			
+			theta.targetCounter = 1;
+				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
+				
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step17=function(){ //torot C'
+		theta.storedraw3(2);
+		theta.storedraw2();
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+					if(theta.currentPhase != 16)
+					return;
+					theta.targetCounter=3;
+					theta.object[1].moveTo(theta.object[1].pos.x,theta.object[1].pos.y+50,1,theta.objectHitTarget);
+				
+		},1000*this.speedMultiplier));
+		this.currentTimeout.push(new Timer(function(){
+					if(theta.currentPhase != 16)
+					return;
+					theta.targetCounter=2;
+					theta.object[1].moveTo(theta.object[1].pos.x+687,theta.object[1].pos.y,1,theta.objectHitTarget);
+				
+				},2000*this.speedMultiplier));
+		this.currentTimeout.push(new Timer(function(){
+					if(theta.currentPhase != 16)
+					return;
+					theta.targetCounter=1;
+					theta.object[1].moveTo(theta.object[1].pos.x,theta.object[1].pos.y+175,1,theta.objectHitTarget);
+				
+				},3000*this.speedMultiplier));
+	}
+	
+	this.step18=function(){ //toxor
+		theta.storedraw4(2);
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			690,
+			305,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 17)
+				return;
+			
+			theta.targetCounter = 2;
+				theta.object[0].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.5,theta.objectHitTarget);
+				theta.object[1].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.3,theta.objectHitTarget);
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step19=function(){ //toprime
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			650,
+			400,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 18)
+				return;
+			
+			theta.targetCounter = 1;
+				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
+				
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step20=function(){ //torot D'
+		theta.storedraw3(3);
+		theta.storedraw2();
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+		if(theta.currentPhase != 19)
+				return;
+					theta.targetCounter=1;
+					theta.object[1].moveTo(100,300,1.5,theta.objectHitTarget);
+				
+		},1000*this.speedMultiplier));
+	}
+	
+	this.step21=function(){ //toxor 
+		theta.storedraw4(3);
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			100,
+			300,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		if(theta.currentPhase != 20)
+				return;
+				this.currentTimeout.push(new Timer(function(){
+					if(theta.currentPhase != 20)
+					return;
+					theta.targetCounter=4;
+					theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+95,1,theta.objectHitTarget)
+				
+		},1000*this.speedMultiplier));
+		
+		this.currentTimeout.push(new Timer(function(){
+					if(theta.currentPhase != 20)
+					return;
+					theta.targetCounter=3;
+					theta.object[0].moveTo(theta.object[0].pos.x-610,theta.object[0].pos.y,1,theta.objectHitTarget);
+				
+				},2000*this.speedMultiplier));
+				
+		this.currentTimeout.push(new Timer(function(){
+					if(theta.currentPhase != 20)
+					return;
+					theta.targetCounter=2;
+					theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+220,1,theta.objectHitTarget);
+					theta.object[1].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+220,1,theta.objectHitTarget);
+				},3000*this.speedMultiplier));
+				
+	}
+	
+	this.step22=function(){ //toprime
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			50,
+			400,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 21)
+				return;
+			
+			theta.targetCounter = 1;
+				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
+				
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step23=function(){ //torot E'
+		theta.storedraw3(4);
+		theta.storedraw2();
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 22)
+				return;
+			
+			theta.targetCounter = 1;
+				theta.object[1].moveTo(250,300,1,theta.objectHitTarget);
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step24=function(){ //toxor
+		theta.storedraw4(4);
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			250,
+			300,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 23)
+				return;
+			
+			theta.targetCounter = 2;
+				theta.object[0].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.5,theta.objectHitTarget);
+				theta.object[1].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.2,theta.objectHitTarget);
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step25=function(){ //toprime
+		var dc = new cube();
+		theta.object.push(dc.createCube(
+			this.context,
+			200,
+			400,
+			20,
+			"#FFF000",
+			1,
+			""
+		));
+		theta.storedraw2();
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 24)
+				return;
+			
+			theta.targetCounter = 1;
+				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
+				
+		},2000*this.speedMultiplier));
+	}
+	//Theta Step II finished
+	
+	//Theta Step III Start	
+	this.storedraw5=function(){
+		
 		for (var i=0; i<5; ++i) {
 			var c = new cube();
 			this.object.push(c.createCube(
-				this.context,
-					50+50*i,
+					this.context,
+					i * 50+50,
 					275,
 					50,
 					"#8ED6FF",
-					0.5,
-					""
+					1,
+					theta.labelprimes[i]
 			));
 		}
 		
-	}
-	
-	// create static Xor operator (display in 3rd theta loop)
-	this.showOperatorXOR1= function(k) {
-		var i=k;
-		
 		var opxor = new operator();
-			this.indicators.push(opxor.createOperator(
+			this.object.push(opxor.createOperator(
 				this.context,
 				420,
 				280,
@@ -671,260 +1205,547 @@ var theta = new function()
 				1,
 				"XOR"
 			));
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
+		
+		
 		
 	}
 	
-	// Operator XOR (show together with cubes for 3rd theta loop)
-	this.showOperatorXOR2= function(k) {
-		var i=k;
-		for(var j=0; j<5; ++j){
-		var opxor = new operator();
-			this.oparray.push(opxor.createOperator(
-				this.context,
-				this.padding+this.startX+50*j,
-				this.startY+250-i*50-this.padding,
-				20,
-				"#ffd66a",
-				1,
-				""
+	this.step26=function(){
+		for (var i=0; i<5; ++i) {
+			var c = new cube();
+			this.object.push(c.createCube(
+					this.context,
+					25+i * 150,
+					450,
+					50,
+					"#8ED6FF",
+					1,
+					theta.labelprimes[i]
 			));
 		}
-		/*setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 6000*this.speedMultiplier);*/
-	}
-	
-	// cubes row to Xor (animation for 3rd theta loop)
-	this.xorRowUp1=function(k){
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
 			
-			var delay = 1000;
-			var i=k;
-			var g=500;
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 25)
+				return;
 			
-			theta.showCubes1();
-			
-			setTimeout(function(){
-			
-			for(var j=0; j<5; ++j){
-				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y+100-50*i,0.5);
-				//theta.object[j].moveTo(515,theta.object[j].pos.y+100-50*i,0.5);
-			}
-			}, delay);
-			
-			/*
-			delay += g;
-			setTimeout(function(){
-			
-			for(var j=0; j<5; ++j){
-				theta.object[j].moveTo(theta.object[j].pos.x,theta.object[j].pos.y-50*i,0.5);
-	
-			}
-			}, delay);
-			*/
-			delay += g;
-			setTimeout(function(){
-						
-						
-						//theta.showCubes1();
-						theta.showOperatorXOR2(i);
-						
-						
-					}, delay);
+			theta.targetCounter = 5;
+				for(var i = 0;i<5;++i){
 					
+			theta.object[i].moveTo(i * 50+50,275,1,theta.objectHitTarget);
+				}
 				
-					delay += g;
-					setTimeout(function(){
-					theta.object=[];
-					theta.oparray=[];
-					if (i < 4) {
-						
-						theta.xorRowUp1(k+1);
-						
-					}
-					
-				}, delay);
+		},2000*this.speedMultiplier));
 		
-			
-			setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-			},10000*this.speedMultiplier);
-
+		
 	}
 	
-	// draw last State
-	this.showStatelastSkeleton = function() { //play 0
-		var filler = new Array();
-		for (var i=0; i<25; ++i) {
-			filler.push("");
-		}
-
-		// (context, x, y, size, color, alpha, input)
-		var skeleton = new slice();
-		this.extra.push(skeleton.createSlice(
-			this.context,
-			515,
-			175,
-			50,
-			"#8ED6FF",
-			1,
-			filler
-		));
-
-		//this.moveCubes(1000, 750, 0.5);
+	this.step27=function(){ //1
+		theta.storedraw1();
+		theta.storedraw5();
 		
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
+		for (var i=0; i<5; ++i) {
+			var c = new cube();
+			this.object.push(c.createCube(
+				this.context,
+					50+50*i,
+					275,
+					50,
+					"#8ED6FF",
+					1,
+					theta.labelprimes[i]
+			));
+		}
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 26)
+				return;
+				theta.object.splice(0,17);
+			theta.targetCounter = 5;
+				for(var j=0; j<5; ++j){
+				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y+100,0.5,theta.objectHitTarget);
+			}
+				
+		},2000*this.speedMultiplier));
+	}
+	
+	
+	this.step28=function(){
+		
+		theta.storedraw1();
+		theta.storedraw5();
+		for(var i=0; i<5; ++i){
+			var opxor = new operator();
+				this.object.push(opxor.createOperator(
+					this.context,
+					this.padding+this.startX+50*i,
+					this.startY+250-this.padding,
+					20,
+					"#ffd66a",
+					1,
+					""
+				));
+			}
+		
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 27)
+				return;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step29=function(){ //2
+		theta.storedraw1();
+		theta.storedraw5();
+		
+		for (var i=0; i<5; ++i) {
+			var c = new cube();
+			this.object.push(c.createCube(
+				this.context,
+					50+50*i,
+					275,
+					50,
+					"#8ED6FF",
+					1,
+					theta.labelprimes[i]
+			));
+		}
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 28)
+				return;
+				theta.object.splice(0,17);
+			theta.targetCounter = 5;
+				for(var j=0; j<5; ++j){
+				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y+50,0.5,theta.objectHitTarget);
+			}
+				
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step30=function(){
+		
+		theta.storedraw1();
+		theta.storedraw5();
+		for(var i=0; i<5; ++i){
+			var opxor = new operator();
+				this.object.push(opxor.createOperator(
+					this.context,
+					this.padding+this.startX+50*i,
+					this.startY+200-this.padding,
+					20,
+					"#ffd66a",
+					1,
+					""
+				));
+			}
+		
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 29)
+				return;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step31=function(){ //3
+		theta.storedraw1();
+		theta.storedraw5();
+		
+		for (var i=0; i<5; ++i) {
+			var c = new cube();
+			this.object.push(c.createCube(
+				this.context,
+					50+50*i,
+					275,
+					50,
+					"#8ED6FF",
+					1,
+					theta.labelprimes[i]
+			));
+		}
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 30)
+				return;
+				theta.object.splice(0,17);
+			theta.targetCounter = 5;
+				for(var j=0; j<5; ++j){
+				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y,0.5,theta.objectHitTarget);
+			}
+				
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step32=function(){
+		
+		theta.storedraw1();
+		theta.storedraw5();
+		for(var i=0; i<5; ++i){
+			var opxor = new operator();
+				this.object.push(opxor.createOperator(
+					this.context,
+					this.padding+this.startX+50*i,
+					this.startY+150-this.padding,
+					20,
+					"#ffd66a",
+					1,
+					""
+				));
+			}
+		
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 31)
+				return;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step33=function(){ //4
+		theta.storedraw1();
+		theta.storedraw5();
+		
+		for (var i=0; i<5; ++i) {
+			var c = new cube();
+			this.object.push(c.createCube(
+				this.context,
+					50+50*i,
+					275,
+					50,
+					"#8ED6FF",
+					1,
+					theta.labelprimes[i]
+			));
+		}
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 32)
+				return;
+				theta.object.splice(0,17);
+			theta.targetCounter = 5;
+				for(var j=0; j<5; ++j){
+				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y-50,0.5,theta.objectHitTarget);
+			}
+				
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step34=function(){
+		
+		theta.storedraw1();
+		theta.storedraw5();
+		for(var i=0; i<5; ++i){
+			var opxor = new operator();
+				this.object.push(opxor.createOperator(
+					this.context,
+					this.padding+this.startX+50*i,
+					this.startY+100-this.padding,
+					20,
+					"#ffd66a",
+					1,
+					""
+				));
+			}
+		
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 33)
+				return;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step35=function(){ //5
+		theta.storedraw1();
+		theta.storedraw5();
+		
+		for (var i=0; i<5; ++i) {
+			var c = new cube();
+			this.object.push(c.createCube(
+				this.context,
+					50+50*i,
+					275,
+					50,
+					"#8ED6FF",
+					1,
+					theta.labelprimes[i]
+			));
+		}
+		theta.sortedObject = theta.object;
+		this.currentTimeout.push(new Timer(function(){
+			
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 34)
+				return;
+				theta.object.splice(0,17);
+			theta.targetCounter = 5;
+				for(var j=0; j<5; ++j){
+				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y-100,0.5,theta.objectHitTarget);
+			}
+				
+		},2000*this.speedMultiplier));
+	}
+	
+	this.step36=function(){
+		
+		theta.storedraw1();
+		theta.storedraw5();
+		for(var i=0; i<5; ++i){
+			var opxor = new operator();
+				this.object.push(opxor.createOperator(
+					this.context,
+					this.padding+this.startX+50*i,
+					this.startY+50-this.padding,
+					20,
+					"#ffd66a",
+					1,
+					""
+				));
+			}
+		
+		
+		console.log("Object"+theta.object.length);
+		theta.sortedObject = theta.object;
+		
+		//theta.object=theta.storedraw1.object;
+		
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 35)
+				return;
+			theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
+	}
+	
+	//Theta Step III finished
+	
+	
+	this.step37=function(){
+		
+		var filler = new Array();
+				for (var i=0; i<25; ++i) {
+					filler.push("");
+				}
+
+				// (context, x, y, size, color, alpha, input)
+				var skeleton = new slice();
+				this.object.push(skeleton.createSlice(
+					this.context,
+					515,
+					175,
+					50,
+					"#8ED6FF",
+					1,
+					filler
+				));
+		theta.sortedObject = zSort5x5(theta.object);
+		this.currentTimeout.push(new Timer(function(){
+			//theta.object.splice(0,11);
+			console.log("Object splice"+theta.object.length);
+			if(theta.currentPhase != 36)
+				return;
+			//theta.playAnimationPhase(++theta.currentPhase) ;
+		},2000*this.speedMultiplier));
 	}
 	
 	this.objectHitTarget = function()
 	{
-		theta.hitCounter++;
-		if(theta.hitCounter >= theta.targetCounter) 
+		++theta.hitCounter;
+		
+		if(theta.hitCounter >= theta.targetCounter)
 		{
-			//theta.reorderCube();
 			theta.hitCounter = 0;
 			theta.playAnimationPhase(++theta.currentPhase);
 		}
 	}
 	
-	
-	// clear state,opeator index arrays
-	this.destroyArrays1 = function()
-	{
-		// destroy skeleton
-		for (var i=0; i<theta.extra.length; ++i) {
-			theta.oparray[i]=null;
-			theta.indexX[i]=null;
-			theta.indexY[i]=null;
-			theta.extra[i] = null;
-		}
-		theta.oparray=[];
-		theta.indexX=[];
-		theta.indexY=[];
-		theta.extra = [];
-	}
-	
-	// clear indicators
-	this.destroyArrays2=function(){
-		for(var i=0; i<theta.indicators.length;++i){
-			theta.indicators[i]=null;
-		}
-		theta.indicators=[];
-		for(var i=0;i<theta.extra.length;++i){
-			theta.extra[i]=null;
-		}
-		theta.extra=[];
-		for(var i=0; i<theta.object.length; ++i){
-			theta.object[i]=null;
-			theta.indexX[i]=null;
-		}
-		theta.object=[];
-		theta.indexX=[];
-		theta.oparray=[];
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
-	}
-	
-	// clear everything
-	this.destroyEverything=function(){
-		for(var i=0; i<5; ++i){
-			theta.oparray[i]=null;
-			theta.object[i]=null;
-			theta.object1[i]=null;
-			theta.indexX2[i]=null;
-			theta.indexX[i]=null;
-			theta.indexY[i]=null;
-		}
-		theta.oparray=[];
-		theta.indexX2=[];
-		theta.object=[];
-		theta.object1=[];
-		theta.indexX=[];
-		theta.indexY=[];
-		theta.indicators=[];
-		theta.extra=[];
-		setTimeout(function(){
-			theta.playAnimationPhase(++theta.currentPhase) 
-		}, 1000*this.speedMultiplier);
-	}
-	
-	this.update = function()
-	{
-		time.updateTime();
-		
-		theta_render.update();
-	}
 	// Animation phases
 	this.playAnimationPhase = function(phase)
 	{
+		//ERIC: If only its a new step, remove all previously created objects
+		if(this.step_array.indexOf(phase) > -1)
+		{
+			for(var i=0; i<this.currentTimeout.length; i++)
+			{
+				this.currentTimeout[i].remove();
+			}
+			
+			this.currentTimeout = new Array();
+			this.object = new Array();
+			this.sortedObject = new Array();
+		}
+		
 		switch(phase)
 		{
 			case 0:
-				this.showStateSkeleton();
+				this.step1();//Theta Step I Start
 				break;
 			case 1:
-				this.showindexXY();
+				this.step2();
 				break;
 			case 2:
-				this.showCubes();
+				this.step3();
 				break;
 			case 3:
-				this.xorRowUp(0);
+				this.step4();
 				break;
 			case 4:
-				this.destroyArrays1();
-				
+				this.step5();
 				break;
 			case 5:
-				this.showindexX1();
+				this.step6();
 				break;
 			case 6:
-				this.moveXoredRow();
+				this.step7();
 				break;
 			case 7:
-				this.showRowSkeleton();
+				this.step8();
 				break;
 			case 8:
-				this.showindexX2();
+				this.step9();
 				break;
 			case 9:
-				this.showOperation();
+				this.step10(); 
 				break;
 			case 10: 
-				this.animatexorWithRot(0);
+				this.step11();
 				break;
 			case 11:
-				this.destroyArrays2();
+				this.step12();
 				break;
 			case 12:
-				this.moveXorRotRow();
+				this.step13();
 				break;
 			case 13:
-				this.showStateSkeleton();
+				this.step14();
 				break;
 			case 14:
-				this.showindexXY();
+				this.step15();
 				break;
 			case 15:
-				this.showOperatorXOR1();
+				this.step16();
 				break;
 			case 16:
-				this.xorRowUp1(0);
+				this.step17();
 				break;
 			case 17:
-				this.destroyEverything();
+				this.step18();
 				break;
 			case 18:
-				this.showStatelastSkeleton();
+				this.step19();
 				break;
+			case 19:
+				this.step20();
+				break;
+			case 20:
+				this.step21();
+				break;
+			case 21:
+				this.step22();
+				break;
+			case 22:
+				this.step23();
+				break;
+			case 23:
+				this.step24();
+				break;
+			case 24:
+				this.step25();
+				break;
+			case 25:
+				this.step26();
+				break;
+			case 26:
+				this.step27();
+				break;
+			case 27:
+				this.step28();
+				break;
+			case 28:
+				this.step29();
+				break;
+			case 29:
+				this.step30();
+				break;
+			case 30:
+				this.step31();
+				break;
+			case 31:
+				this.step32();
+				break;
+			case 32:
+				this.step33();
+				break;
+			case 33:
+				this.step34();
+				break;
+			case 34:
+				this.step35();
+				break;
+			case 35:
+				this.step36();
+				break;
+			case 36:
+				this.step37();
+				break;
+			/*case 37:
+				this.step38();
+				break;
+			case 38:
+				this.step39();
+				break;
+			case 39:
+				this.step40();
+				break;
+			case 40: 
+				this.step41();
+				break;	*/
 			
+			
+		
 		}
+		theta.sortedObject = zSort5x5(theta.object);
 	}
 }
 
-theta.init();
+//theta.init();

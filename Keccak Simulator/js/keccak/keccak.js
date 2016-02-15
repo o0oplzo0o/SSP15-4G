@@ -477,7 +477,6 @@ var KECCAK = new function()
 			{
 				my_string = my_string + "00";
 			}
-			console.log("Padded "+(8*my_string.length/2)+" 00s");
 
 			my_string = my_string + "80";
 		}
@@ -546,8 +545,14 @@ var KECCAK = new function()
 					[0,0,0,0,0],
 					[0,0,0,0,0]];
 					
+		this.data["init"] = new Array();
+		this.data["init"]["step1"] = new Array();
+		this.data["init"]["step1"].push(common.hex2string(M[1]),M,suffix);
+		
 		//Appending the suffix
 		M = this.appendDelimitedSuffix(M, suffix);
+		
+		this.data["init"]["step1"].push(M);
 		
 		if(verbose)
 		{
@@ -556,6 +561,7 @@ var KECCAK = new function()
 		
 		//Padding of messages
 		var P = this.pad10star1(M,r);
+		this.data["init"]["step1"].push(P);
 		
 		if(verbose)
 		{
@@ -604,7 +610,7 @@ var KECCAK = new function()
 		{
 			console.log("Value after squeezing : " + this.convertTableToStr(S));
 		}
-		console.log(this.data);
+		
 		return Z.slice(0,Math.floor(2*n/8));
 	};
 }

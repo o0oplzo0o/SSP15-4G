@@ -7,6 +7,7 @@
 
 var cube = function()
 {
+	this.uid = 0;
 	this.pos = {x:0,y:0};
 	this.size = 0;
 	this.color = "#FFFFFF";
@@ -22,10 +23,13 @@ var cube = function()
 	this.speed = 0;
 	this.factor = 0;
 	
+	this.updateID = null;
+	
 	this.onHitTargetCB = null; //Function callback when cube moveTo hit destination
 	
 	this.createCube = function(context, x, y, size, color, alpha, text)
 	{
+		this.uid = uid++;
 		this.pos.x = x;
 		this.pos.y = y;
 		this.size = size;
@@ -35,7 +39,7 @@ var cube = function()
 		
 		this.draw(context);
 		
-		setInterval(this.update,1000/60,this);
+		this.updateID = setInterval(this.update,1000/60,this);
 
 		return this;
 	}
@@ -111,7 +115,7 @@ var cube = function()
 			this.onHitTargetCB = cb;
 
 		this.factor = 0;
-		this.ori = {x:this.pos.x, y:this.pos.y};
+		this.ori = {x:this.pos.x,y:this.pos.y};
 		this.dest = {x:x,y:y};
 		this.speed = speed;
 		this.isMoving = true;
@@ -121,6 +125,8 @@ var cube = function()
 	{
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
+		
+		//self.onHitTargetCB = null;
 	}
 	
 	//Specific object update loop
@@ -139,5 +145,16 @@ var cube = function()
 
 			self.factor += time.dt * self.speed;
 		}
+	}
+	
+	this.pause = function()
+	{
+		clearInterval(this.updateID);
+		this.updateID = null;
+	}
+	
+	this.resume = function()
+	{
+		this.updateID = setInterval(this.update,1000/60, this);
 	}
 }

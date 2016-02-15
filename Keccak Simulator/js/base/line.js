@@ -15,6 +15,8 @@ var line = function()
 	this.speed = 0;
 	this.factor = 0;
 	
+	this.updateID = null;
+	
 	this.onHitTargetCB = null; //Function callback when cube moveTo hit destination
 	
 	this.createLine = function(context, x, y, x2, y2, color, alpha)
@@ -28,7 +30,7 @@ var line = function()
 		
 		this.draw(context);
 		
-		setInterval(this.update,1000/60, this);
+		this.updateID = setInterval(this.update,1000/60, this);
 		return this;
 	}
 	
@@ -62,7 +64,7 @@ var line = function()
 			this.onHitTargetCB = cb;
 		
 		this.factor = 0;
-		this.ori = this.pos;
+		this.ori = {x:this.pos.x,y:this.pos.y};
 		this.dest = {x:x,y:y};
 		this.speed = speed;
 		this.isMoving = true;
@@ -70,7 +72,6 @@ var line = function()
 	
 	this.onHitTarget = function(self)
 	{
-		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
 	}
@@ -91,5 +92,16 @@ var line = function()
 			}
 			self.factor += time.dt * self.speed;
 		}
+	}
+	
+	this.pause = function()
+	{
+		clearInterval(this.updateID);
+		this.updateID = null;
+	}
+	
+	this.resume = function()
+	{
+		this.updateID = setInterval(this.update,1000/60, this);
 	}
 }

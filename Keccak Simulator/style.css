@@ -1,14 +1,5 @@
-*, *:before, *:after {
-	margin:0;
-	padding:0;
-	-webkit-box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	box-sizing:border-box;
-	font-family:"Andika", "Arial", sans-serif, serif;
-}
-
 body{	
-	background-color:#ffffff;
+	background-color: 	#FFF    ;
 }
 
 /*Nav bar*/
@@ -17,7 +8,7 @@ body{
 	width: 100%;
     list-style-type: none;
     margin: 0;
-    padding-left: 0px;
+    padding-left: 20px;
     overflow: hidden;
     background-color: #606060  ;
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
@@ -32,6 +23,7 @@ body{
     padding-left: 20px;
     overflow: hidden;
 	position:static;
+	font-family:Andika, Arial, sans-serif; 
 	color:#000;
 	font-size:0.9em;
 	letter-spacing:.1em;
@@ -46,6 +38,7 @@ li a {
     text-align: center;
     padding: 10px 10px;
     text-decoration: none;
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.1em;
 	letter-spacing:.1em;
@@ -77,7 +70,7 @@ li a:hover {
 	margin-left:20px;
 	margin-top:30px;
 	position:static;
-	background-color:#E8E8E8;
+	background-color:#E8E8E8    ;
 	border:0px groove #D0D0D0 ;
 	-webkit-border-radius:  8px 0 0 8px ;
 	-moz-border-radius:  8px 0 0 8px ;
@@ -88,6 +81,8 @@ li a:hover {
 }
 
 .rounddiv h1{
+	
+	font-family:Andika, Arial, sans-serif; 
 	color:#000;
 	font-size:1.4em;
 	letter-spacing:.1em;
@@ -96,6 +91,7 @@ li a:hover {
 	font-variant:small-caps;
 }
 .rounddiv input{
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.4em;
 	letter-spacing:.1em;
@@ -104,7 +100,8 @@ li a:hover {
 	font-variant:small-caps;
 	
 }
-.rounddiv div {
+.rounddiv div{
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.em;
 	letter-spacing:.1em;
@@ -113,7 +110,9 @@ li a:hover {
 	
 }
 
-p {
+p{
+	
+	font-family:Andika, Arial, sans-serif; 
 	color:#000;
 	font-size:1.0em;
 	letter-spacing:.1em;
@@ -135,6 +134,8 @@ p {
 	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 }
 .rounddiv1 h1{
+	
+	font-family:Andika, Arial, sans-serif; 
 	color:#000;
 	font-size:1.4em;
 	letter-spacing:.1em;
@@ -151,9 +152,10 @@ p {
 	padding: 5px 25px;
 	background-color:	#404040  ;
 	/*give the background a gradient
-	background-color:#606060; /*required for browsers that don't support gradients*/
+	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
 	border-radius:15px ;
 	/*style to the text inside the button*/
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.4sem;
 	letter-spacing:.1em;
@@ -176,84 +178,120 @@ p {
 
 .stylecanvas{
 	float:left;
-	margin:20px;
-	padding:10px;
-	border:3px groove #909090;
-	/*
+	/* margin-top: 30px;
+	margin-left : 20px;
+	margin-bottom: 20px;
+	margin-right: 20px; 
+	padding: 20px 20px 20px 80px;*/
+	border:3px groove #7c93ba;
 	-webkit-border-radius: 10px;
     -moz-border-radius: 10px;
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
-	*/
-	width:80%;
-}
-.KCanvas{
-	width: 1600px;
-	height:720px;
-	border:3px groove #7c93ba;
-	-webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
 }
 .KNavin{
-	/*border:2px groove #7c93ba;*/
+	border:2px groove #7c93ba;
 	width: 100%;
-	padding:10px 0;
-	margin:10px 0;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-bottom:5px;
 	
-	/*give the background a gradient
-	background-color:#606060; /*required for browsers that don't support gradients*/
-	background: -webkit-gradient(linear, left top, left bottom, from(#909090), to(#606060));
-	background: -webkit-linear-gradient(top, #909090, #606060);
-	background: -moz-linear-gradient(top, #909090, #606060);
-	background: -o-linear-gradient(top, #909090, #606060);
-	background: linear-gradient(top, #909090, #606060);
+
 	/*style to the text inside the button*/
-	color:#FF9933;
-	font-size:1em;
-	font-weight:bold;
+	font-family:Andika, Arial, sans-serif; 
+	font-size:1.3em;
+	letter-spacing:.1em;
 	font-variant:small-caps;
 	text-align: center;
-	letter-spacing:.05em;
 	
-	/*give the corners a small curve
+	/*give the corners a small curve*/
 	-webkit-border-radius:  15px 0  0 15px;
 	-moz-border-radius:  15px 0 0 15px ;
-	border-radius:  15px 0 0 15px ;*/
+	border-radius:  15px 0 0 15px ;
 	/*add a drop shadow to the button*/
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+	
+	cursor:pointer;
+}
+
+.KNavinSelected
+{
+	/*give the background a gradient
+	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
+	background: -webkit-gradient(linear, left top, left bottom, from(#568AC5), to(#313379));
+	background: -webkit-linear-gradient(top, #568AC5, #313379);
+	background: -moz-linear-gradient(top, #568AC5, #313379);
+	background: -o-linear-gradient(top, #568AC5, #313379);
+	background: linear-gradient(top, #568AC5, #313379);
+	
+	color:#FF9933;
+}
+.KNavinUnselected
+{	
+	/*give the background a gradient
+	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
+	background: -webkit-gradient(linear, left top, left bottom, from(#88add7), to(#6b6dbb));
+	background: -webkit-linear-gradient(top, #88add7, #6b6dbb);
+	background: -moz-linear-gradient(top, #88add7, #6b6dbb);
+	background: -o-linear-gradient(top, #88add7, #6b6dbb);
+	background: linear-gradient(top, #88add7, #6b6dbb);
+	
+	color:#FF9933;
 }
 
 .KNav{
-	vertical-align: middle;
-	float:left;
-	margin-top:40px;
-	padding-left:5px;
+	display:inline-block;
+	margin-left:20px;
+	margin-top: 20px;
+	height:300px;
+	width: 15%;
+	vertical-align:top;
+}
+
+.KCanvas{
+	display:inline-block;
+	overflow:hidden;
+	min-width:640px;
+	min-height:300px;
+	width:60%;
+}
+
+.KPlayBtn{
+	display:inline-block;
+	vertical-align:top;
 	width:10%;
 }
 
+.KCanvas canvas
+{
+	width:calc(100% - 6px);
+	height:calc(100% - 6px);
+}
 
-input[type="text"], textarea {
-	border: 2px solid #606060;
-	/*border-radius: 10px;*/
-	height: 1.4em;
-	width: 50%;
+
+input[type="text"] ,textarea {
+	border: 2px solid #6b6dbb;
+	border-radius: 10px;
+	height: 50px;
+	width: 100%;
 	resize: none;
 	display:inline-block;
 	vertical-align:middle;
-	color:#000000;
-	font-size:1.4em;
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.2em;
 }
 
 .one{
-	padding-top: 40px;
-	padding-bottom:10px;
-	text-align:center;
+	padding: 20px 20px 20px 20px;
 }
 
 .first{
+	
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.6em;
 	letter-spacing:.1em;
@@ -262,6 +300,8 @@ input[type="text"], textarea {
 	padding: 200px 20px 20px 20px;
 }
 .first div{
+	
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.0em;
 	letter-spacing:.1em;
@@ -272,6 +312,7 @@ input[type="text"], textarea {
 
 .one1{
 	padding-left: 20px;
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.8em;
 	letter-spacing:.1em;
@@ -280,6 +321,7 @@ input[type="text"], textarea {
 }
 .one2{
 	padding-left: 20px;
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.8em;
 	letter-spacing:.1em;
@@ -305,27 +347,28 @@ input[type="text"], textarea {
 	}
 	
 .round1{
-	/*border:2px groove #7c93ba;*/
-	border:none;
+    width:100%;
+	border:2px groove #7c93ba;
 	cursor:pointer; /*forces the cursor to change to a hand when the button is hovered*/
-	padding: 5px 15px;
+	padding: 5px 25px;
 	background-color:	#707070;
 	/*give the background a gradient
-	background-color:#606060; /*required for browsers that don't support gradients*/
-	background: -webkit-gradient(linear, left top, left bottom, from(#909090), to(#606060));
-	background: -webkit-linear-gradient(top, #909090, #606060);
-	background: -moz-linear-gradient(top, #909090, #606060);
-	background: -o-linear-gradient(top, #909090, #606060);
-	background: linear-gradient(top, #909090, #606060);
+	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
+	background: -webkit-gradient(linear, left top, left bottom, from(#88add7), to(#6b6dbb));
+	background: -webkit-linear-gradient(top, #88add7, #6b6dbb);
+	background: -moz-linear-gradient(top, #88add7, #6b6dbb);
+	background: -o-linear-gradient(top, #88add7, #6b6dbb);
+	background: linear-gradient(top, #88add7, #6b6dbb);
 	/*style to the text inside the button*/
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.2em;
 	letter-spacing:.1em;
 	font-variant:small-caps;
-	/*give the corners a small curve
+	/*give the corners a small curve*/
 	-webkit-border-radius:  15px 0  0 15px;
 	-moz-border-radius:  15px 0 0 15px ;
-	border-radius:  15px 0 0 15px ;*/
+	border-radius:  15px 0 0 15px ;
 	/*add a drop shadow to the button*/
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
@@ -340,27 +383,27 @@ input[type="text"], textarea {
 }	
 
 .round {
-	/*border:2px groove #7c93ba;*/
-	border:none;
+	border:2px groove #7c93ba;
 	cursor:pointer; /*forces the cursor to change to a hand when the button is hovered*/
 	padding: 5px 25px;
 	background-color:	#707070;
 	/*give the background a gradient
-	background-color:#606060; /*required for browsers that don't support gradients*/
-	background: -webkit-gradient(linear, left top, left bottom, from(#909090), to(#606060));
-	background: -webkit-linear-gradient(top, #909090, #606060);
-	background: -moz-linear-gradient(top, #909090, #606060);
-	background: -o-linear-gradient(top, #909090, #606060);
-	background: linear-gradient(top, #909090, #606060);
+	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
+	background: -webkit-gradient(linear, left top, left bottom, from(#88add7), to(#6b6dbb));
+	background: -webkit-linear-gradient(top, #88add7, #6b6dbb);
+	background: -moz-linear-gradient(top, #88add7, #6b6dbb);
+	background: -o-linear-gradient(top, #88add7, #6b6dbb);
+	background: linear-gradient(top, #88add7, #6b6dbb);
 	/*style to the text inside the button*/
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:1.2em;
 	letter-spacing:.1em;
 	font-variant:small-caps;
-	/*give the corners a small curve
+	/*give the corners a small curve*/
 	-webkit-border-radius: 0 15px 15px 0;
 	-moz-border-radius: 0 15px 15px 0;
-	border-radius: 0 15px 15px 0;*/
+	border-radius: 0 15px 15px 0;
 	/*add a drop shadow to the button*/
 	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
@@ -381,9 +424,10 @@ input[type="text"], textarea {
 	padding: 5px 25px;
 	background-color:	#404040  ;
 	/*give the background a gradient
-	background-color:#606060; /*required for browsers that don't support gradients*/
+	background-color:#6b6dbb; /*required for browsers that don't support gradients*/
 	
 	/*style to the text inside the button*/
+	font-family:Andika, Arial, sans-serif; 
 	color:#FF9933;
 	font-size:0.8em;
 	letter-spacing:.1em;
@@ -402,63 +446,67 @@ input[type="text"], textarea {
 	box-shadow: rgba(0, 0, 0, .25) 0 1px 0px;
 }
 
+
+
+
+
 .form-style-3{
-    width:60%;
-    margin:0 auto;
-	font-size:1em;
+	padding-left: 20px;
+	padding-right: 20px;
+    width: calc(100% - 60px);
+    font-family: Andika, Arial, sans-serif; 
+
+	font-size:1.2em;
 	letter-spacing:.1em;
 	font-variant:small-caps;
 }
 
 .form-style-3 span{
+    font-family:Andika, Arial, sans-serif; 
 	color:#FFF;
 	font-size:1.2em;
 	letter-spacing:.1em;
 	font-variant:small-caps;
 }
 .form-style-3 fieldset{
-	/*
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
-    */
-	margin: 0px 0px 10px 0px;
-	border: 2px solid #909090;
-	padding: 20px;
-
-	background: -webkit-gradient(linear, left top, left bottom, from(#909090), to(#606060));
-	background: -webkit-linear-gradient(top, #909090, #606060);
-	background: -moz-linear-gradient(top, #909090, #606060);
-	background: -o-linear-gradient(top, #909090, #606060);
-	background: linear-gradient(top, #909090, #606060);*/
-	-webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+    border: 2px groove #7c93ba;
+    /* padding: 20px; */
+	
+    background: -webkit-gradient(linear, left top, left bottom, from(#88add7), to(#6b6dbb));
+	background: -webkit-linear-gradient(top, #88add7, #6b6dbb);
+	background: -moz-linear-gradient(top, #88add7, #6b6dbb);
+	background: -o-linear-gradient(top, #88add7, #6b6dbb);
+	background: linear-gradient(top, #88add7, #6b6dbb);*/
+    -webkit-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	-moz-box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 	box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
 }
 
+
+
 .form-style-3 textarea{
- 	border: 2px solid #606060;
-	height: 1.4em;
+ 	border: 2px solid #6b6dbb;
+	border-radius: 10px;
+	height: 50px;
 	width: 90%;
 	resize: none;
 	display:inline-block;
 	vertical-align:middle;
-	color:#000000;
-	font-size:1.4em;
+	font-family:Andika, Arial, sans-serif; 
+	color:#FF9933;
+	font-size:1.0em;
 }
 
-#wrapper {
-	border:none;
-	margin:0;
-	padding:0;
-	width:100%;
-}
 
-.clear {
-	clear:both;
-	font-size:0;
-	line-height:0;
-	height:0;
-	margin:0;
-	padding:0;
-}
+
+
+
+
+
+
+
+
+	

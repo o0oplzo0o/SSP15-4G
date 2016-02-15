@@ -28,6 +28,8 @@ var table = function()
 	
 	this.onHitTargetCB = null; //Function callback when cube moveTo hit destination
 	
+	this.updateID = null;
+	
 	this.createTable = function(context, x, y, input)
 	{
 		// constructor settings
@@ -37,7 +39,7 @@ var table = function()
 		
 		this.draw(context);
 		
-		setInterval(this.update,1000/60, this);
+		this.updateID = setInterval(this.update,1000/60, this);
 		return this;
 	}
 	
@@ -141,7 +143,6 @@ var table = function()
 	
 	this.onHitTarget = function(self)
 	{
-		console.log(self.onHitTargetCB);
 		if(self.onHitTargetCB != null)
 			self.onHitTargetCB();
 	}
@@ -161,5 +162,16 @@ var table = function()
 			}
 			self.factor += time.dt * self.speed;
 		}
+	}
+	
+	this.pause = function()
+	{
+		clearInterval(this.updateID);
+		this.updateID = null;
+	}
+	
+	this.resume = function()
+	{
+		this.updateID = setInterval(this.update,1000/60, this);
 	}
 }

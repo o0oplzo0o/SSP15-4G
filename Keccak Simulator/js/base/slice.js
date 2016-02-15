@@ -169,4 +169,26 @@ var slice = function()
 			}
 		}
 	}
+	
+	this.pause = function()
+	{
+		for(var i=0; i<this.cubes.length; i++)
+		{
+			for(var j=0; j<this.cubes[i].length; j++)
+			{
+				this.cubes[i][j].pause();
+			}
+		}
+	}
+	
+	this.resume = function()
+	{
+		for(var i=0; i<this.cubes.length; i++)
+		{
+			for(var j=0; j<this.cubes[i].length; j++)
+			{
+				this.cubes[i][j].resume();
+			}
+		}
+	}
 }

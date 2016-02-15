@@ -3,23 +3,25 @@ var inputToState_render = new function()
 	//Render loop
 	this.update = function()
 	{
-		inputToState.context.clearRect(0, 0, inputToState.canvas.width, inputToState.canvas.height);
+		inputToState.context.clearRect(0, 0, inputToState.canvas.width, inputToState.canvas.width);
 		
-		// input set
-		for(var i=0; i<inputToState.input.length; i++){
-			inputToState.input[i].draw(inputToState.context);
-		}
-
-		// object set
-		for(var i=0; i<inputToState.object.length; i++)
+		for(var i=0; i<inputToState.sortedObject.length; i++)
 		{
-			inputToState.object[i].draw(inputToState.context);
+			inputToState.sortedObject[i].draw(inputToState.context);
 		}
 		
-		// extra set
-		for(var i=0; i<inputToState.extra.length; i++)
+		if(index.isResize)
 		{
-			inputToState.extra[i].draw(inputToState.context);
+			index.isResize = false;
+			// iota.canvas.width = iota.canvas.parentElement.clientWidth-10;
+			// iota.canvas.height = iota.canvas.parentElement.clientHeight-10;
+			// var scale = (inputToState.canvas.parentElement.clientWidth-10)/640;
+			// inputToState.context.scale(index.lastScaleValue,index.lastScaleValue);
+			// index.lastScaleValue = 1/scale;
+			// inputToState.context.scale(scale,scale);
 		}
+		
+		if(inputToState.message != "")
+			inputToState.m_dialog.draw(inputToState.context);
 	}
 }

@@ -1,3 +1,6 @@
+
+var uid = 0;
+
 var time = new function()
 {
 	this.fps = 0;
@@ -52,7 +55,8 @@ var util = new function()
 	}
 }
 
-function Timer(cb, delay)
+//OVERRIDE
+function Timer(cb, delay, param)
 {
 	this.tId;
 	this.start;
@@ -62,7 +66,7 @@ function Timer(cb, delay)
 	{
 		this.start = new Date();
 		clearTimeout(this.tId);
-		this.tId = setTimeout(cb,this.remaining);
+		this.tId = setTimeout(cb,this.remaining,param);
 	};
 	
 	this.pause = function()
@@ -70,6 +74,11 @@ function Timer(cb, delay)
 		clearTimeout(this.tId);
 		this.remaining -= new Date() - this.start;
 	};
+	
+	this.remove = function()
+	{
+		clearTimeout(this.tId);
+	}
 	
 	this.resume();
 }
@@ -103,7 +112,8 @@ function stateToArray(state) {
 }
 
 // re-ordering function by eric
-function zSort5x5(slice) {
+function zSort5x5(slice) 
+{
 	this.sortFunctionY = function(a,b)
 	{
 		return a.pos.y - b.pos.y;
@@ -114,20 +124,20 @@ function zSort5x5(slice) {
 		return a.pos.x - b.pos.x;
 	}
 	
-	this.zSort25 = function()
-	{
-		var tempArray = {};
+	// this.zSort25 = function()
+	// {
+		// var tempArray = {};
 		
-		for(var x=0; x<this.object.length; x++)
-		{
-			for(var y=0; y<this.object[x].length; i++)
-			{
-			}
-		}
+		// for(var x=0; x<this.object.length; x++)
+		// {
+			// for(var y=0; y<this.object[x].length; i++)
+			// {
+			// }
+		// }
 		
-		this.sortedObject = tempArray.slice();
-		tempArray = null;
-	}
+		// this.sortedObject = tempArray.slice();
+		// tempArray = null;
+	// }
 
 	var tempArray1 = new Array();
 	
@@ -138,6 +148,11 @@ function zSort5x5(slice) {
 		{
 			tempArray1.push(slice[x][y]);
 		}
+	}
+	
+	if(tempArray1.length <= 0) //for single dimension array
+	{
+		tempArray1 = slice.slice();
 	}
 		
 	/* UNCOMMENT THIS PART TO VIEW UNSORTED ARRAY */

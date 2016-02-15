@@ -22,8 +22,13 @@ var dialog = function()
 	this.height = 60;
 	this.fontspacing = 4;
 	
-	this.createDialog = function(context, m)
+	this.createDialog = function(context, m, pos)
 	{
+		this.pos = pos;
+		if(!pos)
+		{
+			this.pos = {x:5, y:535};
+		}
 		// constructor settings
 		this.setMessage(context, m);
 		this.draw(context);
@@ -47,7 +52,7 @@ var dialog = function()
 		context.rect(
 			this.pos.x,
 			this.pos.y,
-			this.width,
+			context.canvas.width,
 			this.height
 		);
 		context.fill();
@@ -64,7 +69,7 @@ var dialog = function()
 		for (var i = 0; i < this.message.length; ++i) {
 			context.fillText(
 				this.message[i],
-				this.width/2+this.pos.x,
+				context.canvas.width/2+this.pos.x,
 				y
 			);
 			y+=this.fontsize+this.fontspacing;

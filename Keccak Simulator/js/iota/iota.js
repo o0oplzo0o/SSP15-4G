@@ -41,37 +41,36 @@ var iota = new function()
 	this.hitCounter = 0;
 	this.targetCounter = 0;
 	
+	this.step_array = [0,1,2,3,4,5];
+	
 	// timeout
-	this.currentTimeout = null;
-
+	this.currentTimeout = new Array();
+	this.m_dialog;
+	this.message = "";
 	
 	// animation sets
 	this.object = new Array();
 	this.sortedObject = new Array();
+	this.maxPhase = 5;
+	
 	// animation loop
 	this.refresh;
 
-	// display metrics
-	// this.padding = 25;
-	// this.spaceX = 150;
-	// this.spaceY = 500;
-	// this.startX=515;
-	// this.startY=175;
-	
-	
 	this.init = function()
 	{
 		this.canvas = document.getElementById("keccakCanvas");
 		this.context = this.canvas.getContext("2d");
 		
-	this.currentPhase = 0;
-	this.hitCounter = 0;
-	this.targetCounter = 0;
-	this.object = new Array();
-	this.sortedObject = new Array();
+		this.currentPhase = 0;
+		this.hitCounter = 0;
+		this.targetCounter = 0;
+		this.object = new Array();
+		this.sortedObject = new Array();
 		// store input string
 		//this.inputString = inputString;
 
+		this.m_dialog = new dialog();
+		this.m_dialog.createDialog(this.context,this.message);
 		// start by showing state
 		//this.showInput();
 		this.playAnimationPhase(this.currentPhase); 
@@ -83,9 +82,57 @@ var iota = new function()
 		this.refresh = setInterval(this.update,1000/60);
 	}
 	
+	this.stop = function()
+	{
+		this.pause();
+		clearInterval(this.refresh);
+		
+		for(var i=0; i<this.currentTimeout.length; i++)
+		{
+			this.currentTimeout[i].remove();
+		}
+		
+		this.currentPhase = 0;
+		this.hitCounter = 0;
+		this.targetCounter = 0;
+		this.currentTimeout = new Array();
+		this.object = new Array();
+		this.sortedObject = new Array();
+		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	}
+	
+	this.pause = function()
+	{
+		clearInterval(this.refresh);
+		//Stop objects update
+		for(var i=0; i<this.object.length; i++)
+		{
+			this.object[i].pause();
+		}
+		for(var i=0; i<this.currentTimeout.length; i++)
+		{
+			this.currentTimeout[i].pause();
+		}
+	}
+	
+	this.resume = function()
+	{
+		//Resume main update
+		this.refresh = setInterval(this.update,1000/60);
+		//Resume objects update
+		for(var i=0; i<this.object.length; i++)
+		{
+			this.object[i].resume();
+		}
+		
+		for(var i=0; i<this.currentTimeout.length; i++)
+		{
+			this.currentTimeout[i].resume();
+		}
+	}
+	
 	this.update = function()
 	{
-		console.log("UPDATE");
 		time.updateTime();
 		
 		iota_render.update();
@@ -93,6 +140,8 @@ var iota = new function()
 	
 	this.step1 = function() // 1 << this.w
 	{
+		this.message = "Perform left shift of 1 by block size/25";
+		this.m_dialog.setMessage(this.context,this.message);
 		var bin = util.dec2bin(1);
 		
 		//bin of w
@@ -148,7 +197,7 @@ var iota = new function()
 			"x64"
 		));
 		
-		this.currentTimeout = new Timer(function(){
+		this.currentTimeout.push(new Timer(function(){
 			if(iota.currentPhase != 0)
 				return;
 			
@@ -160,11 +209,15 @@ var iota = new function()
 			iota.targetCounter = iota.object.length;
 			for(var i=0; i<iota.object.length; i++)
 				iota.object[i].moveTo(200 + (3*50),100,1,iota.objectHitTarget);
-		},3000*this.speedMultiplier);
+			iota.message = "";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step2 = function() // Result of shifting
 	{
+		this.message = "Using RoundConstant[i], perform modulo on the shifting result";
+		this.m_dialog.setMessage(this.context,this.message);
+		
 		var c = new cube();
 		this.object.push(c.createCube(
 			this.context,
@@ -200,7 +253,7 @@ var iota = new function()
 			bigInt(1).shiftLeft(KECCAK.w)
 		));
 		
-		this.currentTimeout = new Timer(function(){
+		this.currentTimeout.push(new Timer(function(){
 			if(iota.currentPhase != 1)
 				return;
 			
@@ -211,12 +264,16 @@ var iota = new function()
 			iota.targetCounter = iota.object.length;
 			for(var i=0; i<iota.object.length; i++)
 				iota.object[i].moveTo(200 + (0*50),100,1,iota.objectHitTarget);
-		},3000*this.speedMultiplier);
+			iota.message = "";
+		},3000*this.speedMultiplier));
 		
 	}
 	
 	this.step3 = function() // Show A slice
 	{
+		this.message = "This is array A";
+		this.m_dialog.setMessage(this.context,this.message);
+		
 		var c = new cube();
 		this.object.push(c.createCube(
 			this.context,
@@ -244,7 +301,7 @@ var iota = new function()
 		
 		iota.sortedObject = zSort5x5(iota.object);
 		
-		this.currentTimeout = new Timer(function(){
+		this.currentTimeout.push(new Timer(function(){
 			if(iota.currentPhase != 2)
 				return;
 			
@@ -253,19 +310,22 @@ var iota = new function()
 				if(i != 0 && i != 13)
 					iota.object[i].alpha = 0.5;
 			}
-			this.currentTimeout = new Timer(function(){
+			iota.currentTimeout.push(new Timer(function(){
 				if(iota.currentPhase != 2)
 					return;
 				
 				iota.targetCounter = 1;
 				iota.object[13].moveTo(200, 200, 2, iota.objectHitTarget);
-				
-			},2000*this.speedMultiplier);
-		},3000*this.speedMultiplier);
+				iota.message = "";
+			},2000*iota.speedMultiplier));
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step4 = function()
 	{
+		this.message = "Using A[0][0], XOR it with the modulo result";
+		this.m_dialog.setMessage(this.context,this.message);
+		
 		var c = new cube();
 		this.object.push(c.createCube(
 			this.context,
@@ -320,7 +380,7 @@ var iota = new function()
 		
 		this.sortedObject = zSort5x5(this.object);
 		
-		this.currentTimeout = new Timer(function(){
+		this.currentTimeout.push(new Timer(function(){
 			if(iota.currentPhase != 3)
 				return;
 			
@@ -328,12 +388,15 @@ var iota = new function()
 			iota.sortObject = zSort5x5(iota.object);
 			iota.targetCounter = 1;
 			iota.object[0].moveTo(200, 200, 2, iota.objectHitTarget);
-			
-		},2000*this.speedMultiplier);
+			iota.message = "";
+		},2000*this.speedMultiplier));
 	}
 	
 	this.step5 = function()
 	{
+		this.message = "Put the result back to A[0][0]";
+		this.m_dialog.setMessage(this.context,this.message);
+		
 		var c = new cube();
 		this.object.push(c.createCube(
 			this.context,
@@ -364,14 +427,14 @@ var iota = new function()
 		
 		this.sortedObject = zSort5x5(this.object);
 		
-		this.currentTimeout = new Timer(function(){
+		this.currentTimeout.push(new Timer(function(){
 			if(iota.currentPhase != 4)
 				return;
 			
 			iota.targetCounter = 1;
 			iota.object[0].moveTo(400+(2*50), 200, 2, iota.objectHitTarget);
-			
-		},2000*this.speedMultiplier);
+			iota.message = "";
+		},2000*this.speedMultiplier));
 	}
 	
 	this.step6 = function()
@@ -407,8 +470,18 @@ var iota = new function()
 	// Animation phases
 	this.playAnimationPhase = function(phase)
 	{
-		this.object = new Array();
-		this.sortedObject = new Array();
+		console.log("Play: " + phase);
+		if(this.step_array.indexOf(phase) > -1)
+		{
+			for(var i=0; i<this.currentTimeout.length; i++)
+			{
+				this.currentTimeout[i].remove();
+			}
+			
+			this.currentTimeout = new Array();
+			this.object = new Array();
+			this.sortedObject = new Array();
+		}
 		
 		switch(phase)
 		{
@@ -461,35 +534,6 @@ var iota = new function()
 		}
 		iota.sortedObject = zSort5x5(iota.object);
 	}
-	
-	this.nextStep = function()
-	{
-		iota.currentPhase = Math.min(++iota.currentPhase,5);
-		this.playAnimationPhase(iota.currentPhase);
-	}
-	
-	this.previousStep = function()
-	{
-		iota.currentPhase = Math.max(--iota.currentPhase,0);
-		this.playAnimationPhase(iota.currentPhase);
-	}
-	
-	this.togglePause = function(pause)
-	{
-		if(pause)
-		{
-			console.log("PAUSE");
-			console.log(this.refresh);
-			clearInterval(this.refresh);
-			this.currentTimeout.pause();
-		}
-		else
-		{
-			console.log("RESUME");
-			this.refresh = setInterval(this.update,1000/60);
-			this.currentTimeout.resume();
-		}
-	}
 }
 
-iota.init();
+//iota.init();

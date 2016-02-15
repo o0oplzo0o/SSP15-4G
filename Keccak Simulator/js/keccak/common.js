@@ -25,6 +25,14 @@ var common = new function()
 		return result;
 	}
 	
+	this.hex2string = function(hex)
+	{
+		var str = '';
+		for (var i=0; i<hex.length; i+=2)
+			str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+		return str;
+	}
+	
 	this.sizeOfHex = function(hex)
 	{
 		if(hex.length % 2 != 0)

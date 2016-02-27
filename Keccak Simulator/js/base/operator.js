@@ -1,4 +1,7 @@
-/* 31 jan 2016
+/* 15 feb 2016
+- applied eric's onHitTargetCB = null fix
+
+31 jan 2016
 	- removed set onHitTarget to null (eric's fix)
 	- make text render at center irregardless of size
 	- changed default font to sans-serif, serif
@@ -87,8 +90,12 @@ var operator = function()
 	
 	this.onHitTarget = function(self)
 	{
-		if(self.onHitTargetCB != null)
-			self.onHitTargetCB();
+		var targetCB = self.onHitTargetCB;
+
+		self.onHitTargetCB = null;
+
+		if(targetCB != null)
+			targetCB();
 	}
 	
 	//Specific object update loop
@@ -101,6 +108,8 @@ var operator = function()
 			
 			if(self.factor >= 1)
 			{
+				self.pos.x = self.dest.x;
+				self.pos.y = self.dest.y;
 				self.isMoving = false;
 				self.onHitTarget(self);
 			}

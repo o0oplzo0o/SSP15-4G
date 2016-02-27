@@ -32,14 +32,27 @@ var chi_render = new function()
 			}
 		}
 
+		// strings set
+		for (var i=0; i<chi.strings.length; ++i) {
+			chi.strings[i].draw(chi.context);
+		}
+
 		// tables set
 		for (var i=0; i<chi.tables.length; ++i) {
 			chi.tables[i].draw(chi.context);
 		}
 		
-		// dialogs set
-		for(var i=0; i<chi.dialogs.length; ++i) {
-			chi.dialogs[i].draw(chi.context);
+		// dialog
+		chi.dialog.draw(chi.context);
+
+		// resize code (17 feb 2016)
+		if(index.isResize)
+		{
+			index.isResize = false;
+			//var scale = (chi.canvas.parentElement.clientWidth-10)/640;
+			//chi.context.scale(index.lastScaleValue,index.lastScaleValue);
+			//index.lastScaleValue = 1/scale;
+			//chi.context.scale(scale,scale);
 		}
 	}
 }

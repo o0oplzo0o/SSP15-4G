@@ -172,6 +172,7 @@ var slice = function()
 	
 	this.pause = function()
 	{
+		/*
 		for(var i=0; i<this.cubes.length; i++)
 		{
 			for(var j=0; j<this.cubes[i].length; j++)
@@ -179,16 +180,27 @@ var slice = function()
 				this.cubes[i][j].pause();
 			}
 		}
+		*/
+
+		for (var i=0; i<this.sortedObject.length; ++i) {
+			this.sortedObject[i].pause();
+		}
 	}
 	
 	this.resume = function()
 	{
+		/*
 		for(var i=0; i<this.cubes.length; i++)
 		{
 			for(var j=0; j<this.cubes[i].length; j++)
 			{
 				this.cubes[i][j].resume();
 			}
+		}
+		*/
+
+		for (var i=0; i<this.sortedObject.length; ++i) {
+			this.sortedObject[i].resume();
 		}
 	}
 }

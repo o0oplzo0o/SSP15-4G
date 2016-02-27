@@ -1,4 +1,7 @@
-/* 31 jan 2016
+/* 15 feb 2016
+- applied eric's onHitTargetCB = null fix
+
+31 jan 2016
 	- removed set onHitTarget to null (eric's fix)
 */
 
@@ -72,8 +75,12 @@ var line = function()
 	
 	this.onHitTarget = function(self)
 	{
-		if(self.onHitTargetCB != null)
-			self.onHitTargetCB();
+		var targetCB = self.onHitTargetCB;
+
+		self.onHitTargetCB = null;
+
+		if(targetCB != null)
+			targetCB();
 	}
 
 	
@@ -87,6 +94,8 @@ var line = function()
 			
 			if(self.factor >= 1)
 			{
+				self.pos.x = self.dest.x;
+				self.pos.y = self.dest.y;
 				self.isMoving = false;
 				self.onHitTarget(self);
 			}

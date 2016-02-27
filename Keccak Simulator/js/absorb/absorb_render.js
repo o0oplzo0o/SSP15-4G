@@ -5,13 +5,6 @@ var absorb_render = new function()
 	{
 		absorb.context.clearRect(0, 0, absorb.canvas.width, absorb.canvas.height);
 
-		// cubes set
-		for (var i=0; i<absorb.cubes.length; ++i) {
-			for(var j=0; j<absorb.cubes[i].length; ++j) {
-				absorb.cubes[i][j].draw(absorb.context);
-			}
-		}
-
 		// lines set
 		for(var i=0; i<absorb.lines.length; ++i) {
 			absorb.lines[i].draw(absorb.context);
@@ -38,8 +31,15 @@ var absorb_render = new function()
 		}
 
 		// dialog set
-		for(var i=0; i<absorb.dialogs.length; ++i) {
-			absorb.dialogs[i].draw(absorb.context);
+		absorb.dialog.draw(absorb.context);
+
+		// resize code (17 feb 2016)
+		if(index.isResize) {
+			index.isResize = false;
+			//var scale = (absorb.canvas.parentElement.clientWidth-10)/640;
+			//absorb.context.scale(index.lastScaleValue,index.lastScaleValue);
+			//index.lastScaleValue = 1/scale;
+			//absorb.context.scale(scale,scale);
 		}
 	}
 }

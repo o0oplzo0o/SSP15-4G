@@ -290,7 +290,12 @@ var KECCAK = new function()
 				var tempD = tempB.and(tempC);
 				var tempE = tempA.xor(tempD);
 				A[i][j] = tempE.toString();
-				this.data[name + "_round" + index]["chi_step1"].push(B[i][j],B[common.mod(i+1,5)][j],B[common.mod(i+2,5)][j],A[i][j]);
+				this.data[name + "_round" + index]["chi_step1"].push(
+					B[i][j],
+					tempB.toString(),
+					tempD.toString(),
+					A[i][j]
+				);
 			}
 		}
 		//Chi step End
@@ -601,7 +606,11 @@ var KECCAK = new function()
 			{
 				S = this.KeccakF(S, verbose, "squeeze");
 			}
-			
+
+			this.data["output"] = new Array();
+			this.data["output"].push(Z);
+			this.data["output"].push(Z.slice(0,Math.floor(2*n/8)));
+
 			// NB: done by block of length r, could have to be cut if outputLength
             //     is not a multiple of r
 		}

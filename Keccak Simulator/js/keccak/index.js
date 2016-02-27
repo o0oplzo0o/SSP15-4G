@@ -11,11 +11,66 @@ var index = new function()
 	this.init = function()
 	{
 		window.onresize = this.onResized;
+		
+		//Load Audio
+		
+		//Init
+		audio.add("init1", "audio/init/1.mp3");
+		audio.add("init2", "audio/init/2.mp3");
+		audio.add("init3", "audio/init/3.mp3");
+		audio.add("init4", "audio/init/4.mp3");
+		audio.add("init5", "audio/init/5.mp3");
+		audio.add("init6", "audio/init/6.mp3");
+		audio.add("init7", "audio/init/7.mp3");
+		audio.add("init8", "audio/init/8.mp3");
+		audio.add("init9", "audio/init/9.mp3");
+		//Absorb
+		audio.add("absorb1", "audio/absorb/1.mp3");
+		audio.add("absorb2", "audio/absorb/2.mp3");
+		audio.add("absorb3", "audio/absorb/3.mp3");
+		audio.add("absorb4", "audio/absorb/4.mp3");
+		audio.add("absorb5", "audio/absorb/5.mp3");
+		audio.add("absorb6", "audio/absorb/6.mp3");
+		//Squeeze
+		audio.add("squeeze1", "audio/squeeze/1.mp3");
+		audio.add("squeeze2", "audio/squeeze/2.mp3");
+		audio.add("squeeze3", "audio/squeeze/3.mp3");
+		//Theta
+		audio.add("theta1", "audio/theta/1.mp3");
+		audio.add("theta2", "audio/theta/2.mp3");
+		audio.add("theta3", "audio/theta/3.mp3");
+		audio.add("theta4", "audio/theta/4.mp3");
+		audio.add("theta5", "audio/theta/5.mp3");
+		audio.add("theta6", "audio/theta/6.mp3");
+		audio.add("theta7", "audio/theta/7.mp3");
+		//Rho
+		audio.add("rho1", "audio/rho/1.mp3");
+		audio.add("rho2", "audio/rho/2.mp3");
+		audio.add("rho3", "audio/rho/3.mp3");
+		audio.add("rho4", "audio/rho/4.mp3");
+		audio.add("rho5", "audio/rho/5.mp3");
+		audio.add("rho6", "audio/rho/5.mp3");
+		//Pi
+		audio.add("pi1", "audio/pi/1.mp3");
+		audio.add("pi2", "audio/pi/2.mp3");
+		audio.add("pi3", "audio/pi/3.mp3");
+		audio.add("pi4", "audio/pi/4.mp3");
+		//Chi
+		audio.add("chi1", "audio/chi/1.mp3");
+		audio.add("chi2", "audio/chi/2.mp3");
+		audio.add("chi3", "audio/chi/3.mp3");
+		audio.add("chi4", "audio/chi/4.mp3");
+		//Iota
+		audio.add("iota1", "audio/iota/1.mp3");
+		audio.add("iota2", "audio/iota/2.mp3");
+		audio.add("iota3", "audio/iota/3.mp3");
+		audio.add("iota4", "audio/iota/4.mp3");
+		audio.add("iota5", "audio/iota/5.mp3");
+		audio.add("iota6", "audio/iota/6.mp3");
 	}
 	
 	this.onResized = function()
 	{
-		console.log("resized");
 		index.isResize = true;
 	}
 	
@@ -77,6 +132,7 @@ var index = new function()
 				break;
 		}
 		
+		audio.stop();
 		if(this.currentStep)
 			this.currentStep.init();
 	}
@@ -89,6 +145,10 @@ var index = new function()
 		}
 		
 		var tempPhase = this.currentStep.currentPhase;
+		
+		if(tempPhase >= this.currentStep.step_array[this.currentStep.step_array.length-1])
+			return;
+		
 		//Default to the last phase
 		this.currentStep.currentPhase = this.currentStep.step_array[this.currentStep.step_array.length-1];
 		
@@ -102,7 +162,7 @@ var index = new function()
 			}
 		}
 		
-		this.currentStep.playAnimationPhase(this.currentStep.currentPhase);
+		this.currentStep.playAnimationPhase(this.currentStep.currentPhase, true);
 		// this.currentStep.currentPhase = Math.min(++this.currentStep.currentPhase,this.currentStep.maxPhase);
 		// this.currentStep.playAnimationPhase(this.currentStep.currentPhase);
 	}
@@ -129,7 +189,7 @@ var index = new function()
 		}
 		
 		console.log(this.currentStep.currentPhase);
-		this.currentStep.playAnimationPhase(this.currentStep.currentPhase);
+		this.currentStep.playAnimationPhase(this.currentStep.currentPhase, true);
 		
 		// this.currentStep.currentPhase = Math.max(--this.currentStep.currentPhase,0);
 		// this.currentStep.playAnimationPhase(this.currentStep.currentPhase);
@@ -142,38 +202,16 @@ var index = new function()
 		//this.currentStep.togglePause(this.isPause);
 		if(this.isPause)
 		{
-			//Stop main update
-			// clearInterval(this.currentStep.refresh);
-			// //Stop objects update
-			// for(var i=0; i<this.currentStep.object.length; i++)
-			// {
-				// this.currentStep.object[i].pause();
-			// }
-			// for(var i=0; i<this.currentStep.currentTimeout.length; i++)
-			// {
-				// this.currentStep.currentTimeout[i].pause();
-			// }
-			
 			this.currentStep.pause();
+			audio.pause();
 		}
 		else
 		{
 			//reset dt
 			time.previousTime = Date.now();
 			time.updateTime();
-			// //Resume main update
-			// this.currentStep.refresh = setInterval(this.currentStep.update,1000/60);
-			// //Resume objects update
-			// for(var i=0; i<this.currentStep.object.length; i++)
-			// {
-				// this.currentStep.object[i].resume();
-			// }
-			
-			// for(var i=0; i<this.currentStep.currentTimeout.length; i++)
-			// {
-				// this.currentStep.currentTimeout[i].resume();
-			// }
 			this.currentStep.resume();
+			audio.resume();
 		}
 	}
 	
@@ -188,6 +226,11 @@ var index = new function()
 		var d = document.getElementById("input_text");
 		
 		var str = d.value;
+		if(str.length <= 0 || str.length > 40)
+		{
+			alert("String length should be at least 1 and less than 40");
+			return;
+		}
 		var hexStr = common.string2hex(str);
 		var hexValue = common.sizeOfHex(hexStr);
 		

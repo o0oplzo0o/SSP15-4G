@@ -46,11 +46,12 @@ var rho_render = new function()
 			index.isResize = false;
 			//rho.canvas.width =rho.canvas.parentElement.clientWidth-10;
 			//rho.canvas.height =rho.canvas.parentElement.clientHeight-10;
-			var scale = (rho.canvas.parentElement.clientWidth-10)/640;
-			rho.context.scale(index.lastScaleValue,index.lastScaleValue);
-			index.lastScaleValue = 1/scale;
-			rho.context.scale(scale,scale);
+			//var scale = (rho.canvas.parentElement.clientWidth-10)/640;
+			//rho.context.scale(index.lastScaleValue,index.lastScaleValue);
+			//index.lastScaleValue = 1/scale;
+			//rho.context.scale(scale,scale);
 		}
+
 		
 		if(rho.message != "")
 			rho.m_dialog.draw(rho.context);

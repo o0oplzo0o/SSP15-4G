@@ -1,8 +1,14 @@
-/* 31 jan 2016
-	- some code optimizations
-	- fixed graphical bug
-	- removed set onHitTarget to null (eric's fix)
-	- make text render at center irregardless of size
+/* 18 feb 2016
+- "monospaced" to "sans-serif, serif"
+
+15 feb 2016
+- applied eric's onHitTargetCB = null fix
+
+31 jan 2016
+- some code optimizations
+- fixed graphical bug
+- removed set onHitTarget to null (eric's fix)
+- make text render at center irregardless of size
 */
 
 var cube = function()
@@ -14,7 +20,7 @@ var cube = function()
 	this.alpha = 1;
 	this.text = "";
 
-	this.font = "monospaced";
+	this.font = "sans-serif, serif";
 	this.fontsize = "18";
 	
 	this.isMoving = false;
@@ -139,6 +145,8 @@ var cube = function()
 
 			if(self.factor >= 1)
 			{
+				self.pos.x = self.dest.x;
+				self.pos.y = self.dest.y;
 				self.isMoving = false;
 				self.onHitTarget(self);
 			}

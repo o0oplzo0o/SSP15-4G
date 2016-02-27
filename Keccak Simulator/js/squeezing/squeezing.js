@@ -11,20 +11,18 @@ var squeezing = new function()
 
 	// animation sets
 	this.cubes = new Array();
-	this.dialogs = new Array();
-	this.indicators = new Array();
-	this.lines = new Array();
-	this.operators = new Array();
+	this.dialog;
 	this.slices = new Array();
 	this.strings = new Array();
+	this.tables = new Array();
 	
-	//ERIC: all timeouts will be stored here, when the game is pause,
+	//all timeouts will be stored here, when the game is pause,
 	// all setTimeout(Timer function in util.js) will be handle in that function
 	this.currentTimeout = new Array();
 	
-	//ERIC: Insert all critical steps into this array
+	//Insert all critical steps into this array
 	// Objects will be cleared automatically in playAnimationPhase() on critical steps
-	this.step_array = [];
+	this.step_array = [0,2,4,38];
 
 	// animation timers
 	this.refresh;
@@ -73,10 +71,11 @@ var squeezing = new function()
 
 		// create dialog box
 		var d = new dialog();
-		this.dialog = (d.createDialog(
+		this.dialog = d.createDialog(
 			this.context,
 			"The squeezing phase is the extraction of the final hash value from the state."
-		));
+		);
+		audio.play("squeeze1");
 		
 		// 60 fps update loop
 		this.update();
@@ -86,7 +85,7 @@ var squeezing = new function()
 		this.playAnimationPhase(this.currentPhase); // Play 0
 	}
 	
-	//ERIC: Called when user skip this squeezing steps,
+	//Called when user skip this squeezing steps,
 	// remove/reinitialise object so that it will not continue running
 	this.stop = function()
 	{
@@ -103,71 +102,73 @@ var squeezing = new function()
 		this.targetCounter = 0;
 		
 		this.cubes = new Array();
-		this.dialogs = new Array();
-		this.indicators = new Array();
-		this.lines = new Array();
-		this.operators = new Array();
+		this.dialog;
 		this.slices = new Array();
 		this.strings = new Array();
+		this.tables = new Array();
 		
 		this.currentTimeout = new Array();
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 	}
 	
-	//ERIC: Handle pause here
+	//Handle pause here
 	// For each of the objects created, call pause to stop their updates (movement, etc)
 	this.pause = function()
 	{
 		clearInterval(this.refresh);
 		
-		var len = Math.max(this.cubes.length,this.lines.length,this.operators.length,this.indicators.length,this.currentTimeout);
+		var len = Math.max(this.cubes.length,this.slices.length,this.strings.length,this.tables.length,this.currentTimeout.length);
 		for(var i=0; i<len; i++)
 		{
 			if(this.cubes[i])
 				this.cubes[i].pause();
-			if(this.lines[i])
-				this.lines[i].pause();
-			if(this.operators[i])
-				this.operators[i].pause();
-			if(this.indicators[i])
-				this.indicators[i].pause();			
+			if(this.slices[i])
+				this.slices[i].pause();
+			if(this.strings[i])
+				this.strings[i].pause();
+			if(this.tables[i])
+				this.tables[i].pause();
+
 			if(this.currentTimeout[i])
 				this.currentTimeout[i].pause();			
 		}
 	}
 	
-	//ERIC: Handle resume here
+	//Handle resume here
 	// For each of the objects created, call resume to continue their updates (movement, etc)
 	this.resume = function()
 	{
 		this.refresh = setInterval(this.update,1000/60);
 		
-		var len = Math.max(this.cubes.length,this.lines.length,this.operators.length,this.indicators.length,this.currentTimeout);
+		var len = Math.max(this.cubes.length,this.slices.length,this.strings.length,this.tables.length,this.currentTimeout.length);
 		for(var i=0; i<len; i++)
 		{
 			if(this.cubes[i])
 				this.cubes[i].resume();
-			if(this.lines[i])
-				this.lines[i].resume();
-			if(this.operators[i])
-				this.operators[i].resume();
-			if(this.indicators[i])
-				this.indicators[i].resume();			
+			if(this.slices[i])
+				this.slices[i].resume();
+			if(this.strings[i])
+				this.strings[i].resume();
+			if(this.tables[i])
+				this.tables[i].resume();
+
 			if(this.currentTimeout[i])
 				this.currentTimeout[i].resume();			
 		}
 	}
 	
 	this.showState = function() {
-		console.log("showInputToState");
+		console.log("showState");
 
-		var abc = new Array();
-		for (var i=0; i<25; ++i) {
-			abc.push(String.fromCharCode(97+i));
-		}
+		var abc = [
+			"N", "I", "D", "X", "S",
+			"O", "J", "E", "Y", "T",
+			"K", "F", "A", "U", "P",
+			"L", "G", "B", "V", "Q",
+			"M", "H", "C", "W", "R"
+		];
 
 		//draw inputToState state (Pi)
-		console.log("PUSH");
 		var s = new slice();
 		this.slices.push(s.createSlice(
 			this.context,
@@ -193,18 +194,21 @@ var squeezing = new function()
 		));
 
 		this.currentTimeout.push(new Timer(function() {
+			if (squeezing.currentPhase != 0)
+				return;
+
 			squeezing.playAnimationPhase(++squeezing.currentPhase);
 		}, 1000*this.speedMultiplier));
 	}
 	
 	this.moveState = function() {
-		console.log("moveInputToState");
+		console.log("moveState");
 
 		squeezing.targetCounter = 26;
 
 		//move inputToState state to somewhere
 		this.slices[0].moveTo(
-			215,
+			100,
 			175,
 			0.5,
 			squeezing.objectHitTarget
@@ -212,7 +216,7 @@ var squeezing = new function()
 
 		// move label
 		this.strings[0].moveTo(
-			215,
+			100,
 			425+16,
 			0.5,
 			squeezing.objectHitTarget
@@ -222,31 +226,88 @@ var squeezing = new function()
 	this.showTable = function() {
 		console.log("showTable");
 
+		var abc = [
+			"N", "I", "D", "X", "S",
+			"O", "J", "E", "Y", "T",
+			"K", "F", "A", "U", "P",
+			"L", "G", "B", "V", "Q",
+			"M", "H", "C", "W", "R"
+		];
+
+		//draw inputToState state (Pi)
+		var s = new slice();
+		this.slices.push(s.createSlice(
+			this.context,
+			100,
+			175,
+			50,
+			"#8ED6FF",
+			1,
+			abc
+		));
+
+		// label
+		var str = new string();
+		this.strings.push(str.createString(
+			this.context,
+			100,
+			425+16,
+			"sans-serif, serif",
+			16,
+			"#000000",
+			1,
+			"State S"
+		));
+
+		var label = new string();
+		this.strings.push(label.createString(
+			this.context,
+			400,
+			100-8,
+			"sans-serif, serif",
+			24,
+			"#000000",
+			1,
+			"State Values"
+		));
+
 		var tableInput = new Array();
-		for (var i = 0; i<25; ++i) {
+		for (var i = 0; i<13; ++i) {
 			tableInput.push(new Array());
 
-			tableInput[tableInput.length-1].push(String.fromCharCode(97+i));
-			tableInput[tableInput.length-1].push(""); // value of state cube
+			tableInput[i].push(String.fromCharCode(65+i));
+			if (i == 0) {
+				tableInput[i].push(KECCAK.data["absorb_round23"]["iota_step1"][2]); // value of state cube
+			} else {
+				tableInput[i].push(KECCAK.data["absorb_round23"]["chi_step1"][i*4+3]); // value of state cube
+			}
+			if ((i+13) < 25) {
+				tableInput[i].push(String.fromCharCode(78+i));
+				tableInput[i].push(KECCAK.data["absorb_round23"]["chi_step1"][(i+13)*4+3]); // value of state cube
+			}
 		}
 
 		var t = new table();
 		this.tables.push(t.createTable(
 			this.context,
-			515,
 			400,
+			100,
 			tableInput
 		));
 
 		this.currentTimeout.push(new Timer(function() {
+			if (squeezing.currentPhase != 2)
+				return;
+
 			squeezing.playAnimationPhase(++squeezing.currentPhase);
-		}, 1000*this.speedMultiplier));
+		}, 3000*this.speedMultiplier));
 	}
 
 	this.hideTable = function() {
 		console.log("hideTable");
 
-		this.tables = [];
+		this.strings.pop();
+		this.tables = new Array();
 
 		squeezing.targetCounter = 26;
 
@@ -270,29 +331,251 @@ var squeezing = new function()
 	this.extractOutput = function() {
 		console.log("extractOutput");
 
-		this.dialogs[0].setMessage(this.context,
+		this.dialog.setMessage(this.context,
 			"Depending on the size of the output (which differs depending on the type of KECCAK hash function used), a certain number of \"cubes\" is extracted from the state to be used as the output."
 		);
+		audio.play("squeeze2");
+
+		var abc = [
+			"N", "I", "D", "X", "S",
+			"O", "J", "E", "Y", "T",
+			"K", "F", "A", "U", "P",
+			"L", "G", "B", "V", "Q",
+			"M", "H", "C", "W", "R"
+		];
+
+		//draw inputToState state (Pi)
+		var s = new slice();
+		this.slices.push(s.createSlice(
+			this.context,
+			515,
+			50,
+			50,
+			"#8ED6FF",
+			1,
+			abc
+		));
+
+		// label
+		var str = new string();
+		this.strings.push(str.createString(
+			this.context,
+			515,
+			300+16,
+			"sans-serif, serif",
+			16,
+			"#000000",
+			1,
+			"State S"
+		));
 
 		// take first 16 cubes
-		for (var i=0; i<16; ++i) {
-			this.slices[0].cubes = arrayToState(this.slices[0].cubes);
+		// we want first 3 rows (y = 0, 1, 2)
+		// middle of 4th row (y = 3, x = 2);
 
-		}
+		squeezing.playAnimationPhase(++squeezing.currentPhase);
+	}
+
+	this.moveCube = function(x, y, i) {
+		this.targetCounter = 1;
+
+		this.slices[0].cubes[x][y].moveTo(
+			50+i*50,
+			400,
+			1,
+			squeezing.objectHitTarget
+		);
+	}
+	this.moveEnd = function(x, y, i) {
+		var c = new cube();
+		this.cubes.push(c.createCube(
+			this.context,
+			50+i*50,
+			400,
+			50,
+			"#8ED6FF",
+			1,
+			String.fromCharCode(65+i)
+		));
+
+		squeezing.playAnimationPhase(++squeezing.currentPhase);
+	}
+
+	this.delayExtract = function() {
+		this.currentTimeout.push(new Timer(function() {
+			if (squeezing.currentPhase != 37)
+				return;
+
+			squeezing.playAnimationPhase(++squeezing.currentPhase);
+		}, 3000*this.speedMultiplier));
 	}
 
 	this.extractHash = function() {
 		console.log("extractHash");
 
 		// output 128 or 256
-		this.dialogs[0].setMessage(this.context,
-			"The final actual hash value is then extracted from the output."
+		this.dialog.setMessage(this.context,
+			"The final hash value is \"squeezed\" from the values of the 16 cubes according to how long the hash value is expected to be."
 		);
+		audio.play("squeeze3");
 
+		// create 16 cubes
+		for (var i = 0; i<16; ++i) {
+			var c = new cube();
+			this.cubes.push(c.createCube(
+				this.context,
+				50+i*50,
+				400,
+				50,
+				"#8ED6FF",
+				1,
+				String.fromCharCode(65+i)
+			));
+		}
+
+		// move 16 cubes up
+		this.targetCounter = 16;
+		for (var i = 0; i<16; ++i) {
+			this.cubes[i].moveTo(
+				50+i*50,
+				150,
+				0.5,
+				squeezing.objectHitTarget
+			);
+		}
 	}
 
 	this.showLongOutput = function() {
 		console.log("extractOutput");
+
+		var s = KECCAK.data["output"][0];
+		var n = Math.ceil(s.length / 4);
+
+		var s1 = s.substring(0, n);
+		var s2 = s.substring(n, 2*n);
+		var s3 = s.substring(2*n, 3*n);
+		var s4 = s.substring(3*n, s.length);
+
+		var label1 = new string();
+		this.strings.push(label1.createString(
+			this.context,
+			50,
+			250,
+			"sans-serif, serif",
+			24,
+			"#000000",
+			1,
+			"Squeezed hash output:"
+		));
+
+		var str = new string();
+		this.strings.push(str.createString(
+			this.context,
+			50,
+			275,
+			"monospace",
+			24,
+			"#000000",
+			1,
+			s1
+		));
+
+		var str2 = new string();
+		this.strings.push(str2.createString(
+			this.context,
+			50,
+			300,
+			"monospace",
+			24,
+			"#000000",
+			1,
+			s2
+		));
+
+		var str3 = new string();
+		this.strings.push(str3.createString(
+			this.context,
+			50,
+			325,
+			"monospace",
+			24,
+			"#000000",
+			1,
+			s3
+		));
+
+		var str4 = new string();
+		this.strings.push(str4.createString(
+			this.context,
+			50,
+			350,
+			"monospace",
+			24,
+			"#000000",
+			1,
+			s4
+		));
+
+		var label2 = new string();
+		this.strings.push(label2.createString(
+			this.context,
+			50,
+			400,
+			"sans-serif, serif",
+			24,
+			"#000000",
+			1,
+			"Final hash output (256 or 512 bits):"
+		));
+
+
+		var ss = KECCAK.data["output"][1];
+		if (ss.length > 64) {
+			var nn = Math.ceil(ss.length / 2);
+			var s5 = ss.substring(0, nn);
+			var s6 = ss.substring(nn, 2*nn);
+
+			var str5 = new string();
+			this.strings.push(str5.createString(
+				this.context,
+				50,
+				425,
+				"monospace",
+				24,
+				"#000000",
+				1,
+				s5
+			));
+
+			var str6 = new string();
+			this.strings.push(str6.createString(
+				this.context,
+				50,
+				450,
+				"monospace",
+				24,
+				"#000000",
+				1,
+				s6
+			));
+		} else {
+			var str5 = new string();
+			this.strings.push(str5.createString(
+				this.context,
+				50,
+				425,
+				"monospace",
+				24,
+				"#000000",
+				1,
+				ss
+			));
+		}
+	}
+
+	this.extractExactOutput = function() {
+		this.cubes = new Array();
+
 
 	}
 
@@ -316,49 +599,158 @@ var squeezing = new function()
 	}
 
 	// Animation phases
-	this.playAnimationPhase = function(phase)
+	this.playAnimationPhase = function(phase, skipAudio)
 	{
-		//ERIC: If only its a new step, remove all previously created objects
-		if(this.step_array.indexOf(phase) > -1)
+		if(!skipAudio)
 		{
-			for(var i=0; i<this.currentTimeout.length; i++)
+			if(audio.durationLeft() > 0)
 			{
-				this.currentTimeout[i].remove();
+				squeezing.currentTimeout.push(new Timer(squeezing.playAnimationPhase, (audio.durationLeft() + 2) * 1000, phase));
+				return;
+			}
+		}
+		else
+		{
+			audio.stop();
+		}
+		//If only its a new step, remove all previously created objects
+		if(squeezing.step_array.indexOf(phase) > -1)
+		{
+			for(var i=0; i<squeezing.currentTimeout.length; i++)
+			{
+				squeezing.currentTimeout[i].remove();
 			}
 			
-			//ERIC: Please determine what to reinitialise on each critical steps
-			// this.cubes = new Array();
-			// this.dialogs = new Array();
-			// this.lines = new Array();
-			// this.operators = new Array();
-			// this.indicators = new Array(); // yellow cubes
-			// this.slices = new Array();
-			// this.tables = new Array();
-			this.currentTimeout = new Array();
+			//Please determine what to reinitialise on each critical steps
+			squeezing.cubes = new Array();
+			squeezing.slices = new Array();
+			squeezing.tables = new Array();
+			squeezing.strings = new Array();
+
+			squeezing.currentTimeout = new Array();
 		}
 		
 		switch(phase)
 		{
-			case 0:
-				this.showState();
+			case 0: // !
+				squeezing.showState();
 				break;
 			case 1:
-				this.moveState();
+				squeezing.moveState();
 				break;
-			case 2:
-				this.showTable();
-				break;
-			case 3:
-				this.hideTable();
+			case 2: // !
+				squeezing.showTable();
 				break;
 			case 3:
-				this.extractOutput();
+				squeezing.hideTable();
 				break;
-			case 3:
-				this.extractHash();
+			case 4: // !
+				squeezing.extractOutput();
 				break;
-			case 4:
-				this.showLongOutput();
+			case 5:
+				squeezing.moveCube(2,2,0);
+				break;
+			case 6:
+				squeezing.moveEnd(2,2,0);
+				break;
+			case 7:
+				squeezing.moveCube(3,2,1);
+				break;
+			case 8:
+				squeezing.moveEnd(3,2,1);
+				break;
+			case 9:
+				squeezing.moveCube(4,2,2);
+				break;
+			case 10:
+				squeezing.moveEnd(4,2,2);
+				break;
+			case 11:
+				squeezing.moveCube(0,2,3);
+				break;
+			case 12:
+				squeezing.moveEnd(0,2,3);
+				break;
+			case 13:
+				squeezing.moveCube(1,2,4);
+				break;
+			case 14:
+				squeezing.moveEnd(1,2,4);
+				break;
+			case 15:
+				squeezing.moveCube(2,1,5);
+				break;
+			case 16:
+				squeezing.moveEnd(2,1,5);
+				break;
+			case 17:
+				squeezing.moveCube(3,1,6);
+				break;
+			case 18:
+				squeezing.moveEnd(3,1,6);
+				break;
+			case 19:
+				squeezing.moveCube(4,1,7);
+				break;
+			case 20:
+				squeezing.moveEnd(4,1,7);
+				break;
+			case 21:
+				squeezing.moveCube(0,1,8);
+				break;
+			case 22:
+				squeezing.moveEnd(0,1,8);
+				break;
+			case 23:
+				squeezing.moveCube(1,1,9);
+				break;
+			case 24:
+				squeezing.moveEnd(1,1,9);
+				break;
+			case 25:
+				squeezing.moveCube(2,0,10);
+				break;
+			case 26:
+				squeezing.moveEnd(2,0,10);
+				break;
+			case 27:
+				squeezing.moveCube(3,0,11);
+				break;
+			case 28:
+				squeezing.moveEnd(3,0,11);
+				break;
+			case 29:
+				squeezing.moveCube(4,0,12);
+				break;
+			case 30:
+				squeezing.moveEnd(4,0,12);
+				break;
+			case 31:
+				squeezing.moveCube(0,0,13);
+				break;
+			case 32:
+				squeezing.moveEnd(0,0,13);
+				break;
+			case 33:
+				squeezing.moveCube(1,0,14);
+				break;
+			case 34:
+				squeezing.moveEnd(1,0,14);
+				break;
+			case 35:
+				squeezing.moveCube(2,3,15);
+				break;
+			case 36:
+				squeezing.moveEnd(2,3,15);
+				break;
+			case 37:
+				squeezing.delayExtract();
+				break;
+			case 38: // !
+				squeezing.extractHash();
+				break;
+			case 39:
+				squeezing.showLongOutput();
 				break;
 		}
 	}

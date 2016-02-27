@@ -1,4 +1,10 @@
-/* 31 jan 2016
+/* 18 feb 2016
+- "monospaced" to "monospace"
+
+15 feb 2016
+- applied eric's onHitTargetCB = null fix
+
+31 jan 2016
 	- removed set onHitTarget to null (eric's fix)
 	- changed default font to monospaced
 */
@@ -8,7 +14,7 @@ var string = function()
 	this.uid = 0;
 	this.alpha = 1;
 	this.color = "#FFFFFF";
-	this.font = "monospaced";
+	this.font = "monospace";
 	this.pos = {x:0,y:0};
 	this.size = 0;
 	this.text = "";
@@ -77,8 +83,12 @@ var string = function()
 	
 	this.onHitTarget = function(self)
 	{
-		if(self.onHitTargetCB != null)
-			self.onHitTargetCB();
+		var targetCB = self.onHitTargetCB;
+
+		self.onHitTargetCB = null;
+
+		if(targetCB != null)
+			targetCB();
 	}
 	
 	//Specific object update loop
@@ -91,6 +101,8 @@ var string = function()
 			
 			if(self.factor >= 1)
 			{
+				self.pos.x = self.dest.x;
+				self.pos.y = self.dest.y;
 				self.isMoving = false;
 				self.onHitTarget(self);
 			}

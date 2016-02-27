@@ -149,8 +149,9 @@ var inputToState = new function()
 	}
 
 	this.step1 = function() {
-		this.message = "The init function converts the input string into array of hex string";
+		this.message = "The init function converts the input string into array of hex value";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("init1");
 		
 		for (var i=0; i<this.numBlocks; ++i) {
 			var str = new string();
@@ -158,9 +159,9 @@ var inputToState = new function()
 			// (context, x, y, font, size, color, alpha, text)
 			this.object.push(str.createString(
 				this.context,
-				i*105,
+				this.padding+i*112,
 				50,
-				"Consolas",
+				"monospace",
 				24,
 				"#000000",
 				1,
@@ -177,15 +178,17 @@ var inputToState = new function()
 	}
 	
 	this.step2 = function() {
-		this.message = "Split the string into groups of 8 bytes";
+		this.message = "Split the string into groups of 8 characters";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("init2");
 		
 		this.targetCounter = this.numBlocks;
 
 		// animation showing string being split
 		for (var i=0; i<this.numBlocks; ++i) {
 			this.object[i].moveTo(
-				i*250,this.object[i].pos.y,
+				this.padding+i*250,
+				this.object[i].pos.y,
 				0.5,
 				this.objectHitTarget
 			);
@@ -197,6 +200,7 @@ var inputToState = new function()
 	this.step3 = function() {
 		this.message = "Convert each of the characters into hex representation";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("init3");
 		
 		// show converted input in hex format
 		for (var i=0; i<this.numBlocks; ++i) {
@@ -210,9 +214,9 @@ var inputToState = new function()
 			// (context, x, y, font, size, color, alpha, text)
 			this.object.push(str.createString(
 				this.context,
-				i*250, // my measurements are exact!
+				this.padding+i*250, // my measurements are exact!
 				75,
-				"Consolas",
+				"monospace",
 				24,
 				"#000000",
 				1,
@@ -230,8 +234,9 @@ var inputToState = new function()
 	}
 	this.step4 = function()
 	{
-		this.message = "For each group, reverse the order of hex string";
+		this.message = "For each group, reverse the order of hex value";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("init4");
 		
 		// show inverted hex after conversion
 		for (var i=0; i<this.numBlocks; ++i) {
@@ -245,9 +250,9 @@ var inputToState = new function()
 			// (context, x, y, font, size, color, alpha, text)
 			this.object.push(str.createString(
 				this.context,
-				i*250, // my measurements are exact!
+				this.padding+i*250, // my measurements are exact!
 				100,
-				"Consolas",
+				"monospace",
 				24,
 				"#000000",
 				1,
@@ -276,9 +281,9 @@ var inputToState = new function()
 			// (context, x, y, font, size, color, alpha, text)
 			this.object.push(str.createString(
 				this.context,
-				i*250, // my measurements are exact!
+				this.padding+i*250, // my measurements are exact!
 				100,
-				"Consolas",
+				"monospace",
 				24,
 				"#000000",
 				1,
@@ -291,7 +296,7 @@ var inputToState = new function()
 		inputToState.targetCounter = inputToState.numBlocks;
 		
 		for (var i=0; i<inputToState.numBlocks; ++i) {
-			inputToState.object[i].moveTo(i*250,50,0.5,inputToState.objectHitTarget);
+			inputToState.object[i].moveTo(this.padding+i*250,50,0.5,inputToState.objectHitTarget);
 		}
 		
 		
@@ -304,6 +309,7 @@ var inputToState = new function()
 	{
 		this.message = "Append suffix";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("init5");
 		
 		for (var i=0; i<this.numBlocks; ++i) {
 			var str = new string();
@@ -316,9 +322,9 @@ var inputToState = new function()
 			// (context, x, y, font, size, color, alpha, text)
 			this.object.push(str.createString(
 				this.context,
-				i*250, // my measurements are exact!
+				this.padding+i*250, // my measurements are exact!
 				50,
-				"Consolas",
+				"monospace",
 				24,
 				"#000000",
 				1,
@@ -334,7 +340,7 @@ var inputToState = new function()
 				this.context,
 				this.numBlocks*250, // my measurements are exact!
 				50,
-				"Consolas",
+				"monospace",
 				24,
 				"#000000",
 				1,
@@ -350,6 +356,7 @@ var inputToState = new function()
 	{
 		this.message = "Pad last block with 0";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("init6");
 		
 		for (var i=0; i<this.numBlocks; ++i) {
 			var str = new string();
@@ -362,9 +369,9 @@ var inputToState = new function()
 			// (context, x, y, font, size, color, alpha, text)
 			this.object.push(str.createString(
 				this.context,
-				i*250, // my measurements are exact!
+				this.padding+i*250, // my measurements are exact!
 				50,
-				"Consolas",
+				"monospace",
 				24,
 				"#000000",
 				1,
@@ -380,7 +387,7 @@ var inputToState = new function()
 				this.context,
 				this.numBlocks*250, // my measurements are exact!
 				50,
-				"Consolas",
+				"monospace",
 				24,
 				"#000000",
 				1,
@@ -470,12 +477,13 @@ var inputToState = new function()
 	this.step9 = function() {
 		this.message = "Put the results into the respective array block";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("init7");
 		
 		for (var i=0; i<this.numBlocks + this.additionalBlocks; ++i) {
 			var c = new cube();
 			this.object.push(c.createCube(
 				this.context,
-				i*250,
+				this.padding+i*250,
 				100,
 				50,
 				"#8ED6FF",
@@ -489,7 +497,7 @@ var inputToState = new function()
 			var c = new cube();
 			this.object.push(c.createCube(
 				this.context,
-				(i%5*50)+400,
+				(i%5*50)+515,
 				(Math.floor(i/5)*50)+200,
 				50,
 				"#8ED6FF",
@@ -520,6 +528,7 @@ var inputToState = new function()
 	{
 		this.message = "Fill up the rest of the array block with 0";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("init8");
 		
 		var startIndex = this.object.length;
 		//created padded array blocks
@@ -560,6 +569,10 @@ var inputToState = new function()
 	
 	this.step11 = function()
 	{
+		this.message = "This concludes the init function";
+		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("init9");
+		
 		//clear all object
 		this.object = new Array();
 		this.sortedObject = new Array();
@@ -569,7 +582,7 @@ var inputToState = new function()
 			var c = new cube();
 			this.object.push(c.createCube(
 				this.context,
-				(i%5*50)+400,
+				(i%5*50)+515,
 				(Math.floor(i/5)*50)+200,
 				50,
 				"#8ED6FF",
@@ -580,129 +593,6 @@ var inputToState = new function()
 		
 		this.sortedObject = zSort5x5(this.object);
 	}
-	// this.moveInput1 = function() {
-		// // set cube text to original input array
-		// for (var i=0; i<inputToState.numBlocks; ++i) {
-			// inputToState.object[i].text = bigInt(inputToState.input[i].text,16).toString();
-		// }
-
-		// // clear original input array
-		// for (var i=0; i<inputToState.input.length; ++i) {
-			// inputToState.input[i] = null;
-		// }
-		// inputToState.input = [];
-
-		// // continue
-		// //inputToState.showStateSkeleton();
-		// setTimeout(function(){
-			// inputToState.playAnimationPhase(++inputToState.currentPhase) // Play 10
-		// }, 1000*this.speedMultiplier);
-	// }
-	// this.showStateSkeleton = function() {
-		// var filler = new Array();
-		// for (var i=0; i<25; ++i) {
-			// filler.push("");
-		// }
-
-		// // (context, x, y, size, color, alpha, input)
-		// var skeleton = new slice();
-		// this.extra.push(skeleton.createSlice(
-			// this.context,
-			// 515,
-			// 175,
-			// 50,
-			// "#8ED6FF",
-			// 0.25,
-			// filler
-		// ));
-
-		// //this.moveCubes(1000, 750, 0.5);
-		
-		// setTimeout(function(){
-			// inputToState.playAnimationPhase(++inputToState.currentPhase) // Play 11
-		// }, 3000*this.speedMultiplier);
-	// }
-	// this.moveCubes = function() {
-		// inputToState.targetCounter = inputToState.numBlocks;
-		// // shifts cubes to form 5x5
-		// for (var i=0; i<inputToState.numBlocks; ++i) {
-			// var x = i % 5;
-			// var y = Math.floor(i / 5);
-
-			// var stateX = (x+2)%5;
-			// var stateY = (-y+7)%5;
-				
-			// inputToState.object[i].moveTo(stateX*50+515,stateY*50+175,0.5, inputToState.objectHitTarget);
-		// }
-	// }
-	// this.showPadCubes = function() {
-		// // show required padding
-		// for (var i=this.numBlocks; i<25; ++i) {
-			// var c = new cube();
-			// this.object.push(c.createCube(
-				// this.context,
-				// 50,
-				// 50,
-				// 50,
-				// "#8ED6FF",
-				// 1,
-				// "0"
-			// ));
-		// }
-
-		// //this.movePadCubes(1000, 1000, 0.5);
-		
-		// setTimeout(function(){
-			// inputToState.playAnimationPhase(++inputToState.currentPhase) // Play 13
-		// }, 1000*this.speedMultiplier);
-	// }
-	// this.movePadCubes = function() {
-		// inputToState.targetCounter = 25 - inputToState.numBlocks;
-		// // adds required padding
-		// for (var i=inputToState.numBlocks; i<25; ++i) {
-			// var x = i % 5;
-			// var y = Math.floor(i / 5);
-
-			// var stateX = (x+2)%5;
-			// var stateY = (-y+7)%5;
-				
-			// inputToState.object[i].moveTo(stateX*50+515,stateY*50+175,0.5, inputToState.objectHitTarget);
-		// }
-	// }
-	
-	// this.destroySkeleton = function()
-	// {
-		// // destroy skeleton
-		// for (var i=0; i<inputToState.extra.length; ++i) {
-			// inputToState.extra[i] = null;
-		// }
-		// inputToState.extra = [];
-
-		// // remove text on all blocks
-		// for (var i=0; i<25; ++i) {
-			// inputToState.object[i].text = "";
-		// }
-		
-		// setTimeout(function(){
-			// inputToState.playAnimationPhase(++inputToState.currentPhase) // Play 15
-		// }, 1000*this.speedMultiplier);
-	// }
-	// this.endAnimation = function()
-	// {
-		// // stop update loop
-		// clearInterval(inputToState.refresh);
-
-		// // destroy all objects
-		// for (var i=0; i<inputToState.input.length; ++i) {
-			// inputToState.input[i] = null;
-		// }
-		// inputToState.input = [];
-
-		// for (var i=0; i<inputToState.object.length; ++i) {
-			// inputToState.object[i] = null;
-		// }
-		// inputToState.object = [];
-	// }
 
 	// Function to keep track of the number of cubes reaching the destination
 	this.objectHitTarget = function()
@@ -719,69 +609,66 @@ var inputToState = new function()
 	}
 	
 	// Animation phases
-	this.playAnimationPhase = function(phase)
+	this.playAnimationPhase = function(phase, skipAudio)
 	{
-		if(this.step_array.indexOf(phase) > -1)
+		if(!skipAudio)
 		{
-			for(var i=0; i<this.currentTimeout.length; i++)
+			if(audio.durationLeft() > 0)
 			{
-				this.currentTimeout[i].remove();
+				inputToState.currentTimeout.push(new Timer(inputToState.playAnimationPhase, (audio.durationLeft() + 2) * 1000, phase));
+				return;
+			}
+		}
+		else
+		{
+			audio.stop();
+		}
+		if(inputToState.step_array.indexOf(phase) > -1)
+		{
+			for(var i=0; i<inputToState.currentTimeout.length; i++)
+			{
+				inputToState.currentTimeout[i].remove();
 			}
 			
-			this.currentTimeout = new Array();
-			this.object = new Array();
-			this.sortedObject = new Array();
+			inputToState.currentTimeout = new Array();
+			inputToState.object = new Array();
+			inputToState.sortedObject = new Array();
 		}
 		
 		switch(phase)
 		{
 			case 0:
-				this.step1();
+				inputToState.step1();
 				break;
 			case 1:
-				this.step2();
+				inputToState.step2();
 				break;
 			case 2:
-				this.step3();
+				inputToState.step3();
 				break;
 			case 3:
-				this.step4();
+				inputToState.step4();
 				break;
 			case 4:
-				this.step5();
+				inputToState.step5();
 				break;
 			case 5:
-				this.step6();
+				inputToState.step6();
 				break;
 			case 6:
-				this.step7();
+				inputToState.step7();
 				break;
 			case 7:
-				this.step8();
+				inputToState.step8();
 				break;
 			case 8:
-				this.step9();
+				inputToState.step9();
 				break;
 			case 9:
-				this.step10();
+				inputToState.step10();
 				break;
 			case 10:
-				this.step11();
-				break;
-			case 11:
-				//this.moveCubes();
-				break;
-			case 12:
-				//this.showPadCubes();
-				break;
-			case 13:
-				//this.movePadCubes();
-				break;
-			case 14:
-				//this.destroySkeleton();
-				break;
-			case 15:
-				//this.endAnimation();
+				inputToState.step11();
 				break;
 		}
 	}

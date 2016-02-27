@@ -184,9 +184,22 @@ var rho = new function()
 	{
 		this.message = "Rho performs offsets base on the slice of cube and the fixed offset table shown";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("rho1");
+		
+		var tt = new string();
+				this.Ttexts.push(tt.createString(
+				this.context,
+				515,
+				100,
+				"Serif",
+				24,
+				"#000000",
+				1,
+				"Fixed Offset Table"
+				));
 		
 		var s = new slice(); //draws slice
-		var inputt = ["3,2","3,2","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
+		var inputt = ["3,2","3,1","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
 				this.extra.push(s.createSlice(
 					this.context,
 					115,
@@ -247,7 +260,7 @@ var rho = new function()
 		var t = new table();
 		t.fontsize =15;
 		t.size = t.getLongestWidth(this.context);
-		t.font = "Consolas";
+		t.font = "monospace";
 		this.extra.push(t.createTable(
 		this.context,
 		515,
@@ -259,17 +272,30 @@ var rho = new function()
 			if(rho.currentPhase != 0)
 				return;
 			rho.playAnimationPhase(++rho.currentPhase);
-			rho.message = "";
+			//rho.message = "";
 		},3000*this.speedMultiplier));
 	}
 	
 	this.step2 = function(dialog2,cubeNum,ObjNum,PosX,PosY,phaseNum,dataNum)
 	{
-		this.message = dialog2; //dunno y no show
+		this.message = dialog2;
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("rho2");
+		
+		var tt = new string();
+				this.Ttexts.push(tt.createString(
+				this.context,
+				515,
+				100,
+				"Serif",
+				24,
+				"#000000",
+				1,
+				"Fixed Offset Table"
+				));
 		
 		var s = new slice(); //draws slice
-		var inputt = ["3,2","3,2","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
+		var inputt = ["3,2","3,1","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
 				this.extra.push(s.createSlice(
 					this.context,
 					115,
@@ -330,7 +356,7 @@ var rho = new function()
 		var t = new table();
 		t.fontsize =15;
 		t.size = t.getLongestWidth(this.context);
-		t.font = "Consolas";
+		t.font = "monospace";
 		this.extra.push(t.createTable(
 		this.context,
 		515,
@@ -354,6 +380,30 @@ var rho = new function()
 		{
 			this.temp[i] = string1.slice(i,i+1);
 		}
+		
+		var t = new string();
+				this.texts.push(t.createString(
+				this.context,
+				425,
+				325,
+				"monospace",
+				20,
+				"#000000",
+				1,
+				"Decimal"
+				));
+				
+		var t2 = new string();
+				this.texts.push(t2.createString(
+				this.context,
+				425,
+				425,
+				"monospace",
+				20,
+				"#000000",
+				1,
+				"Binary Value"
+				));
 		
 		var string2 = parseInt(string1, 10).toString(2);
 		console.log(string1);
@@ -416,19 +466,32 @@ var rho = new function()
 		
 			rho.targetCounter = 1;
 			rho.object[ObjNum].moveTo(225,405,0.5,rho.objectHitTarget);
-			rho.message = "";
+			//rho.message = "";
 		},3000*this.speedMultiplier));
 	}
 	
-	this.step3 = function(dialog3,cubeNum,numOfZeros,phaseNum,dataNum)
+	this.step3 = function(dialog3,cubeNum,numOfShifts,phaseNum,dataNum)
 	{
 		this.message = dialog3;
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("rho3");
+		
+		var tt = new string();
+				this.Ttexts.push(tt.createString(
+				this.context,
+				515,
+				100,
+				"Serif",
+				24,
+				"#000000",
+				1,
+				"Fixed Offset Table"
+				));
 		
 		var offsetV=64;
 		
 		var s = new slice(); //draws slice
-		var inputt = ["3,2","3,2","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
+		var inputt = ["3,2","3,1","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
 				this.extra.push(s.createSlice(
 					this.context,
 					115,
@@ -489,7 +552,7 @@ var rho = new function()
 		var t = new table();
 		t.fontsize =15;
 		t.size = t.getLongestWidth(this.context);
-		t.font = "Consolas";
+		t.font = "monospace";
 		this.extra.push(t.createTable(
 		this.context,
 		515,
@@ -547,22 +610,33 @@ var rho = new function()
 			}
 		}
 		
-		var e = new cube();
-			this.shiftcube.push(e.createCube(
+		var e = new string();
+				this.texts.push(e.createString(
 				this.context,
-				300,
-				455,
-				30,
-				"#FFFFFF",
+				425,
+				355,
+				"monospace",
+				20,
+				"#000000",
 				1,
-				numOfZeros
+				numOfShifts
 			));	
+		var oprot = new operator();//Rot
+				this.object.push(oprot.createOperator(
+				this.context,
+				320,
+				475,
+				60,
+				"#f5a9d0",
+				1,
+				"CSR"
+				));
 		var l = new string();
 				this.Ttexts.push(l.createString(
 				this.context,
-				350,
+				370,
 				475,
-				"Consolas",
+				"monospace",
 				40,
 				"#000000",
 				1,
@@ -572,14 +646,16 @@ var rho = new function()
 		this.currentTimeout.push(new Timer(function(){
 			if(rho.currentPhase != phaseNum)
 				return;
-		if(string2.length>22)
+
+		if(string2.length>29)
 		{
-			rho.message = "As the binary value is too large the dropping of rear values will not be shown";
+			rho.message = rho.message + " (as the binary value is too large the dropping of rear values will not be shown)";
 			rho.m_dialog.setMessage(rho.context,rho.message);
 			rho.playAnimationPhase(++rho.currentPhase);
 		}
 		else
 		{
+			/*bitshift not circular shift
 			if(string2.length>offsetV)
 			{
 				var j=i+1;
@@ -599,20 +675,35 @@ var rho = new function()
 					rho.bitcubes[string2.length-j].moveTo(425+((string2.length-j)*30),720,0.5,rho.objectHitTarget);
 				}
 			}
+			*/
+			rho.playAnimationPhase(++rho.currentPhase);
 		}
-			rho.message = "";
+			//rho.message = "";
 		},3000*this.speedMultiplier));
 		
 	}
 	
-	this.step4 = function(dialog4,cubeNum,numOfZeros,phaseNum,dataNum)
+	this.step4 = function(dialog4,cubeNum,numOfShifts,phaseNum,dataNum)
 	{
 		
 		this.message = dialog4;
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("rho4");
+		
+		var tt = new string();
+				this.Ttexts.push(tt.createString(
+				this.context,
+				515,
+				100,
+				"Serif",
+				24,
+				"#000000",
+				1,
+				"Fixed Offset Table"
+				));
 		
 		var s = new slice(); //draws slice
-		var inputt = ["3,2","3,2","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
+		var inputt = ["3,2","3,1","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
 				this.extra.push(s.createSlice(
 					this.context,
 					115,
@@ -673,7 +764,7 @@ var rho = new function()
 		var t = new table();
 		t.fontsize =15;
 		t.size = t.getLongestWidth(this.context);
-		t.font = "Consolas";
+		t.font = "monospace";
 		this.extra.push(t.createTable(
 		this.context,
 		515,
@@ -713,22 +804,33 @@ var rho = new function()
 			));	
 		}
 		
-		var e = new cube();
-			this.shiftcube.push(e.createCube(
+		var e = new string();
+				this.texts.push(e.createString(
 				this.context,
-				485+(string2.length*30),
-				455,
-				30,
-				"#FFFFFF",
+				425,
+				355,
+				"monospace",
+				20,
+				"#000000",
 				1,
-				numOfZeros //"0x0"
+				numOfShifts
 			));	
+		var oprot = new operator();//Rot
+				this.object.push(oprot.createOperator(
+				this.context,
+				520+(string2.length*30),
+				475,
+				60,
+				"#f5a9d0",
+				1,
+				"CSL"
+				));	
 		var l = new string();
 				this.Ttexts.push(l.createString(
 				this.context,
 				440+(string2.length*30),
 				475,
-				"Consolas",
+				"monospace",
 				40,
 				"#000000",
 				1,
@@ -739,19 +841,32 @@ var rho = new function()
 			if(rho.currentPhase != phaseNum)
 				return;
 			rho.playAnimationPhase(++rho.currentPhase);
-			rho.message = "";
+			//rho.message = "";
 		},3000*this.speedMultiplier));
 	}
 	
-	this.step5 = function(dialog5,cubeNum,ObjNum,PosX,PosY,phaseNum,dataNum) //add the shifted
+	this.step5 = function(dialog5,cubeNum,ObjNum,PosX,PosY,phaseNum,dataNum) 
 	{
-		this.message = dialog5; //dunno y no show
+		this.message = dialog5; 
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("rho5");
+		
+		var tt = new string();
+				this.Ttexts.push(tt.createString(
+				this.context,
+				515,
+				100,
+				"Serif",
+				24,
+				"#000000",
+				1,
+				"Fixed Offset Table"
+				));
 		
 		var offsetV=64;
 		
 		var s = new slice(); //draws slice
-		var inputt = ["3,2","3,2","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
+		var inputt = ["3,2","3,1","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
 				this.extra.push(s.createSlice(
 					this.context,
 					115,
@@ -812,7 +927,7 @@ var rho = new function()
 		var t = new table();
 		t.fontsize =15;
 		t.size = t.getLongestWidth(this.context);
-		t.font = "Consolas";
+		t.font = "monospace";
 		this.extra.push(t.createTable(
 		this.context,
 		515,
@@ -857,7 +972,7 @@ var rho = new function()
 				return;
 			rho.targetCounter = 1;
 			rho.object[ObjNum].moveTo(PosX,PosY,0.5,rho.objectHitTarget);
-			rho.message = "";
+			//rho.message = "";
 		},3000*this.speedMultiplier));
 		
 	}
@@ -866,6 +981,7 @@ var rho = new function()
 	{
 		this.message = "Rho is now complete";
 		this.m_dialog.setMessage(this.context,this.message);
+		audio.play("rho6");
 		
 		var s = new slice(); //draws slice
 		var inputt = ["3,2","3,2","3,0","3,4","3,3","4,2","4,1","4,0","4,4","4,3","0,2","0,1","0,0","0,4","0,3","1,2","1,1","1,0","1,4","1,3","2,2","2,1","2,0","2,4","2,3"];
@@ -929,7 +1045,7 @@ var rho = new function()
 		var t = new table();
 		t.fontsize =15;
 		t.size = t.getLongestWidth(this.context);
-		t.font = "Consolas";
+		t.font = "monospace";
 		this.extra.push(t.createTable(
 		this.context,
 		515,
@@ -942,7 +1058,7 @@ var rho = new function()
 				return;
 			rho.playAnimationPhase(++rho.currentPhase);
 			rho.clearall();
-			rho.message = "";
+			//rho.message = "";
 		},3000*this.speedMultiplier));
 	}
 	
@@ -1012,484 +1128,497 @@ var rho = new function()
 	}
 
 	// Animation phases
-	this.playAnimationPhase = function(phase)
+	this.playAnimationPhase = function(phase, skipAudio)
 	{
-		this.clearall();
+		if(!skipAudio)
+		{
+			if(audio.durationLeft() > 0)
+			{
+				rho.currentTimeout.push(new Timer(rho.playAnimationPhase, (audio.durationLeft() + 2) * 1000, phase));
+				return;
+			}
+		}
+		else
+		{
+			audio.stop();
+		}
+		
+		rho.clearall();
 		
 		//ERIC: If only its a new step, remove all previously created objects
-		if(this.step_array.indexOf(phase) > -1)
+		if(rho.step_array.indexOf(phase) > -1)
 		{
-			for(var i=0; i<this.currentTimeout.length; i++)
+			for(var i=0; i<rho.currentTimeout.length; i++)
 			{
-				this.currentTimeout[i].remove();
+				rho.currentTimeout[i].remove();
 			}
 			
-			this.currentTimeout = new Array();
+			rho.currentTimeout = new Array();
 			
 			//ERIC: Please determine what to reinitialise on each critical steps
-			this.shiftcube = new Array();
-			this.Ttexts = new Array();
-			this.texts = new Array();
-			this.input = new Array();
-			this.object = new Array();
-			this.extra = new Array();
-			this.bitcubes = new Array();
-			this.data = new Array();
-			this.rhophidata = new Array();
-			this.temp = new Array();
+			rho.shiftcube = new Array();
+			rho.Ttexts = new Array();
+			rho.texts = new Array();
+			rho.input = new Array();
+			rho.object = new Array();
+			rho.extra = new Array();
+			rho.bitcubes = new Array();
+			rho.data = new Array();
+			rho.rhophidata = new Array();
+			rho.temp = new Array();
 		}
 		
 		//ERIC: Remove all the reinitialisation after adding in the steps for previous/next
 		// and use the "if" above
-		this.shiftcube = new Array();
-		this.Ttexts = new Array();
-		this.texts = new Array();
-		this.input = new Array();
-		this.object = new Array();
-		this.extra = new Array();
-		this.bitcubes = new Array();
-		this.data = new Array();
-		this.rhophidata = new Array();
-		this.temp = new Array();
+		rho.shiftcube = new Array();
+		rho.Ttexts = new Array();
+		rho.texts = new Array();
+		rho.input = new Array();
+		rho.object = new Array();
+		rho.extra = new Array();
+		rho.bitcubes = new Array();
+		rho.data = new Array();
+		rho.rhophidata = new Array();
+		rho.temp = new Array();
 		
 		
 		switch(phase)
 		{
 			case 0:
-				this.step1();
+				rho.step1();
 				
 				break;
 				//0,0
 			case 1:
-				this.step2("Now we take cube 0,0 and change it to binary","0,0",0,215,155,1,0);
+				rho.step2("Now we take cube 0,0 and change it to binary","0,0",0,215,155,1,0);
 				
 				break;
 			case 2:
-				this.step3("Now with cube 0,0 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-0mod64=64","0,0","0x64",2,0);
+				rho.step3("Now with cube 0,0 value in binary we circular shift right by width of keccak minus offset modulus 64 thus equals 64-0mod64=64","0,0"," circular shifts right by 64",2,0);
 			
 				break;
 			case 3:
-				this.step4("Now with cube 0,0 value in binary we shift left by n offset from table x=0,y=0 n= 0mod64 =0 ","0,0","0x0",3,0);
+				rho.step4("Now with cube 0,0 value in binary we circular shift left by n offset from table x=0,y=0 n= 0mod64 =0 ","0,0"," circular shifts left by 0",3,0);
 				
 				break;
 			case 4:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,0",0,215,155,4,2);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,0",0,215,155,4,2);
 				
 				break;
 				//0,1
 			case 5:
-				this.step2("Now we take cube 0,1 and change it to binary","0,1",0,215,105,5,3);
+				rho.step2("Now we take cube 0,1 and change it to binary","0,1",0,215,105,5,3);
 				
 				break;
 			case 6:
-				this.step3("Now with cube 0,1 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-36mod64=28","0,1","0x28",6,3);
+				rho.step3("Now with cube 0,1 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-36mod64=28","0,1"," circular shifts right by 28",6,3);
 			
 				break;
 			case 7:
-				this.step4("Now with cube 0,1 value in binary we shift left by n offset from table x=0,y=1 n= 36mod64 =36 ","0,1","0x36",7,3);
+				rho.step4("Now with cube 0,1 value in binary we  circular shift left by n offset from table x=0,y=1 n= 36mod64 =36 ","0,1"," circular shifts left by 36",7,3);
 				
 				break;
 			case 8:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,1",0,215,105,8,5);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,1",0,215,105,8,5);
 				
 				break;
 				//0,2
 			case 9:
-				this.step2("Now we take cube 0,2 and change it to binary","0,2",0,215,55,9,6);
+				rho.step2("Now we take cube 0,2 and change it to binary","0,2",0,215,55,9,6);
 				
 				break;
 			case 10:
-				this.step3("Now with cube 0,2 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-3mod64=61","0,2","0x61",10,6);
+				rho.step3("Now with cube 0,2 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-3mod64=61","0,2"," circular shifts right by 61",10,6);
 			
 				break;
 			case 11:
-				this.step4("Now with cube 0,2 value in binary we shift left by n offset from table x=0,y=2 n= 3mod64 =3 ","0,2","0x3",11,6);
+				rho.step4("Now with cube 0,2 value in binary we  circular shift left by n offset from table x=0,y=2 n= 3mod64 =3 ","0,2"," circular shifts left by 3",11,6);
 				
 				break;
 			case 12:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,2",0,215,105,12,8);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,2",0,215,105,12,8);
 				
 				break;
 				//0,3
 			case 13:
-				this.step2("Now we take cube 0,3 and change it to binary","0,3",0,215,255,13,9);
+				rho.step2("Now we take cube 0,3 and change it to binary","0,3",0,215,255,13,9);
 				
 				break;
 			case 14:
-				this.step3("Now with cube 0,3 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-105mod64=23","0,3","0x23",14,9);
+				rho.step3("Now with cube 0,3 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-105mod64=23","0,3"," circular shifts right by 23",14,9);
 			
 				break;
 			case 15:
-				this.step4("Now with cube 0,3 value in binary we shift left by n offset from table x=0,y=3 n= 105mod64 =23 ","0,3","0x23",15,9);
+				rho.step4("Now with cube 0,3 value in binary we  circular shift left by n offset from table x=0,y=3 n= 105mod64 =23 ","0,3"," circular shifts left by 23",15,9);
 				
 				break;
 			case 16:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,3",0,215,255,16,11);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,3",0,215,255,16,11);
 				
 				break;
 				//0,4
 			case 17:
-				this.step2("Now we take cube 0,4 and change it to binary","0,4",0,215,205,17,12);
+				rho.step2("Now we take cube 0,4 and change it to binary","0,4",0,215,205,17,12);
 				
 				break;
 			case 18:
-				this.step3("Now with cube 0,4 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-210mod64=46","0,4","0x46",18,12);
+				rho.step3("Now with cube 0,4 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-210mod64=46","0,4"," circular shifts right by 46",18,12);
 			
 				break;
 			case 19:
-				this.step4("Now with cube 0,4 value in binary we shift left by n offset from table x=0,y=4 n= 210mod64 =18 ","0,4","0x18",19,12);
+				rho.step4("Now with cube 0,4 value in binary we  circular shift left by n offset from table x=0,y=4 n= 210mod64 =18 ","0,4"," circular shifts left by 18",19,12);
 				
 				break;
 			case 20:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,4",0,215,205,20,14);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","0,4",0,215,205,20,14);
 				
 				break;
 			//new column
 				//1,0
 			case 21:
-				this.step2("Now we take cube 1,0 and change it to binary","1,0",0,265,155,21,15);
+				rho.step2("Now we take cube 1,0 and change it to binary","1,0",0,265,155,21,15);
 				
 				break;
 			case 22:
-				this.step3("Now with cube 1,0 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-1mod64=63","1,0","0x63",22,15);
+				rho.step3("Now with cube 1,0 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-1mod64=63","1,0"," circular shifts right by 63",22,15);
 			
 				break;
 			case 23:
-				this.step4("Now with cube 1,0 value in binary we shift left by n offset from table x=1,y=0 n= 1mod64 =1 ","1,0","0x1",23,15);
+				rho.step4("Now with cube 1,0 value in binary we  circular shift left by n offset from table x=1,y=0 n= 1mod64 =1 ","1,0"," circular shifts left by 1",23,15);
 				
 				break;
 			case 24:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,0",0,265,155,24,17);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,0",0,265,155,24,17);
 				
 				break;
 				//1,1
 			case 25:
-				this.step2("Now we take cube 1,1 and change it to binary","1,1",0,265,105,25,18);
+				rho.step2("Now we take cube 1,1 and change it to binary","1,1",0,265,105,25,18);
 				
 				break;
 			case 26:
-				this.step3("Now with cube 1,1 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-300mod64=20","1,1","0x20",26,18);
+				rho.step3("Now with cube 1,1 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-300mod64=20","1,1"," circular shifts right by 20",26,18);
 			
 				break;
 			case 27:
-				this.step4("Now with cube 1,1 value in binary we shift left by n offset from table x=1,y=1 n= 300mod64 =44 ","1,1","0x44",27,18);
+				rho.step4("Now with cube 1,1 value in binary we  circular shift left by n offset from table x=1,y=1 n= 300mod64 =44 ","1,1"," circular shifts left by 44",27,18);
 				
 				break;
 			case 28:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,1",0,265,105,28,20);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,1",0,265,105,28,20);
 				
 				break;
 				//1,2
 			case 29:
-				this.step2("Now we take cube 1,2 and change it to binary","1,2",0,265,55,29,21);
+				rho.step2("Now we take cube 1,2 and change it to binary","1,2",0,265,55,29,21);
 				
 				break;
 			case 30:
-				this.step3("Now with cube 1,2 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-10mod64=54","1,2","0x54",30,21);
+				rho.step3("Now with cube 1,2 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-10mod64=54","1,2"," circular shifts right by 54",30,21);
 			
 				break;
 			case 31:
-				this.step4("Now with cube 1,2 value in binary we shift left by n offset from table x=1,y=2 n= 10mod64 =10 ","1,2","0x10",31,21);
+				rho.step4("Now with cube 1,2 value in binary we  circular shift left by n offset from table x=1,y=2 n= 10mod64 =10 ","1,2"," circular shifts left by 10",31,21);
 				
 				break;
 			case 32:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,2",0,265,105,32,23);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,2",0,265,105,32,23);
 				
 				break;
 				//1,3
 			case 33:
-				this.step2("Now we take cube 1,3 and change it to binary","1,3",0,265,255,33,24);
+				rho.step2("Now we take cube 1,3 and change it to binary","1,3",0,265,255,33,24);
 				
 				break;
 			case 34:
-				this.step3("Now with cube 1,3 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-45mod64=19","1,3","0x19",34,24);
+				rho.step3("Now with cube 1,3 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-45mod64=19","1,3"," circular shifts right by 19",34,24);
 			
 				break;
 			case 35:
-				this.step4("Now with cube 1,3 value in binary we shift left by n offset from table x=1,y=3 n= 45mod64 =45 ","1,3","0x45",35,24);
+				rho.step4("Now with cube 1,3 value in binary we  circular shift left by n offset from table x=1,y=3 n= 45mod64 =45 ","1,3"," circular shifts left by 45",35,24);
 				
 				break;
 			case 36:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,3",0,265,255,36,26);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,3",0,265,255,36,26);
 				
 				break;
 				//1,4
 			case 37:
-				this.step2("Now we take cube 1,4 and change it to binary","1,4",0,265,205,37,27);
+				rho.step2("Now we take cube 1,4 and change it to binary","1,4",0,265,205,37,27);
 				
 				break;
 			case 38:
-				this.step3("Now with cube 1,4 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-66mod64=62","1,4","0x62",38,27);
+				rho.step3("Now with cube 1,4 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-66mod64=62","1,4"," circular shifts right by 62",38,27);
 			
 				break;
 			case 39:
-				this.step4("Now with cube 1,4 value in binary we shift left by n offset from table x=1,y=4 n= 66mod64 =2 ","1,4","0x2",39,27);
+				rho.step4("Now with cube 1,4 value in binary we  circular shift left by n offset from table x=1,y=4 n= 66mod64 =2 ","1,4"," circular shifts left by 2",39,27);
 				
 				break;
 			case 40:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,4",0,265,205,40,29);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","1,4",0,265,205,40,29);
 				
 				break;
 			//new column
 				//2,0
 			case 41:
-				this.step2("Now we take cube 2,0 and change it to binary","2,0",0,315,155,41,30);
+				rho.step2("Now we take cube 2,0 and change it to binary","2,0",0,315,155,41,30);
 				
 				break;
 			case 42:
-				this.step3("Now with cube 2,0 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-190mod64=2","2,0","0x2",42,30);
+				rho.step3("Now with cube 2,0 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-190mod64=2","2,0"," circular shifts right by 2",42,30);
 			
 				break;
 			case 43:
-				this.step4("Now with cube 2,0 value in binary we shift left by n offset from table x=2,y=0 n= 190mod64 =62 ","2,0","0x62",43,30);
+				rho.step4("Now with cube 2,0 value in binary we  circular shift left by n offset from table x=2,y=0 n= 190mod64 =62 ","2,0"," circular shifts left by 62",43,30);
 				
 				break;
 			case 44:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,0",0,315,155,44,32);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,0",0,315,155,44,32);
 				
 				break;
 				//2,1
 			case 45:
-				this.step2("Now we take cube 2,1 and change it to binary","2,1",0,315,105,45,33);
+				rho.step2("Now we take cube 2,1 and change it to binary","2,1",0,315,105,45,33);
 				
 				break;
 			case 46:
-				this.step3("Now with cube 2,1 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-6mod64=58","2,1","0x58",46,33);
+				rho.step3("Now with cube 2,1 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-6mod64=58","2,1"," circular shifts right by 58",46,33);
 			
 				break;
 			case 47:
-				this.step4("Now with cube 2,1 value in binary we shift left by n offset from table x=2,y=1 n= 6mod64 =6 ","2,1","0x6",47,33);
+				rho.step4("Now with cube 2,1 value in binary we  circular shift left by n offset from table x=2,y=1 n= 6mod64 =6 ","2,1"," circular shifts left by 6",47,33);
 				
 				break;
 			case 48:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,1",0,315,105,48,35);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,1",0,315,105,48,35);
 				
 				break;
 				//2,2
 			case 49:
-				this.step2("Now we take cube 2,2 and change it to binary","2,2",0,315,55,49,36);
+				rho.step2("Now we take cube 2,2 and change it to binary","2,2",0,315,55,49,36);
 				
 				break;
 			case 50:
-				this.step3("Now with cube 2,2 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-171mod64=21","2,2","0x21",50,36);
+				rho.step3("Now with cube 2,2 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-171mod64=21","2,2"," circular shifts right by 21",50,36);
 			
 				break;
 			case 51:
-				this.step4("Now with cube 2,2 value in binary we shift left by n offset from table x=2,y=2 n= 171mod64 =43 ","2,2","0x43",51,36);
+				rho.step4("Now with cube 2,2 value in binary we  circular shift left by n offset from table x=2,y=2 n= 171mod64 =43 ","2,2"," circular shifts left by 43",51,36);
 				
 				break;
 			case 52:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,2",0,315,105,52,38);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,2",0,315,105,52,38);
 				
 				break;
 				//2,3
 			case 53:
-				this.step2("Now we take cube 2,3 and change it to binary","2,3",0,315,255,53,39);
+				rho.step2("Now we take cube 2,3 and change it to binary","2,3",0,315,255,53,39);
 				
 				break;
 			case 54:
-				this.step3("Now with cube 2,3 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-15mod64=49","2,3","0x49",54,39);
+				rho.step3("Now with cube 2,3 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-15mod64=49","2,3"," circular shifts right by 49",54,39);
 			
 				break;
 			case 55:
-				this.step4("Now with cube 2,3 value in binary we shift left by n offset from table x=2,y=3 n= 15mod64 =15 ","2,3","0x15",55,39);
+				rho.step4("Now with cube 2,3 value in binary we  circular shift left by n offset from table x=2,y=3 n= 15mod64 =15 ","2,3"," circular shifts left by 15",55,39);
 				
 				break;
 			case 56:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,3",0,315,255,56,41);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,3",0,315,255,56,41);
 				
 				break;
 				//2,4
 			case 57:
-				this.step2("Now we take cube 2,4 and change it to binary","2,4",0,315,205,57,42);
+				rho.step2("Now we take cube 2,4 and change it to binary","2,4",0,315,205,57,42);
 				
 				break;
 			case 58:
-				this.step3("Now with cube 2,4 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-253mod64=3","2,4","0x3",58,42);
+				rho.step3("Now with cube 2,4 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-253mod64=3","2,4"," circular shifts right by 3",58,42);
 			
 				break;
 			case 59:
-				this.step4("Now with cube 2,4 value in binary we shift left by n offset from table x=2,y=4 n= 253mod64 =61 ","2,4","0x61",59,42);
+				rho.step4("Now with cube 2,4 value in binary we  circular shift left by n offset from table x=2,y=4 n= 253mod64 =61 ","2,4"," circular shifts left by 61",59,42);
 				
 				break;
 			case 60:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,4",0,315,205,60,44);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","2,4",0,315,205,60,44);
 				
 				break;
 			//new column
 				//3,0
 			case 61:
-				this.step2("Now we take cube 3,0 and change it to binary","3,0",0,165,155,61,45);
+				rho.step2("Now we take cube 3,0 and change it to binary","3,0",0,115,155,61,45);
 				
 				break;
 			case 62:
-				this.step3("Now with cube 3,0 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-28mod64=36","3,0","0x36",62,45);
+				rho.step3("Now with cube 3,0 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-28mod64=36","3,0"," circular shifts right by 36",62,45);
 			
 				break;
 			case 63:
-				this.step4("Now with cube 3,0 value in binary we shift left by n offset from table x=3,y=0 n= 28mod64 =28 ","3,0","0x28",63,45);
+				rho.step4("Now with cube 3,0 value in binary we  circular shift left by n offset from table x=3,y=0 n= 28mod64 =28 ","3,0"," circular shifts left by 28",63,45);
 				
 				break;
 			case 64:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,0",0,165,155,64,47);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,0",0,115,155,64,47);
 				
 				break;
 				//3,1
 			case 65:
-				this.step2("Now we take cube 3,1 and change it to binary","3,1",0,165,105,65,48);
+				rho.step2("Now we take cube 3,1 and change it to binary","3,1",0,115,105,65,48);
 				
 				break;
 			case 66:
-				this.step3("Now with cube 3,1 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-55mod64=9","3,1","0x9",66,48);
+				rho.step3("Now with cube 3,1 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-55mod64=9","3,1"," circular shifts right by 9",66,48);
 			
 				break;
 			case 67:
-				this.step4("Now with cube 3,1 value in binary we shift left by n offset from table x=3,y=1 n= 55mod64 =44 ","3,1","0x55",67,48);
+				rho.step4("Now with cube 3,1 value in binary we  circular shift left by n offset from table x=3,y=1 n= 55mod64 =44 ","3,1"," circular shifts left by 55",67,48);
 				
 				break;
 			case 68:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,1",0,165,105,68,50);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,1",0,115,105,68,50);
 				
 				break;
 				//3,2
 			case 69:
-				this.step2("Now we take cube 3,2 and change it to binary","3,2",0,165,55,69,51);
+				rho.step2("Now we take cube 3,2 and change it to binary","3,2",0,115,55,69,51);
 				
 				break;
 			case 70:
-				this.step3("Now with cube 3,2 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-153mod64=39","3,2","0x39",70,51);
+				rho.step3("Now with cube 3,2 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-153mod64=39","3,2"," circular shifts right by 39",70,51);
 			
 				break;
 			case 71:
-				this.step4("Now with cube 3,2 value in binary we shift left by n offset from table x=3,y=2 n= 153mod64 =25 ","3,2","0x25",71,51);
+				rho.step4("Now with cube 3,2 value in binary we  circular shift left by n offset from table x=3,y=2 n= 153mod64 =25 ","3,2"," circular shifts left by 25",71,51);
 				
 				break;
 			case 72:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,2",0,165,105,72,53);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,2",0,115,105,72,53);
 				
 				break;
 				//3,3
 			case 73:
-				this.step2("Now we take cube 3,3 and change it to binary","3,3",0,165,255,73,54);
+				rho.step2("Now we take cube 3,3 and change it to binary","3,3",0,115,255,73,54);
 				
 				break;
 			case 74:
-				this.step3("Now with cube 3,3 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-21mod64=43","3,3","0x43",74,54);
+				rho.step3("Now with cube 3,3 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-21mod64=43","3,3"," circular shifts right by 43",74,54);
 			
 				break;
 			case 75:
-				this.step4("Now with cube 3,3 value in binary we shift left by n offset from table x=3,y=3 n= 21mod64 =21 ","3,3","0x21",75,54);
+				rho.step4("Now with cube 3,3 value in binary we  circular shift left by n offset from table x=3,y=3 n= 21mod64 =21 ","3,3"," circular shifts left by 21",75,54);
 				
 				break;
 			case 76:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,3",0,165,255,76,56);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,3",0,115,255,76,56);
 				
 				break;
 				//3,4
 			case 77:
-				this.step2("Now we take cube 3,4 and change it to binary","3,4",0,165,205,77,57);
+				rho.step2("Now we take cube 3,4 and change it to binary","3,4",0,115,205,77,57);
 				
 				break;
 			case 78:
-				this.step3("Now with cube 3,4 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-120mod64=8","3,4","0x8",78,57);
+				rho.step3("Now with cube 3,4 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-120mod64=8","3,4"," circular shifts right by 8",78,57);
 			
 				break;
 			case 79:
-				this.step4("Now with cube 3,4 value in binary we shift left by n offset from table x=3,y=4 n= 120mod64 =56 ","3,4","0x56",79,57);
+				rho.step4("Now with cube 3,4 value in binary we  circular shift left by n offset from table x=3,y=4 n= 120mod64 =56 ","3,4"," circular shifts left by 56",79,57);
 				
 				break;
 			case 80:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,4",0,165,205,80,59);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","3,4",0,115,205,80,59);
 				
 				break;
 			//new column
 				//4,0
 			case 81:
-				this.step2("Now we take cube 4,0 and change it to binary","4,0",0,115,155,81,60);
+				rho.step2("Now we take cube 4,0 and change it to binary","4,0",0,165,155,81,60);
 				
 				break;
 			case 82:
-				this.step3("Now with cube 4,0 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-91mod64=37","4,0","0x37",82,60);
+				rho.step3("Now with cube 4,0 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-91mod64=37","4,0"," circular shifts right by 37",82,60);
 			
 				break;
 			case 83:
-				this.step4("Now with cube 4,0 value in binary we shift left by n offset from table x=4,y=0 n= 91mod64 =27 ","4,0","0x27",83,60);
+				rho.step4("Now with cube 4,0 value in binary we  circular shift left by n offset from table x=4,y=0 n= 91mod64 =27 ","4,0"," circular shifts left by 27",83,60);
 				
 				break;
 			case 84:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,0",0,115,155,84,62);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,0",0,165,155,84,62);
 				
 				break;
 				//4,1
 			case 85:
-				this.step2("Now we take cube 4,1 and change it to binary","4,1",0,115,105,85,63);
+				rho.step2("Now we take cube 4,1 and change it to binary","4,1",0,165,105,85,63);
 				
 				break;
 			case 86:
-				this.step3("Now with cube 4,1 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-276mod64=44","4,1","0x44",86,63);
+				rho.step3("Now with cube 4,1 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-276mod64=44","4,1"," circular shifts right by 44",86,63);
 			
 				break;
 			case 87:
-				this.step4("Now with cube 4,1 value in binary we shift left by n offset from table x=4,y=1 n= 276mod64 =20 ","4,1","0x20",87,63);
+				rho.step4("Now with cube 4,1 value in binary we  circular shift left by n offset from table x=4,y=1 n= 276mod64 =20 ","4,1"," circular shifts left by 20",87,63);
 				
 				break;
 			case 88:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,1",0,115,105,88,65);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,1",0,165,105,88,65);
 				
 				break;
 				//4,2
 			case 89:
-				this.step2("Now we take cube 4,2 and change it to binary","4,2",0,115,55,89,66);
+				rho.step2("Now we take cube 4,2 and change it to binary","4,2",0,165,55,89,66);
 				
 				break;
 			case 90:
-				this.step3("Now with cube 4,2 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-231mod64=25","4,2","0x25",90,66);
+				rho.step3("Now with cube 4,2 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-231mod64=25","4,2"," circular shifts right by 25",90,66);
 			
 				break;
 			case 91:
-				this.step4("Now with cube 4,2 value in binary we shift left by n offset from table x=4,y=2 n= 231mod64 =39 ","4,2","0x39",91,66);
+				rho.step4("Now with cube 4,2 value in binary we  circular shift left by n offset from table x=4,y=2 n= 231mod64 =39 ","4,2"," circular shifts left by 39",91,66);
 				
 				break;
 			case 92:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,2",0,115,105,92,68);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,2",0,165,105,92,68);
 				
 				break;
 				//4,3
 			case 93:
-				this.step2("Now we take cube 4,3 and change it to binary","4,3",0,115,255,93,69);
+				rho.step2("Now we take cube 4,3 and change it to binary","4,3",0,165,255,93,69);
 				
 				break;
 			case 94:
-				this.step3("Now with cube 4,3 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-136mod64=23","4,3","0x56",94,69);
+				rho.step3("Now with cube 4,3 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-136mod64=23","4,3"," circular shifts right by 56",94,69);
 			
 				break;
 			case 95:
-				this.step4("Now with cube 4,3 value in binary we shift left by n offset from table x=4,y=3 n= 136mod64 =8 ","4,3","0x8",95,69);
+				rho.step4("Now with cube 4,3 value in binary we  circular shift left by n offset from table x=4,y=3 n= 136mod64 =8 ","4,3"," circular shifts left by 8",95,69);
 				
 				break;
 			case 96:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,3",0,115,255,96,71);
+				rho.step5("After adding the circular shift left and the circular shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,3",0,165,255,96,71);
 				
 				break;
 				//4,4
 			case 97:
-				this.step2("Now we take cube 4,4 and change it to binary","4,4",0,115,205,97,72);
+				rho.step2("Now we take cube 4,4 and change it to binary","4,4",0,165,205,97,72);
 				
 				break;
 			case 98:
-				this.step3("Now with cube 4,4 value in binary we shift right by width of keccak minus offset modulus 64 thus equals 64-78mod64=50","4,4","0x50",98,72);
+				rho.step3("Now with cube 4,4 value in binary we  circular shift right by width of keccak minus offset modulus 64 thus equals 64-78mod64=50","4,4"," circular shifts right by 50",98,72);
 			
 				break;
 			case 99:
-				this.step4("Now with cube 4,4 value in binary we shift left by n offset from table x=4,y=4 n= 78mod64 =14 ","4,4","0x14",99,72);
+				rho.step4("Now with cube 4,4 value in binary we  circular shift left by n offset from table x=4,y=4 n= 78mod64 =14 ","4,4"," circular shifts left by 14",99,72);
 				
 				break;
 			case 100:
-				this.step5("After adding the shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,4",0,115,205,100,74);
+				rho.step5("After adding the circular shift left and the shift right values together in decimal form and modulus it by 1<<64 = 18446744073709551616 we get the value above","4,4",0,165,205,100,74);
 				
 				break;
 			case 101:
-				this.stepEND();
+				rho.stepEND();
 				
 				break;
 		}

@@ -1,5 +1,5 @@
 body{	
-	background-color: 	#FFF    ;
+	background-color: 	#FFF       ;
 }
 
 /*Nav bar*/
@@ -183,6 +183,7 @@ p{
 	margin-bottom: 20px;
 	margin-right: 20px; 
 	padding: 20px 20px 20px 80px;*/
+	background: #FFF;
 	border:3px groove #7c93ba;
 	-webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -500,13 +501,11 @@ input[type="text"] ,textarea {
 	font-size:1.0em;
 }
 
-
-
-
-
-
-
-
-
-
-	
+h2 {
+	font-family: Andika,Arial,sans-serif;
+	color: #000;
+	font-size: 1em;
+	font-weight: bold;
+	letter-spacing: 0.1em;
+	font-variant: small-caps;
+}

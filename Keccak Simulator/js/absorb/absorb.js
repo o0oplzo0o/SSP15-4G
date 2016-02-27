@@ -10,20 +10,19 @@ var absorb = new function()
 	this.targetCounter = 0;
 
 	// animation sets
-	this.cubes = new Array();
-	this.dialogs = new Array();
+	this.dialog;
 	this.indicators = new Array();
 	this.lines = new Array();
 	this.operators = new Array();
 	this.slices = new Array();
 	this.strings = new Array();
 	
-	//ERIC: all timeouts will be stored here, when the game is pause,
+	//all timeouts will be stored here, when the game is pause,
 	// all setTimeout(Timer function in util.js) will be handle in that function
 	this.currentTimeout = new Array();
 	
 	// animation break points
-	this.step_array = [0, 4, 11, 18, 25, 32, 39, 42];
+	this.step_array = [0, 4, 55, 57, 63, 67];
 
 	// animation timers
 	this.refresh;
@@ -72,10 +71,11 @@ var absorb = new function()
 
 		// create dialog box
 		var d = new dialog();
-		this.dialogs.push(d.createDialog(
+		this.dialog = d.createDialog(
 			this.context,
 			"The absorption phase is the main underlying process in which the hash function takes place."
-		));
+		);
+		audio.play("absorb1");
 		
 		// 60 fps update loop
 		this.update();
@@ -85,7 +85,7 @@ var absorb = new function()
 		this.playAnimationPhase(this.currentPhase); // Play 0
 	}
 	
-	//ERIC: Called when user skip this absorb steps,
+	//Called when user skip this absorb steps,
 	// remove/reinitialise object so that it will not continue running
 	this.stop = function()
 	{
@@ -101,8 +101,7 @@ var absorb = new function()
 		this.hitCounter = 0;
 		this.targetCounter = 0;
 		
-		this.cubes = new Array();
-		this.dialogs = new Array();
+		this.dialog;
 		this.indicators = new Array();
 		this.lines = new Array();
 		this.operators = new Array();
@@ -113,12 +112,13 @@ var absorb = new function()
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 	}
 	
-	//ERIC: Handle pause here
+	//Handle pause here
 	// For each of the objects created, call pause to stop their updates (movement, etc)
 	this.pause = function()
 	{
 		clearInterval(this.refresh);
 		
+		/*
 		var len = Math.max(this.cubes.length,this.lines.length,this.operators.length,this.indicators.length,
 							this.slices.length,this.strings.length,this.currentTimeout);
 		for(var i=0; i<len; i++)
@@ -138,14 +138,42 @@ var absorb = new function()
 			if(this.currentTimeout[i])
 				this.currentTimeout[i].pause();			
 		}
+		*/
+
+		for(var i=0; i<this.indicators.length; i++)
+		{
+			this.indicators[i].pause();
+		}
+		for(var i=0; i<this.lines.length; i++)
+		{
+			this.lines[i].pause();
+		}
+		for(var i=0; i<this.operators.length; i++)
+		{
+			this.operators[i].pause();
+		}
+		for(var i=0; i<this.slices.length; i++)
+		{
+			this.slices[i].pause();
+		}
+		for(var i=0; i<this.strings.length; i++)
+		{
+			this.strings[i].pause();
+		}
+
+		for(var i=0; i<this.currentTimeout.length; i++)
+		{
+			this.currentTimeout[i].pause();
+		}
 	}
 	
-	//ERIC: Handle resume here
+	//Handle resume here
 	// For each of the objects created, call resume to continue their updates (movement, etc)
 	this.resume = function()
 	{
 		this.refresh = setInterval(this.update,1000/60);
 		
+		/*
 		var len = Math.max(this.cubes.length,this.lines.length,this.operators.length,this.indicators.length,
 							this.slices.length,this.strings.length,this.currentTimeout);
 		for(var i=0; i<len; i++)
@@ -164,6 +192,33 @@ var absorb = new function()
 				this.strings[i].resume();					
 			if(this.currentTimeout[i])
 				this.currentTimeout[i].resume();			
+		}
+		*/
+
+		for(var i=0; i<this.indicators.length; i++)
+		{
+			this.indicators[i].resume();
+		}
+		for(var i=0; i<this.lines.length; i++)
+		{
+			this.lines[i].resume();
+		}
+		for(var i=0; i<this.operators.length; i++)
+		{
+			this.operators[i].resume();
+		}
+		for(var i=0; i<this.slices.length; i++)
+		{
+			this.slices[i].resume();
+		}
+		for(var i=0; i<this.strings.length; i++)
+		{
+			this.strings[i].resume();
+		}
+
+		for(var i=0; i<this.currentTimeout.length; i++)
+		{
+			this.currentTimeout[i].resume();			
 		}
 	}
 	
@@ -230,7 +285,8 @@ var absorb = new function()
 		console.log("showOriginalState");
 
 		// update dialog box
-		this.dialogs[0].setMessage(this.context, "At the start of the absorption phase, a new initial state O is created and is initialized to 0.");
+		this.dialog.setMessage(this.context, "At the start of the absorption phase, a new initial state O is created and is initialized to 0.");
+		audio.play("absorb2");
 
 		var input = new Array();
 		for (var i=0; i<25; ++i) {
@@ -294,10 +350,69 @@ var absorb = new function()
 		console.log("showXOR");
 
 		// update dialog box
-		this.dialogs[0].setMessage(
+		this.dialog.setMessage(
 			this.context,
 			"Each element from the input state P undergoes XOR with each respective element from the initial state O to give the resulting state S."
 		);
+		audio.play("absorb3");
+
+		//draw inputToState state (Pi)
+		var filler = new Array();
+		for (var i=0; i<25; ++i) {
+			filler.push("");
+		}
+		var s = new slice();
+		this.slices.push(s.createSlice(
+			this.context,
+			100,
+			100,
+			50,
+			"#8ED6FF",
+			1,
+			filler
+		));
+
+		// label
+		var str = new string();
+		this.strings.push(str.createString(
+			this.context,
+			100,
+			350+16,
+			"sans-serif, serif",
+			16,
+			"#000000",
+			1,
+			"Input State (P)"
+		));
+
+		//draw original state (S)
+		var input = new Array();
+		for (var i=0; i<25; ++i) {
+			input.push("0");
+		}
+		var s = new slice();
+		this.slices.push(s.createSlice(
+			this.context,
+			400,
+			100,
+			50, 
+			"#8ED6FF",
+			1,
+			input
+		));
+
+		// label
+		var str = new string();
+		this.strings.push(str.createString(
+			this.context,
+			400,
+			350+16,
+			"sans-serif, serif",
+			16,
+			"#000000",
+			1,
+			"Initial State (O)"
+		));
 
 		// draw XOR
 		var o = new operator();
@@ -324,24 +439,6 @@ var absorb = new function()
 			"Resulting State (S)"
 		));
 
-		// draw target slice
-		/*
-		var input = new Array();
-		for (var i=0; i<25; ++i) {
-			input.push("");
-		}
-		var s = new slice();
-		this.slices.push(s.createSlice(
-			this.context,
-			900,
-			100,
-			50, 
-			"#8ED6FF",
-			1,
-			input
-		));
-		*/
-
 		this.currentTimeout.push(new Timer(function() {
 			absorb.playAnimationPhase(++absorb.currentPhase);
 		}, 1000*this.speedMultiplier));
@@ -353,13 +450,13 @@ var absorb = new function()
 		this.slices[0].cubes[i][j].moveTo(
 			742.5,
 			212.5,
-			5,
+			2.5,
 			absorb.objectHitTarget
 		);
 		this.slices[1].cubes[i][j].moveTo(
 			742.5,
 			212.5,
-			5,
+			2.5,
 			absorb.objectHitTarget
 		);
 	}
@@ -368,25 +465,15 @@ var absorb = new function()
 		this.slices[0].cubes[i][j].moveTo(
 			900+(i*50),
 			100+(j*50),
-			5,
+			2.5,
 			absorb.objectHitTarget
 		);
 	}
 
 	this.fadeStates = function() {
-		// wipe xor
+		// wipe arrays
 		this.operators = [];
-		
-		// save resulting state
-		var temp = this.strings[2];
-
-		// wipe strings
 		this.strings = [];
-
-		// push resulting state back
-		this.strings.push(temp);
-
-		// wipe slices
 		this.slices = [];
 
 		// create a new slice for resulting state
@@ -403,6 +490,19 @@ var absorb = new function()
 			"#8ED6FF",
 			1,
 			input
+		));
+
+		// draw label
+		var str = new string();
+		this.strings.push(str.createString(
+			this.context,
+			900,
+			350+16,
+			"sans-serif, serif",
+			16,
+			"#000000",
+			1,
+			"Resulting State (S)"
 		));
 
 		// move resulting state to center
@@ -426,16 +526,16 @@ var absorb = new function()
 	}
 
 	this.compressState = function() {
-		absorb.targetCounter = 25;
-
 		// wipe label
 		this.strings = [];
+
+		absorb.targetCounter = 25;
 
 		// compress cubes
 		for (var i=0; i<5; ++i) {
 			for (var j=0; j<5; ++j) {
 				this.slices[0].cubes[i][j].moveTo(
-					this.slices[0].cubes[2][2].pos.x,
+					615,
 					100,
 					0.5,
 					absorb.objectHitTarget
@@ -447,25 +547,26 @@ var absorb = new function()
 	this.showRoundFunctions = function() {
 		console.log("showRoundFunctions");
 
-		this.dialogs[0].setMessage(
+		this.dialog.setMessage(
 			this.context,
 			"The resulting state S then undergoes the KECCAK round function, consisting of 5 steps (in order): Theta, Rho, Pi, Chi, Iota"
 		);
+		audio.play("absorb4");
+
+		// wipe slice
+		this.slices = [];
 
 		// replace slice with cube
 		var c = new cube();
 		this.indicators.push(c.createCube(
 			this.context,
-			this.slices[0].cubes[2][2].pos.x,
+			615,
 			100,
 			50,
 			"#8ED6FF",
 			1,
 			"S"
 		));
-
-		// wipe slice
-		this.slices = [];
 
 		// show round functions
 		var theta = new operator();
@@ -626,15 +727,27 @@ var absorb = new function()
 	}
 
 	this.moveStateToXOR = function() {
-		this.dialogs[0].setMessage(
+		this.dialog.setMessage(
 			this.context,
 			"After it undergoes the round function, the (modified) state S is then used as the new initial state O and is XOR-ed with P to get another new state S, which then undergoes the round function yet again."
 		);
+		audio.play("absorb5");
 
 		this.lines = [];
 		this.operators = [];
+		this.indicators = [];
 
-		this.indicators[0].text = "O";
+		// replace slice with cube
+		var c = new cube();
+		this.indicators.push(c.createCube(
+			this.context,
+			615,
+			100,
+			50,
+			"#8ED6FF",
+			1,
+			"O"
+		));
 
 		this.indicators[0].moveTo(
 			400,
@@ -704,12 +817,20 @@ var absorb = new function()
 
 	this.moveStateAgain = function() {
 		this.operators = [];
-		
-		var temp = this.indicators[0];
-
 		this.indicators = [];
 
-		this.indicators.push(temp);
+		// replace slice with cube
+		var c = new cube();
+		this.indicators.push(c.createCube(
+			this.context,
+			900,
+			212.5,
+			50,
+			"#8ED6FF",
+			1,
+			"S"
+		));
+
 		this.indicators[0].moveTo(
 			615,
 			100,
@@ -720,12 +841,13 @@ var absorb = new function()
 
 
 	this.showRoundFunctions2 = function() {
-		console.log("showRoundFunctions");
+		console.log("showRoundFunctions2");
 
-		this.dialogs[0].setMessage(
+		this.dialog.setMessage(
 			this.context,
 			"In total, state S undergoes the round function 24 times (on top of XOR-ing with P as O before the start of every round). This whole process is known as the absorption phase."
 		);
+		audio.play("absorb6");
 
 		// show round functions
 		var theta = new operator();
@@ -844,257 +966,268 @@ var absorb = new function()
 		
 		if(absorb.hitCounter >= absorb.targetCounter)
 		{
+			console.log("objectHitTarget triggered, target = "+absorb.targetCounter);
 			absorb.hitCounter = 0;
 			absorb.playAnimationPhase(++absorb.currentPhase);
 		}
 	}
 
 	// Animation phases
-	this.playAnimationPhase = function(phase)
+	this.playAnimationPhase = function(phase, skipAudio)
 	{
-		//ERIC: If only its a new step, remove all previously created objects
-		if(this.step_array.indexOf(phase) > -1)
+		if(!skipAudio)
 		{
-			for(var i=0; i<this.currentTimeout.length; i++)
+			if(audio.durationLeft() > 0)
 			{
-				this.currentTimeout[i].remove();
+				absorb.currentTimeout.push(new Timer(absorb.playAnimationPhase, (audio.durationLeft() + 2) * 1000, phase));
+				return;
+			}
+		}
+		else
+		{
+			audio.stop();
+		}
+		//If only its a new step, remove all previously created objects
+		if(absorb.step_array.indexOf(phase) > -1)
+		{
+			for(var i=0; i<absorb.currentTimeout.length; i++)
+			{
+				absorb.currentTimeout[i].remove();
 			}
 			
-			//ERIC: Please determine what to reinitialise on each critical steps
-			// this.cubes = new Array();
-			// this.dialogs = new Array();
-			// this.indicators = new Array();
-			// this.lines = new Array();
-			// this.operators = new Array();
-			// this.slices = new Array();
-			// this.strings = new Array();
+			//Please determine what to reinitialise on each critical steps
+			absorb.indicators = new Array();
+			absorb.lines = new Array();
+			absorb.operators = new Array();
+			absorb.slices = new Array();
+			absorb.strings = new Array();
 		
-			this.currentTimeout = new Array();
+			absorb.currentTimeout = new Array();
 		}
 		
 		switch(phase)
 		{
-			case 0:
-				this.showInputToState();
+			case 0: // !
+				absorb.showInputToState();
 				break;
 			case 1:
-				this.moveInputToState();
+				absorb.moveInputToState();
 				break;
 			case 2:
-				this.showOriginalState();
+				absorb.showOriginalState();
 				break;
 			case 3:
-				this.moveOriginalState();
+				absorb.moveOriginalState();
 				break;
-			case 4:
-				this.showXOR(); // and draw new state
+			case 4: // !
+				absorb.showXOR();
 				break;
 			case 5:
-			 	this.moveXOR(2,2);
+			 	absorb.moveXOR(2,2);
 			 	break;
 			case 6:
-			 	this.moveEnd(2,2);
+			 	absorb.moveEnd(2,2);
 			 	break;
 			case 7:
-			 	this.moveXOR(3,2);
+			 	absorb.moveXOR(3,2);
 			 	break;
 			case 8:
-			 	this.moveEnd(3,2);
+			 	absorb.moveEnd(3,2);
 			 	break;
 			case 9:
-			 	this.moveXOR(4,2);
+			 	absorb.moveXOR(4,2);
 			 	break;
 			case 10:
-			 	this.moveEnd(4,2);
+			 	absorb.moveEnd(4,2);
 			 	break;
 			case 11:
-			 	this.moveXOR(0,2);
+			 	absorb.moveXOR(0,2);
 			 	break;
 			case 12:
-			 	this.moveEnd(0,2);
+			 	absorb.moveEnd(0,2);
 			 	break;
 			case 13:
-			 	this.moveXOR(1,2);
+			 	absorb.moveXOR(1,2);
 			 	break;
 			case 14:
-			 	this.moveEnd(1,2);
+			 	absorb.moveEnd(1,2);
 			 	break;
 			case 15:
-			 	this.moveXOR(2,3);
+			 	absorb.moveXOR(2,3);
 			 	break;
 			case 16:
-			 	this.moveEnd(2,3);
+			 	absorb.moveEnd(2,3);
 			 	break;
 			case 17:
-			 	this.moveXOR(3,3);
+			 	absorb.moveXOR(3,3);
 			 	break;
 			case 18:
-			 	this.moveEnd(3,3);
+			 	absorb.moveEnd(3,3);
 			 	break;
 			case 19:
-			 	this.moveXOR(4,3);
+			 	absorb.moveXOR(4,3);
 			 	break;
 			case 20:
-			 	this.moveEnd(4,3);
+			 	absorb.moveEnd(4,3);
 			 	break;
 			case 21:
-			 	this.moveXOR(0,3);
+			 	absorb.moveXOR(0,3);
 			 	break;
 			case 22:
-			 	this.moveEnd(0,3);
+			 	absorb.moveEnd(0,3);
 			 	break;
 			case 23:
-			 	this.moveXOR(1,3);
+			 	absorb.moveXOR(1,3);
 			 	break;
 			case 24:
-			 	this.moveEnd(1,3);
+			 	absorb.moveEnd(1,3);
 			 	break;
 			case 25:
-			 	this.moveXOR(2,4);
+			 	absorb.moveXOR(2,4);
 			 	break;
 			case 26:
-			 	this.moveEnd(2,4);
+			 	absorb.moveEnd(2,4);
 			 	break;
 			case 27:
-			 	this.moveXOR(3,4);
+			 	absorb.moveXOR(3,4);
 			 	break;
 			case 28:
-			 	this.moveEnd(3,4);
+			 	absorb.moveEnd(3,4);
 			 	break;
 			case 29:
-			 	this.moveXOR(4,4);
+			 	absorb.moveXOR(4,4);
 			 	break;
 			case 30:
-			 	this.moveEnd(4,4);
+			 	absorb.moveEnd(4,4);
 			 	break;
 			case 31:
-			 	this.moveXOR(0,4);
+			 	absorb.moveXOR(0,4);
 			 	break;
 			case 32:
-			 	this.moveEnd(0,4);
+			 	absorb.moveEnd(0,4);
 			 	break;
 			case 33:
-			 	this.moveXOR(1,4);
+			 	absorb.moveXOR(1,4);
 			 	break;
 			case 34:
-			 	this.moveEnd(1,4);
+			 	absorb.moveEnd(1,4);
 			 	break;
 			case 35:
-			 	this.moveXOR(2,0);
+			 	absorb.moveXOR(2,0);
 			 	break;
 			case 36:
-			 	this.moveEnd(2,0);
+			 	absorb.moveEnd(2,0);
 			 	break;
 			case 37:
-			 	this.moveXOR(3,0);
+			 	absorb.moveXOR(3,0);
 			 	break;
 			case 38:
-			 	this.moveEnd(3,0);
+			 	absorb.moveEnd(3,0);
 			 	break;
 			case 39:
-			 	this.moveXOR(4,0);
+			 	absorb.moveXOR(4,0);
 			 	break;
 			case 40:
-			 	this.moveEnd(4,0);
+			 	absorb.moveEnd(4,0);
 			 	break;
 			case 41:
-			 	this.moveXOR(0,0);
+			 	absorb.moveXOR(0,0);
 			 	break;
 			case 42:
-			 	this.moveEnd(0,0);
+			 	absorb.moveEnd(0,0);
 			 	break;
 			case 43:
-			 	this.moveXOR(1,0);
+			 	absorb.moveXOR(1,0);
 			 	break;
 			case 44:
-			 	this.moveEnd(1,0);
+			 	absorb.moveEnd(1,0);
 			 	break;
 			case 45:
-			 	this.moveXOR(2,1);
+			 	absorb.moveXOR(2,1);
 			 	break;
 			case 46:
-			 	this.moveEnd(2,1);
+			 	absorb.moveEnd(2,1);
 			 	break;
 			case 47:
-			 	this.moveXOR(3,1);
+			 	absorb.moveXOR(3,1);
 			 	break;
 			case 48:
-			 	this.moveEnd(3,1);
+			 	absorb.moveEnd(3,1);
 			 	break;
 			case 49:
-			 	this.moveXOR(4,1);
+			 	absorb.moveXOR(4,1);
 			 	break;
 			case 50:
-			 	this.moveEnd(4,1);
+			 	absorb.moveEnd(4,1);
 			 	break;
 			case 51:
-			 	this.moveXOR(0,1);
+			 	absorb.moveXOR(0,1);
 			 	break;
 			case 52:
-			 	this.moveEnd(0,1);
+			 	absorb.moveEnd(0,1);
 			 	break;
 			case 53:
-			 	this.moveXOR(1,1);
+			 	absorb.moveXOR(1,1);
 			 	break;
 			case 54:
-			 	this.moveEnd(1,1);
+			 	absorb.moveEnd(1,1);
 			 	break;
-			case 55:
-				this.fadeStates();
+			case 55: // !
+				absorb.fadeStates();
 				break;
 			case 56:
-				this.compressState();
+				absorb.compressState();
 				break;
-			case 57:
-				this.showRoundFunctions();
+			case 57: // !
+				absorb.showRoundFunctions();
 				break;
 			case 58:
-				this.moveThroughRound1();
+				absorb.moveThroughRound1();
 				break;
 			case 59:
-				this.moveThroughRound2();
+				absorb.moveThroughRound2();
 				break;
 			case 60:
-				this.moveThroughRound3();
+				absorb.moveThroughRound3();
 				break;
 			case 61:
-				this.moveThroughRound4();
+				absorb.moveThroughRound4();
 				break;
 			case 62:
-				this.moveThroughRound5();
+				absorb.moveThroughRound5();
 				break;
-			case 63: // show updated state
-				this.moveStateToXOR();
+			case 63: // !
+				absorb.moveStateToXOR();
 				break;
 			case 64:
-				this.showXOR2();
+				absorb.showXOR2();
 				break;
 			case 65:
-				this.moveXOR2();
+				absorb.moveXOR2();
 				break;
 			case 66:
-				this.moveEnd2();
+				absorb.moveEnd2();
 				break;
-			case 67:
-				this.moveStateAgain();
+			case 67: // !
+				absorb.moveStateAgain();
 				break;
 			case 68:
-				this.showRoundFunctions2();
+				absorb.showRoundFunctions2();
 				break;
 			case 69:
-				this.moveThroughRound1();
+				absorb.moveThroughRound1();
 				break;
 			case 70:
-				this.moveThroughRound2();
+				absorb.moveThroughRound2();
 				break;
 			case 71:
-				this.moveThroughRound3();
+				absorb.moveThroughRound3();
 				break;
 			case 72:
-				this.moveThroughRound4();
+				absorb.moveThroughRound4();
 				break;
 			case 73:
-				this.moveThroughRound5();
+				absorb.moveThroughRound5();
 				break;
 		}
 	}

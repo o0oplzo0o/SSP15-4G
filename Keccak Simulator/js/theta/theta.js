@@ -1,30 +1,51 @@
-/*	theta.js
+/*	Zin: theta.js
 	---------------
 	info: shows a hard coded function which translates
 		  input into 5x5 matrix for use in keccak
 		  
 				sequence: 
-				
-				showStateSkeleton();		//show state (ready for 1st theta loop)	
-				showindexXY();				//show index of XY on state
-				showCubes();				//show row of cube (ready for 1st theta loop)
-				xorRowUp(0);				//show animation for 1st theta loop
-				destroyArrays1();			//clear all arrays invlove in 1st theta loop
-				showindexX1();				//show index X only (ready for 2nd theta loop)
-				moveXoredRow();				//move row of cube (ready for 2nd theta loop)
-				showRowSkeleton();			//create row of cube for operation (ready for 2nd theta loop)
-				showindexX2();				//show index X only for above row of cube (ready for 2nd theta loop)
-				showOperation();			//show operation structures: Lines,Operators
-				animatexorWithRot(0);		//show animation for 2nd theta loop	
-				destroyArrays2();			//clear all arrys invlove in 2nd theta loop
-				moveXorRotRow();			//move row of cube (ready for 3rd theta loop)
-				showStateSkeleton();		//show state (ready for 3rd theta loop)	
-				showindexXY();				//show index of XY on state
-				showOperatorXOR1();			//show static XOR (ready for 3rd theta loop)
-				xorRowUp1(0);				//show animation for 3rd theta loop
-				destroyEverything();		//clear all arrays invlo in 3rd theta loop
-				showStatelastSkeleton();	//show state (ready to jump to next step)
-				
+				storedraw1()		//store drawings for theta phase 1
+				step1()				//start theta Phrase I
+				step2()				//show cube to XOR up 1	
+				step3()				//show operator 1
+				step4()				//show cube to XOR up 2	
+				step5()				//show operator 2
+				step6()				//show cube to XOR up 3
+				step7()				//show operator 3
+				step8()				//show cube to XOR up 4
+				step9()				//show operator 4
+				step10()			//show cube to XOR up 5
+				storedraw2()		//store drawing for theta phase 2
+				storedraw3(i)		//store drawing for small cubes
+				storedraw4(i)		//store drawing for small cubes
+				step11()			//A' torot
+				step12()			//A' toxor
+				step13()			//A' toprime
+				step14()			//B' torot
+				step15()			//B' toxor
+				step16()			//B' toprime
+				step17()			//C' torot
+				step18()			//C' toxor
+				step19()			//C' toprime
+				step20()			//D' torot
+				step21()			//D' toxor
+				step22()			//D' toprime
+				step23()			//E' torot
+				step24()			//E' toxor
+				step25()			//E' toprime
+				storedraw5()		//store drawings for theta phase3
+				step26()			//show cube base to XOR state
+				step27()			//show cube to XOR state 1
+				step28()			//show operator 1
+				step29()			//show cube to XOR state 2
+				step30()			//show operator 2
+				step31()			//show cube to XOR state 3
+				step32()			//show operator 3
+				step33()			//show cube to XOR state 4
+				step34()			//show operator 4
+				step35()			//show cube to XOR state 5
+				step36()			//show operator 5
+				step37()			//show final state
 		  uses:
 		  - theta_render.js
 		  - relevant base "classes" (cube.js, line.js, etc)
@@ -41,7 +62,7 @@ var theta = new function()
 	this.hitCounter = 0;
 	this.targetCounter = 0;
 	
-	//ERIC: all timeouts will be stored here, when the game is pause,
+	//all timeouts will be stored here, when the game is pause,
 	// all setTimeout(Timer function in util.js) will be handle in that function
 	this.currentTimeout = new Array();
 	this.m_dialog;
@@ -57,7 +78,7 @@ var theta = new function()
 	this.labels = ["D","E","A","B","C"];
 	this.labelprimes = ["D'","E'","A'","B'","C'"];
 	
-	//ERIC: Insert all critical steps into this array
+	//Insert all critical steps into this array
 	// Objects will be cleared automatically in playAnimationPhase() on critical steps
 	this.step_array = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36];
 	
@@ -85,11 +106,8 @@ var theta = new function()
 		// object input string
 		//this.inputString = inputString;
 
-		var d = new dialog();
-		this.dialogs.push(d.createDialog(
-			this.context,
-			"Theta Step is one of the operation to athetaeve diffusion."
-		));
+		this.m_dialog = new dialog();
+		this.m_dialog.createDialog(this.context,this.message);
 		// start by showing state
 		//this.showInput();
 		this.playAnimationPhase(this.currentPhase); 
@@ -102,7 +120,7 @@ var theta = new function()
 	}
 	
 	
-	//ERIC: Called when user skip this theta steps,
+	//Called when user skip this theta steps,
 	// remove/reinitialise object so that it will not continue running
 	this.stop = function()
 	{
@@ -123,7 +141,7 @@ var theta = new function()
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 	}
 	
-	//ERIC: Handle pause here
+	//Handle pause here
 	// For each of the objects created, call pause to stop their updates (movement, etc)
 	this.pause = function()
 	{
@@ -139,7 +157,7 @@ var theta = new function()
 		}
 	}
 	
-	//ERIC: Handle resume here
+	//Handle resume here
 	// For each of the objects created, call resume to continue their updates (movement, etc)
 	this.resume = function()
 	{
@@ -163,13 +181,13 @@ var theta = new function()
 		
 		theta_render.update();
 	}
-	//Theta Step I Start
+	//Theta phase 1 Start
 	this.storedraw1=function(){
 				var filler = new Array();
 				for (var i=0; i<25; ++i) {
 					filler.push("");
 				}
-
+				
 				// (context, x, y, size, color, alpha, input)
 				var skeleton = new slice();
 				this.object.push(skeleton.createSlice(
@@ -189,7 +207,7 @@ var theta = new function()
 						this.context,
 						520+i*55,
 						450,
-						"Consolas",
+						"sans-serif, serif",
 						24,
 						"#000000",
 						1,
@@ -203,7 +221,7 @@ var theta = new function()
 						this.context,
 						480,
 						200+i*55,
-						"Consolas",
+						"sans-serif, serif",
 						24,
 						"#000000",
 						1,
@@ -212,20 +230,52 @@ var theta = new function()
 				}
 	}
 	this.step1=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 1");
-		theta.storedraw1();
-		//theta.object=theta.storedraw1.object;
+		this.message= "Theta Step is one of the operation to achieve diffusion in Keccak-f permutation with 3 phases . Now,this is State S ready to go through Round function of permutation" ;
+		this.m_dialog.setMessage(this.context, this.message);
+		audio.play("theta1");
+		theta.storedraw1();		
 		this.currentTimeout.push(new Timer(function(){
 			if(theta.currentPhase != 0)
 				return;
 			theta.sortedObject = theta.object;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-			
-		},1000*this.speedMultiplier));
+			this.message= "" ;
+		},3000*this.speedMultiplier));
 	}
 	this.step2=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 2");
+		this.message="Theta phase 1 performs XOR in column of State array. 'A','B','C','D','E' will XOR with every bit above, Yellow color circles indicate XOR";
+		this.m_dialog.setMessage(this.context, this.message);
+		audio.play("theta2");
+		
 		theta.storedraw1();
+		var tableInput = [[theta.labels[0]+"     ",KECCAK.data["absorb_round0"]["theta_step1"][21] ],
+			[theta.labels[1]+"     ", KECCAK.data["absorb_round0"]["theta_step1"][27]],
+			[theta.labels[2]+"     ", KECCAK.data["absorb_round0"]["theta_step1"][3]],
+			[theta.labels[3]+"     ", KECCAK.data["absorb_round0"]["theta_step1"][9]],
+			[theta.labels[4]+"     ", KECCAK.data["absorb_round0"]["theta_step1"][15]],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
+		
 		for (var i=0; i<5; ++i) {
 				var c = new cube();
 				this.object.push(c.createCube(
@@ -238,28 +288,33 @@ var theta = new function()
 						theta.labels[i]
 				));
 			}
+			
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		
 		//theta.object=theta.storedraw1.object;
 		
 		this.currentTimeout.push(new Timer(function(){
-			theta.object.splice(0,11);
+			theta.object.splice(0,13);
 			console.log("Object splice"+theta.object.length);
 			if(theta.currentPhase != 1)
 				return;
 			//theta.sortedObject = theta.object;
 			theta.targetCounter = theta.object.length;
+			this.message= "" ;
 			for(var i=0; i<theta.object.length; i++)
 				theta.object[i].moveTo(theta.object[i].pos.x,theta.object[i].pos.y-50,1, theta.objectHitTarget);
 				
-		},2000*this.speedMultiplier));
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step3=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 3");
-		
+		//this.dialogs[0].setMessage(this.context, "This is Step 3");
+		this.message="Theta phase 1 performs XOR in column of State array. 'A','B','C','D','E' will XOR with every bit above, Yellow color circle indicate XOR";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta2");
 		theta.storedraw1();
+		
 		for(var i=0; i<5; ++i){
 			var opxor = new operator();
 				this.object.push(opxor.createOperator(
@@ -285,11 +340,15 @@ var theta = new function()
 			if(theta.currentPhase != 2)
 				return;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step4=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 4");
+		this.message="Theta phase 1 performs XOR in column of State array. 'A','B','C','D','E' will XOR with every bit above, Yellow color circle indicate XOR";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta2");
+		//this.dialogs[0].setMessage(this.context, "This is Step 4");
 		theta.storedraw1();
 		for (var i=0; i<5; ++i) {
 				var c = new cube();
@@ -314,16 +373,19 @@ var theta = new function()
 			if(theta.currentPhase != 3)
 				return;
 			//theta.sortedObject = theta.object;
+			this.message="";
 			theta.targetCounter = theta.object.length;
 			for(var i=0; i<theta.object.length; i++)
 				theta.object[i].moveTo(theta.object[i].pos.x,theta.object[i].pos.y-50,1, theta.objectHitTarget);
 			
-		},2000*this.speedMultiplier));
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step5=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 5");
-		
+		//this.dialogs[0].setMessage(this.context, "This is Step 5");
+		this.message="Theta phase 1 performs XOR in column of State array. 'A','B','C','D','E' will XOR with every bit above, Yellow color circle indicate XOR";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta2");
 		theta.storedraw1();
 		for(var i=0; i<5; ++i){
 			var opxor = new operator();
@@ -350,11 +412,15 @@ var theta = new function()
 			if(theta.currentPhase != 4)
 				return;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step6=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 6");
+		//this.dialogs[0].setMessage(this.context, "This is Step 6");
+		this.message="Theta phase 1 performs XOR in column of State array. 'A','B','C','D','E' will XOR with every bit above, Yellow color circle indicate XOR";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta2");
 		theta.storedraw1();
 		for (var i=0; i<5; ++i) {
 				var c = new cube();
@@ -382,13 +448,15 @@ var theta = new function()
 			theta.targetCounter = theta.object.length;
 			for(var i=0; i<theta.object.length; i++)
 				theta.object[i].moveTo(theta.object[i].pos.x,theta.object[i].pos.y-50,1, theta.objectHitTarget);
-			
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step7=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 7");
-		
+		//this.dialogs[0].setMessage(this.context, "This is Step 7");
+		this.message="Theta phase 1 performs XOR in column of State array. 'A','B','C','D','E' will XOR with every bit above, Yellow color circle indicate XOR";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta2");
 		theta.storedraw1();
 		for(var i=0; i<5; ++i){
 			var opxor = new operator();
@@ -415,11 +483,15 @@ var theta = new function()
 			if(theta.currentPhase != 6)
 				return;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step8=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 8");
+		this.message="Theta phase 1 performs XOR in column of State array. 'A','B','C','D','E' will XOR with every bit above, Yellow color circle indicate XOR";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta2");
+		//this.dialogs[0].setMessage(this.context, "This is Step 8");
 		theta.storedraw1();
 		for (var i=0; i<5; ++i) {
 				var c = new cube();
@@ -447,13 +519,15 @@ var theta = new function()
 			theta.targetCounter = theta.object.length;
 			for(var i=0; i<theta.object.length; i++)
 				theta.object[i].moveTo(theta.object[i].pos.x,theta.object[i].pos.y-50,1, theta.objectHitTarget);
-			
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step9=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 7");
-		
+		//this.dialogs[0].setMessage(this.context, "This is Step 7");
+		this.message="Theta phase 1 performs XOR in column of State array. 'A','B','C','D','E' will XOR with every bit above, Yellow color circle indicate XOR";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta2");
 		theta.storedraw1();
 		for(var i=0; i<5; ++i){
 			var opxor = new operator();
@@ -480,12 +554,41 @@ var theta = new function()
 			if(theta.currentPhase != 8)
 				return;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step10=function(){
-		this.dialogs[0].setMessage(this.context, "This is Step 10");
+		this.message="The table on the right show the new value of 'A','B','C','D' and 'E' after XOR every bits in column. This concludes theta phase 1 and ready to proceed to phase 2";
+		this.m_dialog.setMessage(this.context, this.message);
+		audio.play("theta3");
 		theta.storedraw1();
+		var tableInput = [[theta.labels[0],KECCAK.data["absorb_round0"]["theta_step1"][29] ],
+			[theta.labels[1], KECCAK.data["absorb_round0"]["theta_step1"][28]],
+			[theta.labels[2], KECCAK.data["absorb_round0"]["theta_step1"][5]],
+			[theta.labels[3], KECCAK.data["absorb_round0"]["theta_step1"][11]],
+			[theta.labels[4], KECCAK.data["absorb_round0"]["theta_step1"][23]],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		for (var i=0; i<5; ++i) {
 				var c = new cube();
 				this.object.push(c.createCube(
@@ -504,23 +607,24 @@ var theta = new function()
 		//theta.object=theta.storedraw1.object;
 		
 		this.currentTimeout.push(new Timer(function(){
-			theta.object.splice(0,11);
+			theta.object.splice(0,13);
 			console.log("Object splice"+theta.object.length);
 			if(theta.currentPhase != 9)
 				return;
 			//theta.sortedObject = theta.object;
 			theta.targetCounter = theta.object.length;
+			this.message="";
 			for(var i=0; i<theta.object.length; i++)
 				//var posX = ;
 				theta.object[i].moveTo(25+i*theta.spaceX,27,0.5,theta.objectHitTarget);
 			
-		},2000*this.speedMultiplier));
+		},3000*this.speedMultiplier));
 	}
-	//Theta Step I finished
+	//Theta phase 1 finished
 	
 	
 	
-	//Theta Step II Start
+	//Theta phase 2 Start
 	this.storedraw2=function(){
 		/*var opxor = new operator();
 			this.object.push(opxor.createOperator(
@@ -802,9 +906,38 @@ var theta = new function()
 	}
 	
 	this.step11=function(){ //torot A'
+		this.message="Theta phase 2 perfoms Rotation and XOR of two bits from result of phase 1 to get maximum diffusion by going through every bit. We can see how XOR and Rotation work in 'Learn Basic Operation' page. To get A', E (before A) XOR with rotated B (after A)";
+		this.m_dialog.setMessage(this.context, this.message);
+		audio.play("theta4");
 		theta.storedraw3(0);
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[1], KECCAK.data["absorb_round0"]["theta_step1"][29]],
+			[theta.labels[3],KECCAK.data["absorb_round0"]["theta_step1"][11] ],
+			["Rotate "+theta.labels[3], ""],
+			[theta.labels[1]+" XOR "+theta.labels[3], ""],
+			[theta.labelprimes[2], ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
@@ -815,10 +948,14 @@ var theta = new function()
 			
 			theta.targetCounter = 1;
 				theta.object[1].moveTo(400,300,1,theta.objectHitTarget);
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step12=function(){ //toxor
+		this.message="A' = (A-1) XOR (Rot(A+1)), where A-1 is E and A+1 is B";
+		this.m_dialog.setMessage(this.context, this.message);
+
 		theta.storedraw4(0);
 		var dc = new cube();
 		theta.object.push(dc.createCube(
@@ -831,7 +968,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[1], KECCAK.data["absorb_round0"]["theta_step1"][29]],
+			[theta.labels[3],KECCAK.data["absorb_round0"]["theta_step1"][11] ],
+			["Rotate "+theta.labels[3], KECCAK.data["absorb_round0"]["theta_step2"][1]],
+			[theta.labels[1]+" XOR "+theta.labels[3], ""],
+			[theta.labelprimes[2], ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
@@ -843,10 +1006,13 @@ var theta = new function()
 			theta.targetCounter = 2;
 				theta.object[0].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.5,theta.objectHitTarget);
 				theta.object[1].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.2,theta.objectHitTarget);
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step13=function(){ //toprime
+		this.message="A' = (A-1) XOR (Rot(A+1)), where A-1 is E and A+1 is B";
+		this.m_dialog.setMessage(this.context, this.message);
 		var dc = new cube();
 		theta.object.push(dc.createCube(
 			this.context,
@@ -858,6 +1024,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
+		var tableInput = [
+			[theta.labels[1], KECCAK.data["absorb_round0"]["theta_step1"][29]],
+			[theta.labels[3],KECCAK.data["absorb_round0"]["theta_step1"][11] ],
+			["Rotate "+theta.labels[3], KECCAK.data["absorb_round0"]["theta_step2"][1]],
+			[theta.labels[1]+" XOR "+theta.labels[3], KECCAK.data["absorb_round0"]["theta_step2"][2]],
+			[theta.labelprimes[2], KECCAK.data["absorb_round0"]["theta_step2"][2]],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
 			
@@ -867,14 +1060,42 @@ var theta = new function()
 			
 			theta.targetCounter = 1;
 				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
-				
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step14=function(){ //torot B'
+	this.message="Same as A', get B' by A (before B) XOR with rotated C (after B)";
+		this.m_dialog.setMessage(this.context, this.message);
 		theta.storedraw3(1);
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[2], KECCAK.data["absorb_round0"]["theta_step1"][5]],
+			[theta.labels[4],KECCAK.data["absorb_round0"]["theta_step1"][17] ],
+			["Rotate "+theta.labels[4], ""],
+			[theta.labels[2]+" XOR "+theta.labels[4], ""],
+			[theta.labelprimes[3], ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
@@ -885,10 +1106,13 @@ var theta = new function()
 			
 			theta.targetCounter = 1;
 				theta.object[1].moveTo(550,300,1,theta.objectHitTarget);
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step15=function(){ //toxor
+	this.message="B' = (B-1) XOR (Rot(B+1)), where B-1 is A and B+1 is C";
+		this.m_dialog.setMessage(this.context, this.message);
 		theta.storedraw4(1);
 		var dc = new cube();
 		theta.object.push(dc.createCube(
@@ -901,7 +1125,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[2], KECCAK.data["absorb_round0"]["theta_step1"][5]],
+			[theta.labels[4],KECCAK.data["absorb_round0"]["theta_step1"][17] ],
+			["Rotate "+theta.labels[4], KECCAK.data["absorb_round0"]["theta_step2"][4]],
+			[theta.labels[2]+" XOR "+theta.labels[4], ""],
+			[theta.labelprimes[3], ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
@@ -913,10 +1163,13 @@ var theta = new function()
 			theta.targetCounter = 2;
 				theta.object[0].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.5,theta.objectHitTarget);
 				theta.object[1].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.2,theta.objectHitTarget);
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step16=function(){ //toprime
+	this.message="B' = (B-1) XOR (Rot(B+1)), where B-1 is A and B+1 is C";
+		this.m_dialog.setMessage(this.context, this.message);
 		var dc = new cube();
 		theta.object.push(dc.createCube(
 			this.context,
@@ -928,6 +1181,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
+		var tableInput = [
+			[theta.labels[2], KECCAK.data["absorb_round0"]["theta_step1"][5]],
+			[theta.labels[4],KECCAK.data["absorb_round0"]["theta_step1"][17] ],
+			["Rotate "+theta.labels[4], KECCAK.data["absorb_round0"]["theta_step2"][4]],
+			[theta.labels[2]+" XOR "+theta.labels[4],  KECCAK.data["absorb_round0"]["theta_step2"][5]],
+			[theta.labelprimes[3],  KECCAK.data["absorb_round0"]["theta_step2"][5]],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
 			
@@ -937,14 +1217,42 @@ var theta = new function()
 			
 			theta.targetCounter = 1;
 				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
-				
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step17=function(){ //torot C'
+	this.message="C' = (C-1) XOR (Rot(C+1)), where C-1 is B and C+1 is D";
+		this.m_dialog.setMessage(this.context, this.message);
 		theta.storedraw3(2);
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[3], KECCAK.data["absorb_round0"]["theta_step1"][11]],
+			[theta.labels[0],KECCAK.data["absorb_round0"]["theta_step1"][23] ],
+			["Rotate "+theta.labels[0], ""],
+			[theta.labels[3]+" XOR "+theta.labels[0],  ""],
+			[theta.labelprimes[4],  ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		
@@ -967,11 +1275,13 @@ var theta = new function()
 					return;
 					theta.targetCounter=1;
 					theta.object[1].moveTo(theta.object[1].pos.x,theta.object[1].pos.y+175,1,theta.objectHitTarget);
-				
+					this.message="";
 				},3000*this.speedMultiplier));
 	}
 	
 	this.step18=function(){ //toxor
+	this.message="C' = (C-1) XOR (Rot(C+1)), where C-1 is B and C+1 is D";
+		this.m_dialog.setMessage(this.context, this.message);
 		theta.storedraw4(2);
 		var dc = new cube();
 		theta.object.push(dc.createCube(
@@ -984,7 +1294,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[3], KECCAK.data["absorb_round0"]["theta_step1"][11]],
+			[theta.labels[0],KECCAK.data["absorb_round0"]["theta_step1"][23] ],
+			["Rotate "+theta.labels[0], KECCAK.data["absorb_round0"]["theta_step2"][7]],
+			[theta.labels[3]+" XOR "+theta.labels[0],  ""],
+			[theta.labelprimes[4],  ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
@@ -996,10 +1332,13 @@ var theta = new function()
 			theta.targetCounter = 2;
 				theta.object[0].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.5,theta.objectHitTarget);
 				theta.object[1].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.3,theta.objectHitTarget);
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step19=function(){ //toprime
+	this.message="C' = (C-1) XOR (Rot(C+1)), where C-1 is B and C+1 is D";
+		this.m_dialog.setMessage(this.context, this.message);
 		var dc = new cube();
 		theta.object.push(dc.createCube(
 			this.context,
@@ -1011,6 +1350,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
+		var tableInput = [
+			[theta.labels[3], KECCAK.data["absorb_round0"]["theta_step1"][11]],
+			[theta.labels[0],KECCAK.data["absorb_round0"]["theta_step1"][23] ],
+			["Rotate "+theta.labels[0], KECCAK.data["absorb_round0"]["theta_step2"][7]],
+			[theta.labels[3]+" XOR "+theta.labels[0],  KECCAK.data["absorb_round0"]["theta_step2"][8]],
+			[theta.labelprimes[4],  KECCAK.data["absorb_round0"]["theta_step2"][8]],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
 			
@@ -1020,14 +1386,42 @@ var theta = new function()
 			
 			theta.targetCounter = 1;
 				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
-				
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step20=function(){ //torot D'
+	this.message="D' = (D-1) XOR (Rot(D+1)), where D-1 is C and D+1 is E";
+		this.m_dialog.setMessage(this.context, this.message);
 		theta.storedraw3(3);
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[1], KECCAK.data["absorb_round0"]["theta_step1"][29]],
+			[theta.labels[4],KECCAK.data["absorb_round0"]["theta_step1"][17] ],
+			["Rotate "+theta.labels[1], ""],
+			[theta.labels[1]+" XOR "+theta.labels[4], ""],
+			[theta.labelprimes[0], ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
@@ -1035,11 +1429,13 @@ var theta = new function()
 				return;
 					theta.targetCounter=1;
 					theta.object[1].moveTo(100,300,1.5,theta.objectHitTarget);
-				
-		},1000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step21=function(){ //toxor 
+	this.message="D' = (D-1) XOR (Rot(D+1)), where D-1 is C and D+1 is E";
+		this.m_dialog.setMessage(this.context, this.message);
 		theta.storedraw4(3);
 		var dc = new cube();
 		theta.object.push(dc.createCube(
@@ -1052,7 +1448,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[1], KECCAK.data["absorb_round0"]["theta_step1"][29]],
+			[theta.labels[4],KECCAK.data["absorb_round0"]["theta_step1"][17] ],
+			["Rotate "+theta.labels[1], KECCAK.data["absorb_round0"]["theta_step2"][7]],
+			[theta.labels[1]+" XOR "+theta.labels[4],  ""],
+			[theta.labelprimes[0],  ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		if(theta.currentPhase != 20)
@@ -1079,11 +1501,14 @@ var theta = new function()
 					theta.targetCounter=2;
 					theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+220,1,theta.objectHitTarget);
 					theta.object[1].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+220,1,theta.objectHitTarget);
+					this.message="";
 				},3000*this.speedMultiplier));
 				
 	}
 	
 	this.step22=function(){ //toprime
+	this.message="D' = (D-1) XOR (Rot(D+1)), where D-1 is C and D+1 is E";
+		this.m_dialog.setMessage(this.context, this.message);
 		var dc = new cube();
 		theta.object.push(dc.createCube(
 			this.context,
@@ -1095,6 +1520,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
+		var tableInput = [
+			[theta.labels[1], KECCAK.data["absorb_round0"]["theta_step1"][29]],
+			[theta.labels[4],KECCAK.data["absorb_round0"]["theta_step1"][17] ],
+			["Rotate "+theta.labels[1], KECCAK.data["absorb_round0"]["theta_step2"][7]],
+			[theta.labels[1]+" XOR "+theta.labels[4],  KECCAK.data["absorb_round0"]["theta_step2"][10]],
+			[theta.labelprimes[0],  KECCAK.data["absorb_round0"]["theta_step2"][11]],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
 			
@@ -1104,14 +1556,43 @@ var theta = new function()
 			
 			theta.targetCounter = 1;
 				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
-				
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step23=function(){ //torot E'
+	this.message="E' = (E-1) XOR (Rot(E+1)), where E-1 is D and E+1 is A";
+		this.m_dialog.setMessage(this.context, this.message);
+	
 		theta.storedraw3(4);
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[0], KECCAK.data["absorb_round0"]["theta_step1"][23]],
+			[theta.labels[2],KECCAK.data["absorb_round0"]["theta_step1"][5] ],
+			["Rotate "+theta.labels[2], ""],
+			[theta.labels[0]+" XOR "+theta.labels[2], ""],
+			[theta.labelprimes[1],  ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
@@ -1122,10 +1603,13 @@ var theta = new function()
 			
 			theta.targetCounter = 1;
 				theta.object[1].moveTo(250,300,1,theta.objectHitTarget);
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step24=function(){ //toxor
+	this.message="E' = (E-1) XOR (Rot(E+1)), where E-1 is D and E+1 is A";
+		this.m_dialog.setMessage(this.context, this.message);
 		theta.storedraw4(4);
 		var dc = new cube();
 		theta.object.push(dc.createCube(
@@ -1138,7 +1622,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
-		
+		var tableInput = [
+			[theta.labels[0], KECCAK.data["absorb_round0"]["theta_step1"][23]],
+			[theta.labels[2],KECCAK.data["absorb_round0"]["theta_step1"][5] ],
+			["Rotate "+theta.labels[2], KECCAK.data["absorb_round0"]["theta_step2"][13]],
+			[theta.labels[0]+" XOR "+theta.labels[2], "" ],
+			[theta.labelprimes[1], ""],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		console.log("Object"+theta.object.length);
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
@@ -1150,10 +1660,14 @@ var theta = new function()
 			theta.targetCounter = 2;
 				theta.object[0].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.5,theta.objectHitTarget);
 				theta.object[1].moveTo(theta.object[0].pos.x+158,theta.object[0].pos.y+320,1.2,theta.objectHitTarget);
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step25=function(){ //toprime
+	this.message="E' = (E-1) XOR (Rot(E+1)), where E-1 is D and E+1 is A.Theta phase 2 ends after XOR and Rotation go through each A,B,C,D,E resulting A',B',C',D',E'";
+		this.m_dialog.setMessage(this.context, this.message);
+		audio.play("theta5");
 		var dc = new cube();
 		theta.object.push(dc.createCube(
 			this.context,
@@ -1165,6 +1679,33 @@ var theta = new function()
 			""
 		));
 		theta.storedraw2();
+		var tableInput = [
+			[theta.labels[0], KECCAK.data["absorb_round0"]["theta_step1"][23]],
+			[theta.labels[2],KECCAK.data["absorb_round0"]["theta_step1"][5] ],
+			["Rotate "+theta.labels[2], KECCAK.data["absorb_round0"]["theta_step2"][13]],
+			[theta.labels[0]+" XOR "+theta.labels[2],  KECCAK.data["absorb_round0"]["theta_step2"][14]],
+			[theta.labelprimes[1],  KECCAK.data["absorb_round0"]["theta_step2"][14]],
+		];
+
+		var t = new table();
+		this.object.push(t.createTable(
+			this.context,
+			5*this.spaceX+2*this.padding,
+			0.5*this.spaceY,
+			tableInput
+		));
+		var str=new string();
+			
+		this.object.push(str.createString(
+				this.context,
+				5*this.spaceX+2*this.padding,
+				245,
+				"sans-serif, serif",
+				24,
+				"#000000",
+				1,
+				"Bit Value Table"
+		));
 		theta.sortedObject = theta.object;
 		this.currentTimeout.push(new Timer(function(){
 			
@@ -1175,11 +1716,11 @@ var theta = new function()
 			theta.targetCounter = 1;
 				theta.object[0].moveTo(theta.object[0].pos.x,theta.object[0].pos.y+40,1.5,theta.objectHitTarget);
 				
-		},2000*this.speedMultiplier));
+		},3000*this.speedMultiplier));
 	}
-	//Theta Step II finished
+	//Theta phase 2 finished
 	
-	//Theta Step III Start	
+	//Theta phase 3 Start	
 	this.storedraw5=function(){
 		
 		for (var i=0; i<5; ++i) {
@@ -1211,6 +1752,9 @@ var theta = new function()
 	}
 	
 	this.step26=function(){
+		this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		audio.play("theta6");
 		for (var i=0; i<5; ++i) {
 			var c = new cube();
 			this.object.push(c.createCube(
@@ -1235,13 +1779,16 @@ var theta = new function()
 					
 			theta.object[i].moveTo(i * 50+50,275,1,theta.objectHitTarget);
 				}
-				
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 		
 		
 	}
 	
 	this.step27=function(){ //1
+		this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		
@@ -1268,13 +1815,15 @@ var theta = new function()
 				for(var j=0; j<5; ++j){
 				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y+100,0.5,theta.objectHitTarget);
 			}
-				
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	
 	this.step28=function(){
-		
+		this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		for(var i=0; i<5; ++i){
@@ -1302,10 +1851,14 @@ var theta = new function()
 			if(theta.currentPhase != 27)
 				return;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step29=function(){ //2
+	this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		
@@ -1332,12 +1885,14 @@ var theta = new function()
 				for(var j=0; j<5; ++j){
 				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y+50,0.5,theta.objectHitTarget);
 			}
-				
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step30=function(){
-		
+		this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		for(var i=0; i<5; ++i){
@@ -1365,10 +1920,14 @@ var theta = new function()
 			if(theta.currentPhase != 29)
 				return;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step31=function(){ //3
+	this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		
@@ -1395,12 +1954,14 @@ var theta = new function()
 				for(var j=0; j<5; ++j){
 				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y,0.5,theta.objectHitTarget);
 			}
-				
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step32=function(){
-		
+		this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		for(var i=0; i<5; ++i){
@@ -1428,10 +1989,14 @@ var theta = new function()
 			if(theta.currentPhase != 31)
 				return;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step33=function(){ //4
+	this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		
@@ -1458,12 +2023,14 @@ var theta = new function()
 				for(var j=0; j<5; ++j){
 				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y-50,0.5,theta.objectHitTarget);
 			}
-				
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step34=function(){
-		
+		this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		for(var i=0; i<5; ++i){
@@ -1491,10 +2058,14 @@ var theta = new function()
 			if(theta.currentPhase != 33)
 				return;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step35=function(){ //5
+	this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		
@@ -1521,12 +2092,14 @@ var theta = new function()
 				for(var j=0; j<5; ++j){
 				theta.object[j].moveTo(theta.object[j].pos.x+465,theta.object[j].pos.y-100,0.5,theta.objectHitTarget);
 			}
-				
-		},2000*this.speedMultiplier));
+				this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.step36=function(){
-		
+		this.message="Theta phase 3 is all about A',B',C',D',E' XOR back to the State S which is the original state before start round function of permutation";
+		this.m_dialog.setMessage(this.context, this.message);
+		//audio.play("theta6");
 		theta.storedraw1();
 		theta.storedraw5();
 		for(var i=0; i<5; ++i){
@@ -1554,14 +2127,17 @@ var theta = new function()
 			if(theta.currentPhase != 35)
 				return;
 			theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
-	//Theta Step III finished
+	//Theta phase 3 finished
 	
-	
+	//Theta show final state
 	this.step37=function(){
-		
+		this.message="The resulting State S is now ready for the next step of permutation, RHO";
+		this.m_dialog.setMessage(this.context, this.message);
+		audio.play("theta7");
 		var filler = new Array();
 				for (var i=0; i<25; ++i) {
 					filler.push("");
@@ -1584,8 +2160,8 @@ var theta = new function()
 			console.log("Object splice"+theta.object.length);
 			if(theta.currentPhase != 36)
 				return;
-			//theta.playAnimationPhase(++theta.currentPhase) ;
-		},2000*this.speedMultiplier));
+			this.message="";
+		},3000*this.speedMultiplier));
 	}
 	
 	this.objectHitTarget = function()
@@ -1600,149 +2176,147 @@ var theta = new function()
 	}
 	
 	// Animation phases
-	this.playAnimationPhase = function(phase)
+	this.playAnimationPhase = function(phase, skipAudio)
 	{
-		//ERIC: If only its a new step, remove all previously created objects
-		if(this.step_array.indexOf(phase) > -1)
+		if(!skipAudio)
 		{
-			for(var i=0; i<this.currentTimeout.length; i++)
+			if(audio.durationLeft() > 0)
 			{
-				this.currentTimeout[i].remove();
+				theta.currentTimeout.push(new Timer(theta.playAnimationPhase, (audio.durationLeft() + 2) * 1000, phase));
+				return;
+			}
+		}
+		else
+		{
+			audio.stop();
+		}
+		//If only its a new step, remove all previously created objects
+		if(theta.step_array.indexOf(phase) > -1)
+		{
+			for(var i=0; i<theta.currentTimeout.length; i++)
+			{
+				theta.currentTimeout[i].remove();
 			}
 			
-			this.currentTimeout = new Array();
-			this.object = new Array();
-			this.sortedObject = new Array();
+			theta.currentTimeout = new Array();
+			theta.object = new Array();
+			theta.sortedObject = new Array();
 		}
 		
 		switch(phase)
 		{
 			case 0:
-				this.step1();//Theta Step I Start
+				theta.step1();//Theta Step I Start
 				break;
 			case 1:
-				this.step2();
+				theta.step2();
 				break;
 			case 2:
-				this.step3();
+				theta.step3();
 				break;
 			case 3:
-				this.step4();
+				theta.step4();
 				break;
 			case 4:
-				this.step5();
+				theta.step5();
 				break;
 			case 5:
-				this.step6();
+				theta.step6();
 				break;
 			case 6:
-				this.step7();
+				theta.step7();
 				break;
 			case 7:
-				this.step8();
+				theta.step8();
 				break;
 			case 8:
-				this.step9();
+				theta.step9();
 				break;
 			case 9:
-				this.step10(); 
+				theta.step10(); 
 				break;
 			case 10: 
-				this.step11();
+				theta.step11();
 				break;
 			case 11:
-				this.step12();
+				theta.step12();
 				break;
 			case 12:
-				this.step13();
+				theta.step13();
 				break;
 			case 13:
-				this.step14();
+				theta.step14();
 				break;
 			case 14:
-				this.step15();
+				theta.step15();
 				break;
 			case 15:
-				this.step16();
+				theta.step16();
 				break;
 			case 16:
-				this.step17();
+				theta.step17();
 				break;
 			case 17:
-				this.step18();
+				theta.step18();
 				break;
 			case 18:
-				this.step19();
+				theta.step19();
 				break;
 			case 19:
-				this.step20();
+				theta.step20();
 				break;
 			case 20:
-				this.step21();
+				theta.step21();
 				break;
 			case 21:
-				this.step22();
+				theta.step22();
 				break;
 			case 22:
-				this.step23();
+				theta.step23();
 				break;
 			case 23:
-				this.step24();
+				theta.step24();
 				break;
 			case 24:
-				this.step25();
+				theta.step25();
 				break;
 			case 25:
-				this.step26();
+				theta.step26();
 				break;
 			case 26:
-				this.step27();
+				theta.step27();
 				break;
 			case 27:
-				this.step28();
+				theta.step28();
 				break;
 			case 28:
-				this.step29();
+				theta.step29();
 				break;
 			case 29:
-				this.step30();
+				theta.step30();
 				break;
 			case 30:
-				this.step31();
+				theta.step31();
 				break;
 			case 31:
-				this.step32();
+				theta.step32();
 				break;
 			case 32:
-				this.step33();
+				theta.step33();
 				break;
 			case 33:
-				this.step34();
+				theta.step34();
 				break;
 			case 34:
-				this.step35();
+				theta.step35();
 				break;
 			case 35:
-				this.step36();
+				theta.step36();
 				break;
 			case 36:
-				this.step37();
+				theta.step37();
 				break;
-			/*case 37:
-				this.step38();
-				break;
-			case 38:
-				this.step39();
-				break;
-			case 39:
-				this.step40();
-				break;
-			case 40: 
-				this.step41();
-				break;	*/
 			
-			
-		
 		}
 		theta.sortedObject = zSort5x5(theta.object);
 	}

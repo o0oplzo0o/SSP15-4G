@@ -1,4 +1,7 @@
-/* 31 jan 2016
+/* 18 feb 2016
+- changed default font size 16 -> 24
+
+31 jan 2016
 	- changed default fontspacing to 4
 	- some code optimizations
 	- fixed graphical bug
@@ -8,7 +11,7 @@
 var dialog = function()
 {
 	// constructor settings
-	this.pos = {x:5,y:535};
+	this.pos = {x:0,y:500};
 	this.message = new Array();
 
 	// design settings
@@ -17,9 +20,9 @@ var dialog = function()
 	this.bordercolor = "#FFFFFF";
 	this.font = "sans-serif, serif";
 	this.fontcolor = "#FFFFFF";
-	this.fontsize = 16;
-	this.width = 1270;
-	this.height = 60;
+	this.fontsize = 24;
+	this.width = 1280;
+	this.height = 100;
 	this.fontspacing = 4;
 	
 	this.createDialog = function(context, m, pos)
@@ -27,7 +30,7 @@ var dialog = function()
 		this.pos = pos;
 		if(!pos)
 		{
-			this.pos = {x:5, y:535};
+			this.pos = {x:0, y:500};
 		}
 		// constructor settings
 		this.setMessage(context, m);

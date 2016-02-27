@@ -4,32 +4,15 @@ var squeezing_render = new function()
 	this.update = function()
 	{
 		squeezing.context.clearRect(0, 0, squeezing.canvas.width, squeezing.canvas.height);
-
-		// cubes set
-		for (var i=0; i<squeezing.cubes.length; ++i) {
-			for(var j=0; j<squeezing.cubes[i].length; ++j) {
-				squeezing.cubes[i][j].draw(squeezing.context);
-			}
-		}
-
-		// lines set
-		for(var i=0; i<squeezing.lines.length; ++i) {
-			squeezing.lines[i].draw(squeezing.context);
-		}
-
-		// indicators set
-		for(var i=0; i<squeezing.indicators.length; ++i) {
-			squeezing.indicators[i].draw(squeezing.context);
-		}
 		
 		// slices set
 		for(var i=0; i<squeezing.slices.length; ++i) {
 			squeezing.slices[i].draw(squeezing.context);
 		}
-		
-		// operators set
-		for(var i=0; i<squeezing.operators.length; ++i) {
-			squeezing.operators[i].draw(squeezing.context);
+
+		// cubes set
+		for (var i=0; i<squeezing.cubes.length; ++i) {
+			squeezing.cubes[i].draw(squeezing.context);
 		}
 
 		// strings set
@@ -37,9 +20,22 @@ var squeezing_render = new function()
 			squeezing.strings[i].draw(squeezing.context);
 		}
 
-		// dialog set
-		for(var i=0; i<squeezing.dialogs.length; ++i) {
-			squeezing.dialogs[i].draw(squeezing.context);
+		// tables set
+		for(var i=0; i<squeezing.tables.length; ++i) {
+			squeezing.tables[i].draw(squeezing.context);
+		}
+
+		// dialog
+		squeezing.dialog.draw(squeezing.context);
+
+		// resize code (17 feb 2016)
+		if(index.isResize)
+		{
+			index.isResize = false;
+			//var scale = (squeezing.canvas.parentElement.clientWidth-10)/640;
+			//squeezing.context.scale(index.lastScaleValue,index.lastScaleValue);
+			//index.lastScaleValue = 1/scale;
+			//squeezing.context.scale(scale,scale);
 		}
 	}
 }

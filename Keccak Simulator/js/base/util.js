@@ -55,6 +55,73 @@ var util = new function()
 	}
 }
 
+var audio = new function()
+{
+	this.audioList = [];
+	this.lastPlayed = "";
+	this.isPlaying = false;
+	
+	this.add = function(name, src)
+	{
+		var a = document.createElement("audio");
+		var s = document.createElement("source");
+		s.src = src;
+		a.appendChild(s);
+		
+		this.audioList[name] = a;
+	}
+	
+	this.remove = function(name)
+	{
+		delete this.audioList[name];
+	}
+	
+	this.play = function(name)
+	{
+		this.isPlaying = true;
+		this.lastPlayed = name;
+		this.audioList[name].currentTime = 0;
+		this.audioList[name].play();
+	}
+	this.stop = function()
+	{
+		if(!this.audioList[this.lastPlayed])
+			return;
+		
+		this.isPlaying = false;
+		this.audioList[this.lastPlayed].currentTime = 0;
+		this.audioList[this.lastPlayed].pause();
+	}
+	this.pause = function()
+	{
+		if(!this.audioList[this.lastPlayed])
+			return;
+		
+		this.isPlaying = false;
+		if(this.audioList[this.lastPlayed].currentTime >= this.audioList[this.lastPlayed].duration)
+		{
+			this.lastPlayed = "";
+			return;
+		}
+		this.audioList[this.lastPlayed].pause();
+	}
+	this.resume = function()
+	{
+		if(!this.audioList[this.lastPlayed])
+			return;
+		
+		this.isPlaying = true;
+		this.audioList[this.lastPlayed].play();
+	}
+	this.durationLeft = function()
+	{
+		if(this.isPlaying)
+			return this.audioList[this.lastPlayed].duration - this.audioList[this.lastPlayed].currentTime;
+		else
+			return 0;
+	}
+}
+
 //OVERRIDE
 function Timer(cb, delay, param)
 {
@@ -66,6 +133,8 @@ function Timer(cb, delay, param)
 	{
 		this.start = new Date();
 		clearTimeout(this.tId);
+		if(this.remaining <= 0)
+			return;
 		this.tId = setTimeout(cb,this.remaining,param);
 	};
 	
